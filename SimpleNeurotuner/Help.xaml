@@ -1,0 +1,16 @@
+﻿<Window x:Name="Help" x:Class="SimpleNeurotuner.Window1"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:SimpleNeurotuner"
+        mc:Ignorable="d"
+        Title="Help" Height="302" Width="370" Loaded="Help_Loaded">
+    <Grid>
+        <ScrollViewer HorizontalAlignment="Center" VerticalAlignment="Center" Width="350" Height="266" >
+            <TextBox x:Name="tbHelp" TextWrapping="Wrap" Text="Welcome to Neurotuner NFT.&#xA;&#xA;Instruction:&#xA;1. If the microphone and speakers (headphones) are not selected by default, then select them yourself.&#xA;2. Select an entry.&#xA;3. Press the start button, and enjoy. You can also use the slider to&#xA;adjust the volume of your voice in the microphone. There was&#xA;a desire to stop, press the stop button.&#xA;4. If you want to make your own recording, then switch the&#xA;mode from listening to recording mode.&#xA;5. You will have a window in which you can name your entry.&#xA;6. After you name your entry and press the create button,&#xA;you will go to the main window in which an additional button&#xA;will appear.&#xA;7. To make a recording, first start making a sound, and then&#xA;press the start button, then the recording will begin, after&#xA;the end of the recording, a window will pop up about&#xA;the completion of the recording.&#xA;8. Then you click on the listen button and listen to your recording.&#xA;After you have listened to the recording, press the stop button. A window pops up in which you choose to keep your&#xA;entry, or delete and overwrite.&#xA;&#xA;Version: 1.1" Height="414" Width="350" TextChanged="tbHelp_TextChanged"/>
+
+        </ScrollViewer>
+
+    </Grid>
+</Window>
