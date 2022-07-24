@@ -48,9 +48,19 @@ namespace SimpleNeurotuner
             }
         }
 
+        private void Default()
+        {
+            if (cmbLanguage.SelectedIndex != 1)
+            {
+                File.WriteAllText("DataTemp.dat", "1");
+                //File.Create("DataTemp.dat");
+            }
+        }
+
         private void button_Click(object sender, RoutedEventArgs e)
         {
             this.Close();
+            Default();
             //File.AppendAllText("Data_Load.dat", "1");
         }
     }

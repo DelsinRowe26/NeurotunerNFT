@@ -63,11 +63,15 @@ namespace SimpleNeurotuner
         public static int[] max = new int[10];
         public static int[] Vol = new int[10];
         public static int SampleRate2;
-        private static float MAX, MAX1, MAX2;
+        private static float MAX, MAX1, MAX2, coeffVol;
         private static long IndexMAX, IndexMAX1, IndexMAX2;
         private static long IndexSTART, IndexEND;
-        private static int MAX_FRAME_LENGTH = 16000;
+        private static int MAX_FRAME_LENGTH = 22050;
         private static float[] gInFIFO = new float[MAX_FRAME_LENGTH];
+        private static int[] kt = new int[MAX_FRAME_LENGTH * 2];
+        private static int[] minfreq = new int[MAX_FRAME_LENGTH * 2];
+        private static int[] maxfreq = new int[MAX_FRAME_LENGTH * 2];
+        private static int[] coef = new int[MAX_FRAME_LENGTH * 2];
         private static float[] gOutFIFO = new float[MAX_FRAME_LENGTH];
         private static float[] gFFTworksp = new float[2 * MAX_FRAME_LENGTH];
         private static double[] gFFTworksp2 = new double[2 * MAX_FRAME_LENGTH];
@@ -78,6 +82,9 @@ namespace SimpleNeurotuner
         private static float[] gAnaMagn = new float[MAX_FRAME_LENGTH];
         private static float[] gSynFreq = new float[MAX_FRAME_LENGTH];
         private static float[] gSynMagn = new float[MAX_FRAME_LENGTH];
+        private static StreamReader fileName = new StreamReader("Wide_voice.txt", System.Text.Encoding.Default);
+        private static int Nlines = File.ReadAllLines("Wide_voice.txt").Length;
+        private static string[] txt = fileName.ReadToEnd().Split(new char[] { ' ', '.' }, StringSplitOptions.None);
         private static string[] NoteNames = { "A", "A#", "B/H", "C", "C#", "D", "D#", "E", "F", "F#", "G", "G#" };
         private static float ToneStep = (float)Math.Pow(2, 1.0 / 12);//рассчет шага тоны
         private static long gRover, gInit;
@@ -89,7 +96,7 @@ namespace SimpleNeurotuner
             PitchShift(pitchShift, 0, sampleCount, (long)2048, (long)4, sampleRate, indata);
         }
 
-        public static void FindClosestNote(double frequency, out double closestFrequency/*, out string noteName*/)//нахождение ближайшей ноты
+        /*public static void FindClosestNote(double frequency, out double closestFrequency/*, out string noteName)//нахождение ближайшей ноты
         {
             const float AFrequency = 440.0f;// какое-то значение частоты
             const int ToneIndexOffsetToPositives = 120;//Смещение индекса тона к положительным значениям
@@ -97,7 +104,7 @@ namespace SimpleNeurotuner
             int toneIndex = (int)Math.Round(Math.Log(frequency / AFrequency, ToneStep));//высчитывание индекса тоны
             //noteName = NoteNames[(ToneIndexOffsetToPositives + toneIndex) % NoteNames.Length];//определение ноты из списка
             closestFrequency = (float)Math.Pow(ToneStep, toneIndex) * AFrequency;//ближайшая нота
-        }
+        }*/
 
         public static async void PitchShift(float pitchShift, long offset, long sampleCount, long fftFrameSize,
             long osamp, float sampleRate, float[] indata)
@@ -137,8 +144,43 @@ namespace SimpleNeurotuner
                         window = -.5 * Math.Cos(2.0 * Math.PI * (double)k / (double)fftFrameSize) + .5;
                         gFFTworksp[2 * k] = (float)(gInFIFO[k] * window);
                         gFFTworksp[2 * k + 1] = 0.0F;
+                        gFFTworksp[fftFrameSize * 2 + k] = 0.0F;//заполню нулями до 12288
+                        gFFTworksp[fftFrameSize * 3 + k] = 0.0F;//заполню нулями до 16384
+                        gFFTworksp[fftFrameSize * 4 + k] = 0.0F;//заполню нулями до 20480
+                        gFFTworksp[fftFrameSize * 5 + k] = 0.0F;//заполню нулями до 24576
+                        gFFTworksp[fftFrameSize * 6 + k] = 0.0F;//заполню нулями до 28672
+                        gFFTworksp[fftFrameSize * 7 + k] = 0.0F;//заполню нулями до 32768
+                        gFFTworksp[fftFrameSize * 8 + k] = 0.0F;//заполню нулями до 36864
+                        gFFTworksp[fftFrameSize * 9 + k] = 0.0F;//заполню нулями до 40960
+                        if (fftFrameSize * 10 + k < sampleRate)
+                        {
+                            gFFTworksp[fftFrameSize * 10 + k] = 0.0F;
+                        }
                     }
 
+                    for(int f = 0; f < sampleRate; f++)
+                    {
+                        kt[f] = 1;
+                    }
+
+                    for(int p = 0; p < Nlines; p++)
+                    {
+                        for(int q = 0, r = 1, e = 2; q < Nlines && r < Nlines && e < Nlines; q += 3, r += 3, e += 3)
+                        {
+                            minfreq[p] = int.Parse(txt[q]);
+                            maxfreq[p] = int.Parse(txt[r]);
+                            coef[p] = int.Parse(txt[e]);
+                        }
+                    }
+
+                    for(int t = 0; t < Nlines; t++)
+                    {
+                        for (int l = minfreq[t]; l < maxfreq[t]; l++)
+                        {
+                            kt[l] = coef[t];
+                            kt[(int)sampleRate - l] = coef[t];
+                        }
+                    }
 
                     /* ***************** ANALYSIS ******************* */
                     /* do transform */
@@ -175,7 +217,7 @@ namespace SimpleNeurotuner
                         /* compute the k-th partials' true frequency/вычислить истинную частоту k-го парциала */
                         tmp = (double)k * freqPerBin + tmp * freqPerBin;
 
-                        FindClosestNote(tmp, out closestFrequency/*, out noteName*/);
+                        //FindClosestNote(tmp, out closestFrequency/*, out noteName*/);
                         //NoteName = noteName;
                         //Freq = closestFrequency;
 
@@ -191,116 +233,15 @@ namespace SimpleNeurotuner
 
                     MAX = gAnaMagn[0];
                     IndexMAX = 0;
-                    for(k = 1; k <= fftFrameSize2; k++)
+                    for(k = 0; k <= fftFrameSize2; k++)
                     {
-                        if (MAX > gAnaMagn[k])
+                        MAX = Math.Max(MAX, gAnaMagn[k]);
+                        coeffVol = PitchShifter1.MAXIN / MAX;
+                        if(coeffVol != 0)
                         {
-                            MAX = gAnaMagn[k];
-                            IndexMAX = k;
-                            //File.WriteAllText("magnmax.txt", gAnaMagn[k].ToString());
+                            gAnaMagn[k] *= coeffVol;
                         }
                     }
-
-                    //MAX = gAnaMagn[0];
-                    
-                    /*for (k = IndexMAX; k <= fftFrameSize2; k--)
-                    {
-                        if (gAnaMagn[k] - gAnaMagn[k - 1] >= 0 && k != 1)//Идем в левую сторону от Максимума
-                        {
-
-                            //Console.WriteLine(gAnaMagn[k]);
-                            //File.AppendAllText("magn1.txt", gAnaMagn[k].ToString() + "\n");
-                        }
-                        else
-                        {
-                            IndexSTART = k;
-                            break;
-                        }
-                    }
-
-                    //MAX = gAnaMagn[0];
-                    for (k = IndexMAX; k < fftFrameSize2; k++)
-                    {
-                        if (gAnaMagn[k] - gAnaMagn[k + 1] > 0)//Идем в правую сторону от Максимума
-                        {
-                            //File.AppendAllText("magn2.txt", gAnaMagn[k].ToString() + "\n");
-                            //Console.WriteLine(gAnaMagn[k]);
-                        }
-                        else
-                        {
-                            IndexEND = k;
-                            break;
-                        }
-                    }
-
-                    MAX1 = gAnaMagn[0];
-                    for (k = 0; k < IndexSTART; k++)
-                    {
-                        if (gAnaMagn[k] > MAX1)
-                        {
-                            MAX1 = gAnaMagn[k];//Поиск максимума с начала всего массива до начала первого максимума
-                            IndexMAX1 = k;
-                        }
-                    }
-
-                    MAX2 = gAnaMagn[0];
-                    for (k = IndexEND; k < fftFrameSize2; k++)
-                    {
-                        if (gAnaMagn[k] > MAX2)
-                        {
-                            MAX2 = gAnaMagn[k];//Поиск максимума с конца первого максимума и до конца массива
-                            IndexMAX2 = k;
-                        }
-                    }*/
-
-                    /*for (k = 0; k <= fftFrameSize2; k++)
-                    {
-                        double magn1;
-                        if (min[0] != 0)
-                        {
-                            if (k >= (min[0] * fftFrameSize2) / SampleRate2 && k <= (max[0] * fftFrameSize2) / SampleRate2)
-                            {
-                                magn1 = gAnaMagn[k];
-                                magn1 = magn1 * Vol[0];
-                                gAnaMagn[k] = (float)magn1;
-                                //Thread.Sleep(100);
-                            }
-                            else if (min[1] >= (780 * fftFrameSize2) / SampleRate2 && k <= (max[1] * fftFrameSize2) / SampleRate2 && min[1] != 0)
-                            {
-                                magn1 = gAnaMagn[k];
-                                magn1 *= Vol[1];
-                                gAnaMagn[k] = (float)magn1;
-                                //Thread.Sleep(100);
-                            }
-                            else if (k >= (min[2] * fftFrameSize2) / SampleRate2 && k <= (max[2] * fftFrameSize2) / SampleRate2 && min[2] != 0)
-                            {
-                                magn1 = gAnaMagn[k];
-                                magn1 *= Vol[2];
-                                gAnaMagn[k] = (float)magn1;
-                                //Thread.Sleep(100);
-                            }
-                            else if (k >= (min[3] * fftFrameSize2) / SampleRate2 && k <= (max[3] * fftFrameSize2) / SampleRate2 && min[3] != 0)
-                            {
-                                magn1 = gAnaMagn[k];
-                                magn1 *= Vol[3];
-                                gAnaMagn[k] = (float)magn1;
-                                //Thread.Sleep(100);
-                            }
-                            else if (k >= (min[4] * fftFrameSize2) / SampleRate2 && k <= (max[4] * fftFrameSize2) / SampleRate2 && min[4] != 0)
-                            {
-                                magn1 = gAnaMagn[k];
-                                magn1 *= Vol[4];
-                                gAnaMagn[k] = (float)magn1;
-                                //Thread.Sleep(100);
-                            }
-                            else
-                            {
-                                magn1 = gAnaMagn[k];
-                                gAnaMagn[k] = (float)magn1;
-                            }
-                        }
-                        else { break; }
-                    }*/
 
                     /* ***************** PROCESSING ******************* */
                     /* this does the actual pitch shifting/это делает фактическое изменение высоты тона */

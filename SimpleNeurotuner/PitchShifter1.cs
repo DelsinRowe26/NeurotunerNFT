@@ -63,7 +63,8 @@ namespace SimpleNeurotuner
         public static int[] max = new int[10];
         public static int[] Vol = new int[10];
         public static int SampleRate2;
-        private static float KMAX, MMAX, MAX;
+        private static float KMAX, MMAX;
+        public static float MAX, MIN, MAXIN;
         private static long IndexMAX, IndexMAX1, IndexMAX2;
         private static long IndexSTART, IndexEND;
         private static int MAX_FRAME_LENGTH = 16000;
@@ -175,7 +176,7 @@ namespace SimpleNeurotuner
                         /* compute the k-th partials' true frequency/вычислить истинную частоту k-го парциала */
                         tmp = (double)k * freqPerBin + tmp * freqPerBin;
 
-                        FindClosestNote(tmp, out closestFrequency/*, out noteName*/);
+                        //FindClosestNote(tmp, out closestFrequency/*, out noteName*/);
                         //NoteName = noteName;
                         //Freq = closestFrequency;
 
@@ -187,52 +188,59 @@ namespace SimpleNeurotuner
 
                     }
 
-                    int usefulMinSpectr = Math.Max(0, (int)(30 * gAnaMagn.Length / sampleRate));
-                    int usefulMaxSpectr = Math.Max(0, (int)(24000 * gAnaMagn.Length / sampleRate) + 1);
+                    ///<summary>
+                    ///int usefulMinSpectr = Math.Max(0, (int)(30 * gAnaMagn.Length / sampleRate));
+                    ///int usefulMaxSpectr = Math.Max(0, (int)(24000 * gAnaMagn.Length / sampleRate) + 1);
+                    ///int[] indexPeak = MyFrequencyUtils.FindPeaks(gAnaMagn, usefulMinSpectr, usefulMaxSpectr - usefulMinSpectr, 2);
+                    ///int[] result = new int[2];
+                    ///for (int j = 0; j < 2; j++)
+                    ///{
+                    ///    k = indexPeak[j];
+                    ///    KMAX = gAnaMagn[k];
+                    ///    k++;
+                    ///    while (k < fftFrameSize2 && KMAX < gAnaMagn[k])
+                    ///    {
+                    ///        KMAX = gAnaMagn[k++];
+                    ///    }
+                    ///    m = indexPeak[j];
+                    ///    MMAX = gAnaMagn[m];
+                    ///    m--;
+                    ///    while (m >= 0 && MMAX < gAnaMagn[m])
+                    ///    {
+                    ///        MMAX = gAnaMagn[m--];
+                    ///    }
+                    ///    if (Math.Abs(indexPeak[j] - k) > Math.Abs(indexPeak[j] - m))
+                    ///    {
+                    ///        result[j] = (int)m;
+                    ///    }
+                    ///    else
+                    ///    {
+                    ///        result[j] = (int)k;
+                    ///    }
+                    ///    float[] bufRec = new float[20];
+                    ///    for (int l = 0; l < 20; l++)
+                    ///    {
+                    ///        if (Math.Sqrt(Math.Pow(KMAX - MMAX, 2)) < 25)//могу ошибаться с среднеквадратичным отклонением, смотрел на формулу, но с переменными мог ошибиться
+                    ///        {
+                    ///            bufRec[l] = KMAX;
+                    ///        }
+                    ///        else
+                    ///        {
+                    ///            //здесь нужно что-то сделать чтобы всё по новой начиналось
+                    ///        }
+                    ///    }
+                    ///}
+                    ///</summary>
+                    ///
 
-                    int[] indexPeak = MyFrequencyUtils.FindPeaks(gAnaMagn, usefulMinSpectr, usefulMaxSpectr - usefulMinSpectr, 2);
-                    int[] result = new int[2];
-
-                    for(int j = 0; j < 2; j++)
+                    MAX = gAnaMagn[0];
+                    MIN = MAX;
+                    for(k = 0; k <= fftFrameSize2; k++)
                     {
-                        k = indexPeak[j];
-                        KMAX = gAnaMagn[k];
-                        k++;
-                        while (k < fftFrameSize2 && KMAX < gAnaMagn[k])
-                        {
-                            KMAX = gAnaMagn[k++];
-                        }
-                        m = indexPeak[j];
-                        MMAX = gAnaMagn[m];
-                        m--;
-                        while (m >= 0 && MMAX < gAnaMagn[m])
-                        {
-                            MMAX = gAnaMagn[m--];
-                        }
-                        if (Math.Abs(indexPeak[j] - k) > Math.Abs(indexPeak[j] - m))
-                        {
-                            result[j] = (int)m;
-                        }
-                        else
-                        {
-                            result[j] = (int)k;
-                        }
-                        
-                        float[] bufRec = new float[20];
-                        for(int l = 0; l < 20; l++)
-                        {
-                            if(Math.Sqrt(Math.Pow(KMAX - MMAX, 2)) < 25)//могу ошибаться с среднеквадратичным отклонением, смотрел на формулу, но с переменными мог ошибиться
-                            {
-                                bufRec[l] = KMAX;
-                            }
-                            else
-                            {
-                                //здесь нужно что-то сделать чтобы всё по новой начиналось
-                            }
-                            
-                        }
+                        MAX = Math.Max(MAX, gAnaMagn[k]);
+                        MIN = Math.Min(MIN, gAnaMagn[k]);
+                        MAXIN = Math.Max(Math.Abs(MIN), Math.Abs(MAX));
                     }
-                    //bufRec[l] = (float)Math.Sqrt(Math.Pow(KMAX - MMAX,2));
 
                     /* ***************** PROCESSING ******************* */
                     /* this does the actual pitch shifting/это делает фактическое изменение высоты тона */

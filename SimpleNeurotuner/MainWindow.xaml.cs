@@ -51,7 +51,7 @@ namespace SimpleNeurotuner
         private FileInfo FileLanguage = new FileInfo("Data_Language.dat");
         private FileInfo fileinfo = new FileInfo("DataTemp.dat");
         private SimpleMixer mMixer;
-        private int SampleRate = 48000;//44100;
+        private int SampleRate = 44100;//44100;
         //private Equalizer equalizer;
         private WasapiOut mSoundOut;
         private WasapiCapture mSoundIn;
@@ -136,39 +136,48 @@ namespace SimpleNeurotuner
 
         private void SimpleNeurotuner_Loaded(object sender, RoutedEventArgs e)
         {
-            if (file1.Length == 0)
+            try
             {
-                //File.Create("DataTemp.dat");
-                WelcomeWindow window = new WelcomeWindow();
-                window.Show();
-                File.AppendAllText(fileInfo.FullName, "1");
-            }
-            //Находит устройства для захвата звука и заполнияет комбобокс
-            MMDeviceEnumerator deviceEnum = new MMDeviceEnumerator();
-            mInputDevices = deviceEnum.EnumAudioEndpoints(DataFlow.Capture, DeviceState.Active);
-            MMDevice activeDevice = deviceEnum.GetDefaultAudioEndpoint(DataFlow.Capture, Role.Multimedia);
-            foreach (MMDevice device in mInputDevices)
-            {
-                cmbInput.Items.Add(device.FriendlyName);
-                if (device.DeviceID == activeDevice.DeviceID) cmbInput.SelectedIndex = cmbInput.Items.Count - 1;
-            }
+                if (file1.Length == 0)
+                {
+                    //File.Create("DataTemp.dat");
+                    WelcomeWindow window = new WelcomeWindow();
+                    window.Show();
+                    File.AppendAllText(fileInfo.FullName, "1");
+                }
+                //Находит устройства для захвата звука и заполнияет комбобокс
+                MMDeviceEnumerator deviceEnum = new MMDeviceEnumerator();
+                mInputDevices = deviceEnum.EnumAudioEndpoints(DataFlow.Capture, DeviceState.Active);
+                MMDevice activeDevice = deviceEnum.GetDefaultAudioEndpoint(DataFlow.Capture, Role.Multimedia);
+                foreach (MMDevice device in mInputDevices)
+                {
+                    cmbInput.Items.Add(device.FriendlyName);
+                    if (device.DeviceID == activeDevice.DeviceID) cmbInput.SelectedIndex = cmbInput.Items.Count - 1;
+                }
 
-            //Находит устройства для вывода звука и заполняет комбобокс
-            activeDevice = deviceEnum.GetDefaultAudioEndpoint(DataFlow.Render, Role.Multimedia);
-            mOutputDevices = deviceEnum.EnumAudioEndpoints(DataFlow.Render, DeviceState.Active);
-            foreach (MMDevice device in mOutputDevices)
-            {
-                cmbOutput.Items.Add(device.FriendlyName);
-                if (device.DeviceID == activeDevice.DeviceID) cmbOutput.SelectedIndex = cmbOutput.Items.Count - 1;
-            }
+                //Находит устройства для вывода звука и заполняет комбобокс
+                activeDevice = deviceEnum.GetDefaultAudioEndpoint(DataFlow.Render, Role.Multimedia);
+                mOutputDevices = deviceEnum.EnumAudioEndpoints(DataFlow.Render, DeviceState.Active);
+                foreach (MMDevice device in mOutputDevices)
+                {
+                    cmbOutput.Items.Add(device.FriendlyName);
+                    if (device.DeviceID == activeDevice.DeviceID) cmbOutput.SelectedIndex = cmbOutput.Items.Count - 1;
+                }
 
-            cmbRecord.Items.Add("Select a record");
-            cmbRecord.SelectedIndex = cmbRecord.Items.Count - 1;
-            Filling();
-            string[] filename = File.ReadAllLines(fileInfo1.FullName);
-            if (filename.Length == 1)
+                cmbRecord.Items.Add("Select a record");
+                cmbRecord.SelectedIndex = cmbRecord.Items.Count - 1;
+                Filling();
+                string[] filename = File.ReadAllLines(fileInfo1.FullName);
+                if (filename.Length == 1)
+                {
+                    Languages();
+                }
+            }
+            catch (Exception ex)
             {
-                Languages();
+                string msg = "Error in Loaded: \r\n" + ex.Message;
+                MessageBox.Show(msg);
+                Debug.WriteLine(msg);
             }
         }
 
@@ -295,8 +304,8 @@ namespace SimpleNeurotuner
             {
                 Mixer();
                 mMp3 = CodecFactory.Instance.GetCodec(filename).ToMono().ToSampleSource()/*.AppendSource(Equalizer.Create10BandEqualizer, out mEqualizer)*/;
-                mDspRec = new SampleDSPRecord(mMp3.ToWaveSource(32).ToSampleSource());
-                mMixer.AddSource(mDspRec.ChangeSampleRate(mMixer.WaveFormat.SampleRate).ToWaveSource(32).Loop().ToSampleSource());
+                mDspRec = new SampleDSPRecord(mMp3.ToWaveSource(16).ToSampleSource());
+                mMixer.AddSource(mDspRec.ChangeSampleRate(mMixer.WaveFormat.SampleRate).ToWaveSource(16).Loop().ToSampleSource());
                 await Task.Run(() => SoundOut());
             }
             else
@@ -462,7 +471,7 @@ namespace SimpleNeurotuner
             }
         }
 
-        private void Recordind2()
+        /*private void Recordind2()
         {
             //float[] buffer = new float[4096];
             mSoundIn = new WasapiCapture();
@@ -482,7 +491,7 @@ namespace SimpleNeurotuner
             mMixer.AddSource(mDsp.ChangeSampleRate(mMixer.WaveFormat.SampleRate));
 
             SoundOut();
-        }
+        }*/
 
         private void Languages()
         {
@@ -516,7 +525,7 @@ namespace SimpleNeurotuner
                 lbPBNFT.Content = "Идёт загрузка NFT...";
                 lbRecordPB.Content = "Идёт запись...";
             }
-            else
+            else if (langindex != "0")
             {
                 index = 0;
                 cmbRecord.Items.Clear();
@@ -549,23 +558,26 @@ namespace SimpleNeurotuner
             string[] text = File.ReadAllLines("Data_Load.dat");
             string[] text1 = File.ReadAllLines(fileinfo.FullName);
             //string[] filename = File.ReadAllLines(fileInfo1.FullName);
-            if (text.Length == 0 && text1.Length == 1)
+            if (file1.Length != 1)
             {
-                Languages();
-            }
-            if (langindex == "0")
-            {
-                cmbRecord.Items.Clear();
-                cmbRecord.Items.Add("Выберите запись");
-                cmbRecord.SelectedIndex = cmbRecord.Items.Count - 1;
-                Filling();
-            }
-            else
-            {
-                cmbRecord.Items.Clear();
-                cmbRecord.Items.Add("Select a record");
-                cmbRecord.SelectedIndex = cmbRecord.Items.Count - 1;
-                Filling();
+                if (text.Length == 0 && text1.Length == 1)
+                {
+                    Languages();
+                }
+                if (langindex == "0")
+                {
+                    cmbRecord.Items.Clear();
+                    cmbRecord.Items.Add("Выберите запись");
+                    cmbRecord.SelectedIndex = cmbRecord.Items.Count - 1;
+                    Filling();
+                }
+                else
+                {
+                    cmbRecord.Items.Clear();
+                    cmbRecord.Items.Add("Select a record");
+                    cmbRecord.SelectedIndex = cmbRecord.Items.Count - 1;
+                    Filling();
+                }
             }
         }
 
@@ -585,10 +597,24 @@ namespace SimpleNeurotuner
                 pbRecord.Visibility = Visibility.Visible;
                 pbRecord.Value = 0;
             }
-            else
+            else if (cmbModes.SelectedIndex != 0)
             {
                 btnRecord.Visibility = Visibility.Hidden;
                 pbRecord.Visibility = Visibility.Hidden;
+                if (langindex == "0")
+                {
+                    cmbRecord.Items.Clear();
+                    cmbRecord.Items.Add("Выберите запись");
+                    cmbRecord.SelectedIndex = cmbRecord.Items.Count - 1;
+                    Filling();
+                }
+                else
+                {
+                    cmbRecord.Items.Clear();
+                    cmbRecord.Items.Add("Select a record");
+                    cmbRecord.SelectedIndex = cmbRecord.Items.Count - 1;
+                    Filling();
+                }
             }
         }
 
