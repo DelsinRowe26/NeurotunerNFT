@@ -29,7 +29,7 @@ namespace SimpleNeurotuner
 
         private void Help_Loaded(object sender, RoutedEventArgs e)
         {
-            StreamReader FileLanguage = new StreamReader("Data_Language.dat");
+            StreamReader FileLanguage = new StreamReader("Data_Language.tmp");
             index = FileLanguage.ReadToEnd();
             if (index == "0")
             {

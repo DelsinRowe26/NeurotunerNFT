@@ -22,8 +22,8 @@ namespace SimpleNeurotuner
     {
         public string FileName;
         public string cutFileName;
-        private FileInfo fileCreate = new FileInfo("Data_Create.dat");
-        private FileInfo fileCutCreate = new FileInfo("Data_cutCreate.dat");
+        private FileInfo fileCreate = new FileInfo("Data_Create.tmp");
+        private FileInfo fileCutCreate = new FileInfo("Data_cutCreate.tmp");
 
         public CreateWindow()
         {
@@ -32,7 +32,7 @@ namespace SimpleNeurotuner
 
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
-            StreamReader FileLanguage = new StreamReader("Data_Language.dat");
+            StreamReader FileLanguage = new StreamReader("Data_Language.tmp");
             string index = FileLanguage.ReadLine();
             if (index == "0")
             {

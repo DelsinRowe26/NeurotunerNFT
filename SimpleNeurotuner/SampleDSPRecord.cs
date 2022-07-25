@@ -11,7 +11,7 @@ namespace SimpleNeurotuner
     class SampleDSPRecord : ISampleSource
     {
         ISampleSource mSource;
-        public float[] freq;
+        //public float[] freq;
         public SampleDSPRecord(ISampleSource source)
         {
             if (source == null)
@@ -21,41 +21,48 @@ namespace SimpleNeurotuner
         }
         public /*async Task<int>*/ int Read(float[] buffer, int offset, int count)
         {
-            //double[] buffer1 = new double[count];
-            double closestfreq = 0;
-            float gainAmplification = (float)(Math.Pow(10.0, GainDB / 20.0));//получить Усиление
-            int samples = mSource.Read(buffer, offset, count);//образцы
-                                                              //if (gainAmplification != 1.0f) 
-                                                              //{
-            for (int i = offset; i < offset + samples; i++)
+            try
             {
-                buffer[i] = Math.Max(Math.Min(buffer[i] * gainAmplification, 1), -1);
-            }
-            ///<summary>
-            ///int len = buffer.Length;
-            ///freq = buffer;
-            ///await Task.Run(() => FrequencyUtils.FindFundamentalFrequency(buffer, mSource.WaveFormat.SampleRate, 31, 16000));
-            ///FrequencyUtilsRec.FindFundamentalFrequency(buffer, mSource.WaveFormat.SampleRate, 30, mSource.WaveFormat.SampleRate / 2);
-            ///freq = FrequencyUtils.FindFundamentalFrequency(buffer, mSource.WaveFormat.SampleRate, 31, 16000);
-            ///await Task.Run(() => PitchShifter.FindClosestNote(FrequencyUtils.FindFundamentalFrequency(buffer, mSource.WaveFormat.SampleRate, 31, 16000), out closestfreq));
-            ///PitchShifter.FindClosestNote(FrequencyUtilsRec.FindFundamentalFrequency(buffer, mSource.WaveFormat.SampleRate, 30, mSource.WaveFormat.SampleRate / 2), out closestfreq);
-            ///await Task.Run(() => File.WriteAllText("ClosestFreq.txt", closestfreq.ToString()));
-            ///File.WriteAllText("FreqClosestRec.txt", closestfreq.ToString());
-            ///await Task.Run(() => File.AppendAllText("Freq.txt", FrequencyUtils.FindFundamentalFrequency(buffer, mSource.WaveFormat.SampleRate, 31, 16000).ToString("f3") + "\n"));
-            ///File.AppendAllText("FreqRecord.txt", FrequencyUtilsRec.FindFundamentalFrequency(buffer, mSource.WaveFormat.SampleRate, 30, mSource.WaveFormat.SampleRate / 2).ToString("f3") + "\n");
-            ///}
-            ///</summary>
+                //double[] buffer1 = new double[count];
+                double closestfreq = 0;
+                float gainAmplification = (float)(Math.Pow(10.0, GainDB / 20.0));//получить Усиление
+                int samples = mSource.Read(buffer, offset, count);//образцы
+                                                                  //if (gainAmplification != 1.0f) 
+                                                                  //{
+                for (int i = offset; i < offset + samples; i++)
+                {
+                    buffer[i] = Math.Max(Math.Min(buffer[i] * gainAmplification, 1), -1);
+                }
+                ///<summary>
+                ///int len = buffer.Length;
+                ///freq = buffer;
+                ///await Task.Run(() => FrequencyUtils.FindFundamentalFrequency(buffer, mSource.WaveFormat.SampleRate, 31, 16000));
+                ///FrequencyUtilsRec.FindFundamentalFrequency(buffer, mSource.WaveFormat.SampleRate, 30, mSource.WaveFormat.SampleRate / 2);
+                ///freq = FrequencyUtils.FindFundamentalFrequency(buffer, mSource.WaveFormat.SampleRate, 31, 16000);
+                ///await Task.Run(() => PitchShifter.FindClosestNote(FrequencyUtils.FindFundamentalFrequency(buffer, mSource.WaveFormat.SampleRate, 31, 16000), out closestfreq));
+                ///PitchShifter.FindClosestNote(FrequencyUtilsRec.FindFundamentalFrequency(buffer, mSource.WaveFormat.SampleRate, 30, mSource.WaveFormat.SampleRate / 2), out closestfreq);
+                ///await Task.Run(() => File.WriteAllText("ClosestFreq.txt", closestfreq.ToString()));
+                ///File.WriteAllText("FreqClosestRec.txt", closestfreq.ToString());
+                ///await Task.Run(() => File.AppendAllText("Freq.txt", FrequencyUtils.FindFundamentalFrequency(buffer, mSource.WaveFormat.SampleRate, 31, 16000).ToString("f3") + "\n"));
+                ///File.AppendAllText("FreqRecord.txt", FrequencyUtilsRec.FindFundamentalFrequency(buffer, mSource.WaveFormat.SampleRate, 30, mSource.WaveFormat.SampleRate / 2).ToString("f3") + "\n");
+                ///}
+                ///</summary>
 
-            PitchShifter.PitchShift(PitchShift, offset, count, 4096, 4, mSource.WaveFormat.SampleRate, buffer);
-
-            if (PitchShift != 1.0f)
-            {
-                //FrequencyUtils.FindFundamentalFrequency(buffer1, mSource.WaveFormat.SampleRate, 60, 22050);
                 PitchShifter.PitchShift(PitchShift, offset, count, 4096, 4, mSource.WaveFormat.SampleRate, buffer);
 
-            }
+                if (PitchShift != 1.0f)
+                {
+                    //FrequencyUtils.FindFundamentalFrequency(buffer1, mSource.WaveFormat.SampleRate, 60, 22050);
+                    PitchShifter.PitchShift(PitchShift, offset, count, 4096, 4, mSource.WaveFormat.SampleRate, buffer);
 
-            return samples;
+                }
+
+                return samples;
+            }
+            catch
+            {
+                return 0; 
+            }
         }
 
         public float GainDB { get; set; }

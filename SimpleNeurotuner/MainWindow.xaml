@@ -142,7 +142,7 @@
                 </Grid>
             </TabItem>
         </TabControl>
-        <ProgressBar x:Name="PBNFT" HorizontalAlignment="Left" Height="24" Margin="188,32,0,0" VerticalAlignment="Top" Width="200" BorderBrush="Black" Background="{x:Null}" Grid.ColumnSpan="2">
+        <ProgressBar x:Name="PBNFT" HorizontalAlignment="Left" Height="24" Margin="188,32,0,0" VerticalAlignment="Top" Width="200" BorderBrush="Black" Background="{x:Null}" Grid.ColumnSpan="2" Visibility="Hidden">
             <ProgressBar.Foreground>
                 <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
                     <GradientStop Color="#FF067515"/>
@@ -150,7 +150,7 @@
                 </LinearGradientBrush>
             </ProgressBar.Foreground>
         </ProgressBar>
-        <Label x:Name="lbPBNFT" Content="NFT loading in progress..." HorizontalAlignment="Left" Margin="221,30,0,0" VerticalAlignment="Top"/>
+        <Label x:Name="lbPBNFT" Content="NFT loading in progress..." HorizontalAlignment="Left" Margin="221,30,0,0" VerticalAlignment="Top" Visibility="Hidden"/>
         <Slider x:Name="slPitch" HorizontalAlignment="Center" Margin="160,79,159,0" VerticalAlignment="Top" Width="250" Maximum="15" Minimum="-15" TickPlacement="BottomRight" ValueChanged="slPitch_ValueChanged" Grid.ColumnSpan="2" Visibility="Hidden"/>
         <Label x:Name="lbPitchValue" Content="0" HorizontalAlignment="Left" Margin="51.757,70,0,0" VerticalAlignment="Top" FontSize="14" Grid.Column="1" Visibility="Hidden"/>
     </Grid>

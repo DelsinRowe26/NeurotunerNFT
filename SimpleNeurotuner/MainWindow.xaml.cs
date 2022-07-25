@@ -19,8 +19,6 @@ using System.Threading;
 using System.Diagnostics;
 using System.IO;
 
-using AudioAnalyzer;
-using WinformsVisualization.Visualization;
 //using Microsoft.DirectX.DirectSound;
 //using Buffer = Microsoft.DirectX.DirectSound.Buffer;
 using System.Runtime.InteropServices;
@@ -47,9 +45,9 @@ namespace SimpleNeurotuner
           static extern int vizualzvuk(string filename, string secfile, int[] Rdat,int ParV);
         
         private FileInfo fileInfo = new FileInfo("window.tmp");
-        private FileInfo fileInfo1 = new FileInfo("Data_Load.dat");
-        private FileInfo FileLanguage = new FileInfo("Data_Language.dat");
-        private FileInfo fileinfo = new FileInfo("DataTemp.dat");
+        private FileInfo fileInfo1 = new FileInfo("Data_Load.tmp");
+        private FileInfo FileLanguage = new FileInfo("Data_Language.tmp");
+        private FileInfo fileinfo = new FileInfo("DataTemp.tmp");
         private SimpleMixer mMixer;
         private int SampleRate = 44100;//44100;
         //private Equalizer equalizer;
@@ -58,12 +56,6 @@ namespace SimpleNeurotuner
         private SampleDSP mDsp;
         private SampleDSPRecord mDspRec;
         string[] file1 = File.ReadAllLines("window.tmp");
-        /// <summary>
-        /// рисование спектра
-        /// </summary>
-        private LineSpectrum mLineSpectrum;
-        //private VoicePrint3DSpectrum mVoicePrint3DSpectrum;
-        private int mXpos;
 
         string folder = "Record";
         private IWaveSource mSource;
@@ -78,7 +70,7 @@ namespace SimpleNeurotuner
         string langindex;
         double[] magnRec;
         string FileName, cutFileName;
-        DispatcherTimer timer1 = new DispatcherTimer();
+        //DispatcherTimer timer1 = new DispatcherTimer();
         private System.Windows.Point startPoint;
         //public Image ImgSpectr;
         private System.Windows.Shapes.Rectangle rectangle;
@@ -106,32 +98,91 @@ namespace SimpleNeurotuner
 
         void worker_DoWork(object sender, DoWorkEventArgs e)
         {
-            for (int i = 0; i < 100; i++)
+            try
             {
-                if (worker.CancellationPending == true)
+                for (int i = 0; i < 100; i++)
                 {
-                    //e.Cancel = true;
-                    (sender as BackgroundWorker).ReportProgress(100);
-                    break;
-                    //return;
+                    if (worker.CancellationPending == true)
+                    {
+                        //e.Cancel = true;
+                        (sender as BackgroundWorker).ReportProgress(100);
+                        break;
+                        //return;
+                    }
+                    (sender as BackgroundWorker).ReportProgress(i);
+                    Thread.Sleep(100);
                 }
-                (sender as BackgroundWorker).ReportProgress(i);
-                Thread.Sleep(100);
+            }
+            catch (Exception ex)
+            {
+                if (langindex == "0")
+                {
+                    string msg = "Ошибка в worker_DoWork: \r\n" + ex.Message;
+                    MessageBox.Show(msg);
+                    Debug.WriteLine(msg);
+                }
+                else
+                {
+                    string msg = "Error in worker_DoWork: \r\n" + ex.Message;
+                    MessageBox.Show(msg);
+                    Debug.WriteLine(msg);
+                }
             }
         }
 
         void worker_ProgressChanged(object sender, ProgressChangedEventArgs e)
         {
-            PBNFT.Value = e.ProgressPercentage;
+            try
+            {
+                PBNFT.Value = e.ProgressPercentage;
+                if(PBNFT.Value == 100)
+                {
+                    PBNFT.Visibility = Visibility.Hidden;
+                    lbPBNFT.Visibility = Visibility.Hidden;
+                }
+            }
+            catch (Exception ex)
+            {
+                if (langindex == "0")
+                {
+                    string msg = "Ошибка в worker_ProgressChanged: \r\n" + ex.Message;
+                    MessageBox.Show(msg);
+                    Debug.WriteLine(msg);
+                }
+                else
+                {
+                    string msg = "Error in worker_ProgressChanged: \r\n" + ex.Message;
+                    MessageBox.Show(msg);
+                    Debug.WriteLine(msg);
+                }
+            }
         }
 
         private void Mixer()
         {
-            mMixer = new SimpleMixer(1, SampleRate) //стерео, 44,1 КГц
+            try
             {
-                FillWithZeros = true,
-                DivideResult = true, //Для этого установлено значение true, чтобы избежать звуков тиков из-за превышения -1 и 1.
-            };
+                mMixer = new SimpleMixer(1, SampleRate) //стерео, 44,1 КГц
+                {
+                    FillWithZeros = true,
+                    DivideResult = true, //Для этого установлено значение true, чтобы избежать звуков тиков из-за превышения -1 и 1.
+                };
+            }
+            catch (Exception ex)
+            {
+                if (langindex == "0")
+                {
+                    string msg = "Ошибка в Mixer: \r\n" + ex.Message;
+                    MessageBox.Show(msg);
+                    Debug.WriteLine(msg);
+                }
+                else
+                {
+                    string msg = "Error in Mixer: \r\n" + ex.Message;
+                    MessageBox.Show(msg);
+                    Debug.WriteLine(msg);
+                }
+            }
         }
 
         private void SimpleNeurotuner_Loaded(object sender, RoutedEventArgs e)
@@ -175,35 +226,80 @@ namespace SimpleNeurotuner
             }
             catch (Exception ex)
             {
-                string msg = "Error in Loaded: \r\n" + ex.Message;
-                MessageBox.Show(msg);
-                Debug.WriteLine(msg);
+                if (langindex == "0")
+                {
+                    string msg = "Ошибка в Loaded: \r\n" + ex.Message;
+                    MessageBox.Show(msg);
+                    Debug.WriteLine(msg);
+                }
+                else
+                {
+                    string msg = "Error in Loaded: \r\n" + ex.Message;
+                    MessageBox.Show(msg);
+                    Debug.WriteLine(msg);
+                }
             }
         }
 
         private void Filling()
         {
-            allfile = Directory.GetFiles(folder);
-            foreach (string filename in allfile)
+            try
             {
-                //record = filename.Replace(@"Record\", "");
-                record = filename.Remove(0, 7);
-                cmbRecord.Items.Add(record);
+                allfile = Directory.GetFiles(folder);
+                foreach (string filename in allfile)
+                {
+                    //record = filename.Replace(@"Record\", "");
+                    record = filename.Remove(0, 7);
+                    cmbRecord.Items.Add(record);
+                }
+            }
+            catch (Exception ex)
+            {
+                if (langindex == "0")
+                {
+                    string msg = "Ошибка в Filling: \r\n" + ex.Message;
+                    MessageBox.Show(msg);
+                    Debug.WriteLine(msg);
+                }
+                else
+                {
+                    string msg = "Error in Filling: \r\n" + ex.Message;
+                    MessageBox.Show(msg);
+                    Debug.WriteLine(msg);
+                }
             }
         }
 
         private async void btnStart_Open_Click(object sender, RoutedEventArgs e)
         {
-            if (cmbModes.SelectedIndex == 0)
+            try
             {
-                Recording();
-                //Recordind2();
+                if (cmbModes.SelectedIndex == 0)
+                {
+                    Recording();
+                    //Recordind2();
+                }
+                else
+                {
+                    click = 1;
+                    await Task.Run(() => Sound(file));
+                    StartFullDuplex();
+                }
             }
-            else
+            catch (Exception ex)
             {
-                click = 1;
-                await Task.Run(() => Sound(file));
-                StartFullDuplex();
+                if (langindex == "0")
+                {
+                    string msg = "Ошибка в btnStart: \r\n" + ex.Message;
+                    MessageBox.Show(msg);
+                    Debug.WriteLine(msg);
+                }
+                else
+                {
+                    string msg = "Error in btnStart: \r\n" + ex.Message;
+                    MessageBox.Show(msg);
+                    Debug.WriteLine(msg);
+                }
             }
         }
 
@@ -211,7 +307,6 @@ namespace SimpleNeurotuner
         {
             try
             {
-                timer1.Stop();
                 if (mMixer != null)
                 {
                     mMixer.Dispose();
@@ -242,9 +337,20 @@ namespace SimpleNeurotuner
                     mMp3 = null;
                 }
             }
-            catch
+            catch (Exception ex)
             {
-
+                if (langindex == "0")
+                {
+                    string msg = "Ошибка в Stop: \r\n" + ex.Message;
+                    MessageBox.Show(msg);
+                    Debug.WriteLine(msg);
+                }
+                else
+                {
+                    string msg = "Error in Stop: \r\n" + ex.Message;
+                    MessageBox.Show(msg);
+                    Debug.WriteLine(msg);
+                }
             }
         }
 
@@ -276,20 +382,47 @@ namespace SimpleNeurotuner
             }
             catch (Exception ex)
             {
-                string msg = "Error in StartFullDuplex: \r\n" + ex.Message;
-                MessageBox.Show(msg);
-                Debug.WriteLine(msg);
+                if (langindex == "0")
+                {
+                    string msg = "Ошибка в StartFullDuplex: \r\n" + ex.Message;
+                    MessageBox.Show(msg);
+                    Debug.WriteLine(msg);
+                }
+                else
+                {
+                    string msg = "Error in StartFullDuplex: \r\n" + ex.Message;
+                    MessageBox.Show(msg);
+                    Debug.WriteLine(msg);
+                }
             }
             //return false;
         }
 
         private void SoundOut()
         {
-            mSoundOut = new WasapiOut(/*false, AudioClientShareMode.Exclusive, 1*/);
-            //mSoundOut.Device = mOutputDevices[cmbOutput.SelectedIndex];
-            mSoundOut.Initialize(mMixer.ToWaveSource(32));
-             //mSoundOut.Initialize(mSource);
-            mSoundOut.Play();
+            try
+            {
+                mSoundOut = new WasapiOut(/*false, AudioClientShareMode.Exclusive, 1*/);
+                //mSoundOut.Device = mOutputDevices[cmbOutput.SelectedIndex];
+                mSoundOut.Initialize(mMixer.ToWaveSource(32));
+                //mSoundOut.Initialize(mSource);
+                mSoundOut.Play();
+            }
+            catch (Exception ex)
+            {
+                if (langindex == "0")
+                {
+                    string msg = "Ошибка в SoundOut: \r\n" + ex.Message;
+                    MessageBox.Show(msg);
+                    Debug.WriteLine(msg);
+                }
+                else
+                {
+                    string msg = "Error in SoundOut: \r\n" + ex.Message;
+                    MessageBox.Show(msg);
+                    Debug.WriteLine(msg);
+                }
+            }
         }
 
         private void SetPitchShiftValue()
@@ -299,40 +432,94 @@ namespace SimpleNeurotuner
 
         private async void Sound(string file)
         {
-            Stop();
-            if (click != 0)
+            try
             {
-                Mixer();
-                mMp3 = CodecFactory.Instance.GetCodec(filename).ToMono().ToSampleSource()/*.AppendSource(Equalizer.Create10BandEqualizer, out mEqualizer)*/;
-                mDspRec = new SampleDSPRecord(mMp3.ToWaveSource(16).ToSampleSource());
-                mMixer.AddSource(mDspRec.ChangeSampleRate(mMixer.WaveFormat.SampleRate).ToWaveSource(16).Loop().ToSampleSource());
-                await Task.Run(() => SoundOut());
+                //Stop();
+                if (click != 0)
+                {
+                    Mixer();
+                    mMp3 = CodecFactory.Instance.GetCodec(filename).ToMono().ToSampleSource()/*.AppendSource(Equalizer.Create10BandEqualizer, out mEqualizer)*/;
+                    mDspRec = new SampleDSPRecord(mMp3.ToWaveSource(16).ToSampleSource());
+                    mMixer.AddSource(mDspRec.ChangeSampleRate(mMixer.WaveFormat.SampleRate).ToWaveSource(16).Loop().ToSampleSource());
+                    await Task.Run(() => SoundOut());
+                }
+                else
+                {
+                    Stop();
+                }
             }
-            else
+            catch (Exception ex)
             {
-                Stop();
+                if (langindex == "0")
+                {
+                    string msg = "Ошибка в Sound: \r\n" + ex.Message;
+                    MessageBox.Show(msg);
+                    Debug.WriteLine(msg);
+                }
+                else
+                {
+                    string msg = "Error in Sound: \r\n" + ex.Message;
+                    MessageBox.Show(msg);
+                    Debug.WriteLine(msg);
+                }
             }
         }
 
         private void btnStop_Click(object sender, RoutedEventArgs e)
         {
-            Stop();
-            click = 0;
-            audioclick = 0;
-            if (cmbModes.SelectedIndex == 0)
+            try
             {
-                if (audioclick == 0)
+                Stop();
+                click = 0;
+                audioclick = 0;
+                if (cmbModes.SelectedIndex == 0)
                 {
-                    SaveDeleteWindow saveDelete = new SaveDeleteWindow();
-                    saveDelete.Show();
+                    if (audioclick == 0)
+                    {
+                        SaveDeleteWindow saveDelete = new SaveDeleteWindow();
+                        saveDelete.Show();
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                if (langindex == "0")
+                {
+                    string msg = "Ошибка в btnStop: \r\n" + ex.Message;
+                    MessageBox.Show(msg);
+                    Debug.WriteLine(msg);
+                }
+                else
+                {
+                    string msg = "Error in btnStop: \r\n" + ex.Message;
+                    MessageBox.Show(msg);
+                    Debug.WriteLine(msg);
                 }
             }
         }
 
         private void SimpleNeurotuner_Closing(object sender, CancelEventArgs e)
         {
-            Stop();
-            Environment.Exit(0);
+            try
+            {
+                Stop();
+                Environment.Exit(0);
+            }
+            catch (Exception ex)
+            {
+                if (langindex == "0")
+                {
+                    string msg = "Ошибка в SimpleNeurotuner_Closing: \r\n" + ex.Message;
+                    MessageBox.Show(msg);
+                    Debug.WriteLine(msg);
+                }
+                else
+                {
+                    string msg = "Error in SimpleNeurotuner_Closing: \r\n" + ex.Message;
+                    MessageBox.Show(msg);
+                    Debug.WriteLine(msg);
+                }
+            }
         }
 
         private void btnStart_Open_MouseMove(object sender, MouseEventArgs e)
@@ -377,8 +564,26 @@ namespace SimpleNeurotuner
 
         private void MenuItem_Click(object sender, RoutedEventArgs e)
         {
-            Window1 window1 = new Window1();
-            window1.Show();
+            try
+            {
+                Window1 window1 = new Window1();
+                window1.Show();
+            }
+            catch (Exception ex)
+            {
+                if (langindex == "0")
+                {
+                    string msg = "Ошибка в MenuItem_Click: \r\n" + ex.Message;
+                    MessageBox.Show(msg);
+                    Debug.WriteLine(msg);
+                }
+                else
+                {
+                    string msg = "Error in MenuItem_Click: \r\n" + ex.Message;
+                    MessageBox.Show(msg);
+                    Debug.WriteLine(msg);
+                }
+            }
         }
 
         private void btnRecord_MouseMove(object sender, MouseEventArgs e)
@@ -403,18 +608,36 @@ namespace SimpleNeurotuner
 
         private void btnRecord_Click(object sender, RoutedEventArgs e)
         {
-            //audioclick = 1;
-            //mDsp.PitchShift = 0;
-            click = 1;
-            Audition();
+            try
+            {
+                //audioclick = 1;
+                //mDsp.PitchShift = 0;
+                click = 1;
+                Audition();
+            }
+            catch (Exception ex)
+            {
+                if (langindex == "0")
+                {
+                    string msg = "Ошибка в btnRecord_Click: \r\n" + ex.Message;
+                    MessageBox.Show(msg);
+                    Debug.WriteLine(msg);
+                }
+                else
+                {
+                    string msg = "Error in btnRecord_Click: \r\n" + ex.Message;
+                    MessageBox.Show(msg);
+                    Debug.WriteLine(msg);
+                }
+            }
         }
 
         private async void Recording()
         {
             try
             {
-                StreamReader FileRecord = new StreamReader("Data_Create.dat");
-                StreamReader FileCutRecord = new StreamReader("Data_cutCreate.dat");
+                StreamReader FileRecord = new StreamReader("Data_Create.tmp");
+                StreamReader FileCutRecord = new StreamReader("Data_cutCreate.tmp");
                 myfile = FileRecord.ReadToEnd();
                 cutmyfile = FileCutRecord.ReadToEnd();
                 using (mSoundIn = new WasapiCapture())
@@ -495,263 +718,358 @@ namespace SimpleNeurotuner
 
         private void Languages()
         {
-            StreamReader FileLanguage = new StreamReader("Data_Language.dat");
-            File.WriteAllText("Data_Load.dat", "1");
-            File.WriteAllText("DataTemp.dat", "0");
-            langindex = FileLanguage.ReadToEnd();
-            if (langindex == "0")
+            try
             {
-                index = 0;
-                cmbRecord.Items.Clear();
-                cmbRecord.Items.Add("Выберите запись");
-                cmbRecord.SelectedIndex = cmbRecord.Items.Count - 1;
-                Filling();
-                cmbModes.Items.Clear();
-                cmbModes.Items.Add("Записи");
-                cmbModes.Items.Add("Прослушивание");
-                cmbModes.SelectedIndex = cmbModes.Items.Count - 1;
-                Title = "Нейротюнер NFT";
-                btnStart_Open.Content = "Старт";
-                btnStop.Content = "Стоп";
-                Help.Header = "Помощь";
-                TabNFT.Header = "gNeuro NFT";
-                TabSettings.Header = "Настройки";
-                lbVersion.Content = "Версия: 1.1";
-                btnRecord.Content = "Прослушать";
-                cmbInput.ToolTip = "Микрофон";
-                cmbOutput.ToolTip = "Наушники";
-                cmbRecord.ToolTip = "Записи";
-                cmbModes.ToolTip = "Режимы";
-                lbPBNFT.Content = "Идёт загрузка NFT...";
-                lbRecordPB.Content = "Идёт запись...";
+                StreamReader FileLanguage = new StreamReader("Data_Language.tmp");
+                File.WriteAllText("Data_Load.tmp", "1");
+                File.WriteAllText("DataTemp.tmp", "0");
+                langindex = FileLanguage.ReadToEnd();
+                if (langindex == "0")
+                {
+                    index = 0;
+                    cmbRecord.Items.Clear();
+                    cmbRecord.Items.Add("Выберите запись");
+                    cmbRecord.SelectedIndex = cmbRecord.Items.Count - 1;
+                    Filling();
+                    cmbModes.Items.Clear();
+                    cmbModes.Items.Add("Записи");
+                    cmbModes.Items.Add("Прослушивание");
+                    cmbModes.SelectedIndex = cmbModes.Items.Count - 1;
+                    Title = "Нейротюнер NFT";
+                    btnStart_Open.Content = "Старт";
+                    btnStop.Content = "Стоп";
+                    Help.Header = "Помощь";
+                    TabNFT.Header = "gNeuro NFT";
+                    TabSettings.Header = "Настройки";
+                    lbVersion.Content = "Версия: 1.1";
+                    btnRecord.Content = "Прослушать";
+                    cmbInput.ToolTip = "Микрофон";
+                    cmbOutput.ToolTip = "Наушники";
+                    cmbRecord.ToolTip = "Записи";
+                    cmbModes.ToolTip = "Режимы";
+                    lbPBNFT.Content = "Идёт загрузка NFT...";
+                    lbRecordPB.Content = "Идёт запись...";
+                }
+                else if (langindex != "0")
+                {
+                    index = 0;
+                    cmbRecord.Items.Clear();
+                    cmbRecord.Items.Add("Select a record");
+                    cmbRecord.SelectedIndex = cmbRecord.Items.Count - 1;
+                    Filling();
+                    cmbModes.Items.Clear();
+                    cmbModes.Items.Add("Record");
+                    cmbModes.Items.Add("Audition");
+                    cmbModes.SelectedIndex = cmbModes.Items.Count - 1;
+                    Title = "Neurotuner NFT";
+                    btnStart_Open.Content = "Start";
+                    btnStop.Content = "Stop";
+                    Help.Header = "Help";
+                    TabNFT.Header = "gNeuro NFT";
+                    TabSettings.Header = "Settings";
+                    lbVersion.Content = "Version: 1.1";
+                    btnRecord.Content = "Audition";
+                    cmbInput.ToolTip = "Microphone";
+                    cmbOutput.ToolTip = "Speaker";
+                    cmbRecord.ToolTip = "Record";
+                    cmbModes.ToolTip = "Modes";
+                    lbPBNFT.Content = "NFT loading in progress...";
+                    lbRecordPB.Content = "Recording in progress...";
+                }
             }
-            else if (langindex != "0")
+            catch (Exception ex)
             {
-                index = 0;
-                cmbRecord.Items.Clear();
-                cmbRecord.Items.Add("Select a record");
-                cmbRecord.SelectedIndex = cmbRecord.Items.Count - 1;
-                Filling();
-                cmbModes.Items.Clear();
-                cmbModes.Items.Add("Record");
-                cmbModes.Items.Add("Audition");
-                cmbModes.SelectedIndex = cmbModes.Items.Count - 1;
-                Title = "Neurotuner NFT";
-                btnStart_Open.Content = "Start";
-                btnStop.Content = "Stop";
-                Help.Header = "Help";
-                TabNFT.Header = "gNeuro NFT";
-                TabSettings.Header = "Settings";
-                lbVersion.Content = "Version: 1.1";
-                btnRecord.Content = "Audition";
-                cmbInput.ToolTip = "Microphone";
-                cmbOutput.ToolTip = "Speaker";
-                cmbRecord.ToolTip = "Record";
-                cmbModes.ToolTip = "Modes";
-                lbPBNFT.Content = "NFT loading in progress...";
-                lbRecordPB.Content = "Recording in progress...";
+                if (langindex == "0")
+                {
+                    string msg = "Ошибка в Languages: \r\n" + ex.Message;
+                    MessageBox.Show(msg);
+                    Debug.WriteLine(msg);
+                }
+                else
+                {
+                    string msg = "Error in Languages: \r\n" + ex.Message;
+                    MessageBox.Show(msg);
+                    Debug.WriteLine(msg);
+                }
             }
         }
 
         private void SimpleNeurotuner_Activated(object sender, EventArgs e)
         {
-            string[] text = File.ReadAllLines("Data_Load.dat");
-            string[] text1 = File.ReadAllLines(fileinfo.FullName);
-            //string[] filename = File.ReadAllLines(fileInfo1.FullName);
-            if (file1.Length != 1)
+            try
             {
-                if (text.Length == 0 && text1.Length == 1)
+                string[] text = File.ReadAllLines("Data_Load.tmp");
+                string[] text1 = File.ReadAllLines(fileinfo.FullName);
+                //string[] filename = File.ReadAllLines(fileInfo1.FullName);
+                if (file1.Length != 1)
                 {
-                    Languages();
+                    if (text.Length == 0 && text1.Length == 1)
+                    {
+                        Languages();
+                    }
+                    if (langindex == "0")
+                    {
+                        cmbRecord.Items.Clear();
+                        cmbRecord.Items.Add("Выберите запись");
+                        cmbRecord.SelectedIndex = cmbRecord.Items.Count - 1;
+                        Filling();
+                    }
+                    else
+                    {
+                        cmbRecord.Items.Clear();
+                        cmbRecord.Items.Add("Select a record");
+                        cmbRecord.SelectedIndex = cmbRecord.Items.Count - 1;
+                        Filling();
+                    }
                 }
+            }
+            catch (Exception ex)
+            {
                 if (langindex == "0")
                 {
-                    cmbRecord.Items.Clear();
-                    cmbRecord.Items.Add("Выберите запись");
-                    cmbRecord.SelectedIndex = cmbRecord.Items.Count - 1;
-                    Filling();
+                    string msg = "Ошибка в SimpleNeurotuner_Activated: \r\n" + ex.Message;
+                    MessageBox.Show(msg);
+                    Debug.WriteLine(msg);
                 }
                 else
                 {
-                    cmbRecord.Items.Clear();
-                    cmbRecord.Items.Add("Select a record");
-                    cmbRecord.SelectedIndex = cmbRecord.Items.Count - 1;
-                    Filling();
+                    string msg = "Error in SimpleNeurotuner_Activated: \r\n" + ex.Message;
+                    MessageBox.Show(msg);
+                    Debug.WriteLine(msg);
                 }
             }
         }
 
         private void slPitch_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
         {
+
             SetPitchShiftValue();
             lbPitchValue.Content = slPitch.Value.ToString("f1");
         }
 
         private void cmbModes_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            if(cmbModes.SelectedIndex == 0)
+            try
             {
-                CreateWindow window = new CreateWindow();
-                window.Show();
-                btnRecord.Visibility = Visibility.Visible;
-                pbRecord.Visibility = Visibility.Visible;
-                pbRecord.Value = 0;
+                if (cmbModes.SelectedIndex == 0)
+                {
+                    CreateWindow window = new CreateWindow();
+                    window.Show();
+                    btnRecord.Visibility = Visibility.Visible;
+                    pbRecord.Visibility = Visibility.Visible;
+                    pbRecord.Value = 0;
+                }
+                else if (cmbModes.SelectedIndex != 0)
+                {
+                    btnRecord.Visibility = Visibility.Hidden;
+                    pbRecord.Visibility = Visibility.Hidden;
+                    if (langindex == "0")
+                    {
+                        cmbRecord.Items.Clear();
+                        cmbRecord.Items.Add("Выберите запись");
+                        cmbRecord.SelectedIndex = cmbRecord.Items.Count - 1;
+                        Filling();
+                    }
+                    else
+                    {
+                        cmbRecord.Items.Clear();
+                        cmbRecord.Items.Add("Select a record");
+                        cmbRecord.SelectedIndex = cmbRecord.Items.Count - 1;
+                        Filling();
+                    }
+                }
             }
-            else if (cmbModes.SelectedIndex != 0)
+            catch (Exception ex)
             {
-                btnRecord.Visibility = Visibility.Hidden;
-                pbRecord.Visibility = Visibility.Hidden;
                 if (langindex == "0")
                 {
-                    cmbRecord.Items.Clear();
-                    cmbRecord.Items.Add("Выберите запись");
-                    cmbRecord.SelectedIndex = cmbRecord.Items.Count - 1;
-                    Filling();
+                    string msg = "Ошибка в cmbModes_SelectionChanged: \r\n" + ex.Message;
+                    MessageBox.Show(msg);
+                    Debug.WriteLine(msg);
                 }
                 else
                 {
-                    cmbRecord.Items.Clear();
-                    cmbRecord.Items.Add("Select a record");
-                    cmbRecord.SelectedIndex = cmbRecord.Items.Count - 1;
-                    Filling();
+                    string msg = "Error in cmbModes_SelectionChanged: \r\n" + ex.Message;
+                    MessageBox.Show(msg);
+                    Debug.WriteLine(msg);
                 }
             }
         }
 
         private async void Audition()
         {
-            StreamReader FileRecord = new StreamReader("Data_Create.dat");
-            myfile = FileRecord.ReadToEnd();
-            Stop();
-            Mixer();
-            mMp3 = CodecFactory.Instance.GetCodec(/*@"Record\" + */myfile).ToMono().ToSampleSource();
-            mMixer.AddSource(mMp3.ChangeSampleRate(mMixer.WaveFormat.SampleRate).ToWaveSource(32).Loop().ToSampleSource());
-            await Task.Run(() => SoundOut());
+            try
+            {
+                StreamReader FileRecord = new StreamReader("Data_Create.tmp");
+                myfile = FileRecord.ReadToEnd();
+                //Stop();
+                Mixer();
+                mMp3 = CodecFactory.Instance.GetCodec(/*@"Record\" + */myfile).ToMono().ToSampleSource();
+                mMixer.AddSource(mMp3.ChangeSampleRate(mMixer.WaveFormat.SampleRate).ToWaveSource(32).Loop().ToSampleSource());
+                await Task.Run(() => SoundOut());
+            }
+            catch (Exception ex)
+            {
+                if (langindex == "0")
+                {
+                    string msg = "Ошибка в Audition: \r\n" + ex.Message;
+                    MessageBox.Show(msg);
+                    Debug.WriteLine(msg);
+                }
+                else
+                {
+                    string msg = "Error in Audition: \r\n" + ex.Message;
+                    MessageBox.Show(msg);
+                    Debug.WriteLine(msg);
+                }
+            }
         }
 
         private async void cmbRecord_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            if (cmbRecord.SelectedItem != null)
+            try
             {
-                //unsafe
+                if (cmbRecord.SelectedItem != null)
                 {
-                    filename = @"Record\" + cmbRecord.SelectedItem.ToString();
-                    if ((filename != "Record\\Select a record") && (filename != "Record\\Выберите запись"))
+                    //unsafe
                     {
-                        double closestFreq;
-                        int[] Rdat = new int[250000];
-                        int Ndt;
-                        int Ww, Hw, k, ik, dWw, dHw;
-                        worker.RunWorkerAsync();
-                        Ndt = await Task.Run(() =>
+                        filename = @"Record\" + cmbRecord.SelectedItem.ToString();
+                        if ((filename != "Record\\Select a record") && (filename != "Record\\Выберите запись"))
                         {
-                            return vizualzvuk(filename,filename, Rdat,0);
-                        });                        
-                        Hw = (int)Math.Sqrt(Ndt);
-                        Ww = (int)((double)(Ndt) / (double)(Hw) + 0.5);
-                        dWw = (int)((Image1.Width - (double)Ww) / 2.0)-5;
-                        if (dWw < 0)
-                            dWw = 0;
-                        dHw = (int)((Image1.Height - (double)Hw) / 2.0)-5;
-                        if (dHw < 0)
-                            dHw = 0;
-                        WriteableBitmap wb = new WriteableBitmap((int)Image1.Width, (int)Image1.Height, Ww, Hw, PixelFormats.Bgra32, null);
+                            PBNFT.Visibility = Visibility.Visible;
+                            lbPBNFT.Visibility = Visibility.Visible;
+                            double closestFreq;
+                            int[] Rdat = new int[250000];
+                            int Ndt;
+                            int Ww, Hw, k, ik, dWw, dHw;
+                            worker.RunWorkerAsync();
+                            Ndt = await Task.Run(() =>
+                            {
+                                return vizualzvuk(filename, filename, Rdat, 0);
+                            });
+                            Hw = (int)Math.Sqrt(Ndt);
+                            Ww = (int)((double)(Ndt) / (double)(Hw) + 0.5);
+                            dWw = (int)((Image1.Width - (double)Ww) / 2.0) - 5;
+                            if (dWw < 0)
+                                dWw = 0;
+                            dHw = (int)((Image1.Height - (double)Hw) / 2.0) - 5;
+                            if (dHw < 0)
+                                dHw = 0;
+                            WriteableBitmap wb = new WriteableBitmap((int)Image1.Width, (int)Image1.Height, Ww, Hw, PixelFormats.Bgra32, null);
 
-                        // Define the update square (which is as big as the entire image).
-                        Int32Rect rect = new Int32Rect(0, 0, (int)Image1.Width, (int)Image1.Height);
+                            // Define the update square (which is as big as the entire image).
+                            Int32Rect rect = new Int32Rect(0, 0, (int)Image1.Width, (int)Image1.Height);
 
-                        byte[] pixels = new byte[(int)Image1.Width * (int)Image1.Height * wb.Format.BitsPerPixel / 8];
-                        //Random rand = new Random();
-                        k = 0;
-                        ik = 0;
-                        int Wwt = 2, Hwt = 2, it0 = Ww / 2, jt0 = Hw / 2, it = 0, jt = 0;
-                        int R=0,G=0,B=0,A=0;
-                        int pixelOffset,poffp=0,kt=0;
-                        while (k < Ndt)
-                        {
-                            if (ik % 4 == 0)
+                            byte[] pixels = new byte[(int)Image1.Width * (int)Image1.Height * wb.Format.BitsPerPixel / 8];
+                            //Random rand = new Random();
+                            k = 0;
+                            ik = 0;
+                            int Wwt = 2, Hwt = 2, it0 = Ww / 2, jt0 = Hw / 2, it = 0, jt = 0;
+                            int R = 0, G = 0, B = 0, A = 0;
+                            int pixelOffset, poffp = 0, kt = 0;
+                            while (k < Ndt)
                             {
-                                R = Rdat[3 * k];
-                                G = Rdat[3 * k + 1];
-                                B = Rdat[3 * k + 2];
-                                A = 255;
-                                pixelOffset = (dWw + it0 + it + (dHw + jt0 + jt) * wb.PixelWidth) * wb.Format.BitsPerPixel / 8;
-                                pixels[pixelOffset] = (byte)B;
-                                pixels[pixelOffset + 1] = (byte)G;
-                                pixels[pixelOffset + 2] = (byte)R;
-                                pixels[pixelOffset + 3] = (byte)A;                               
-                                jt++;
-                                if (jt == Hwt)
+                                if (ik % 4 == 0)
                                 {
-                                    ik++;
-                                }                                
-                            }
-                            else if (ik % 4 == 1)
-                            {
-                                R = Rdat[3 * k];
-                                G = Rdat[3 * k + 1];
-                                B = Rdat[3 * k + 2];
-                                A = 255;
-                                pixelOffset = (dWw + it0 + it + (dHw + jt0 + jt) * wb.PixelWidth) * wb.Format.BitsPerPixel / 8;
-                                pixels[pixelOffset] = (byte)B;
-                                pixels[pixelOffset + 1] = (byte)G;
-                                pixels[pixelOffset + 2] = (byte)R;
-                                pixels[pixelOffset + 3] = (byte)A;
-                                it++;
-                                if (it == Wwt)
-                                {
-                                    ik++;
+                                    R = Rdat[3 * k];
+                                    G = Rdat[3 * k + 1];
+                                    B = Rdat[3 * k + 2];
+                                    A = 255;
+                                    pixelOffset = (dWw + it0 + it + (dHw + jt0 + jt) * wb.PixelWidth) * wb.Format.BitsPerPixel / 8;
+                                    pixels[pixelOffset] = (byte)B;
+                                    pixels[pixelOffset + 1] = (byte)G;
+                                    pixels[pixelOffset + 2] = (byte)R;
+                                    pixels[pixelOffset + 3] = (byte)A;
+                                    jt++;
+                                    if (jt == Hwt)
+                                    {
+                                        ik++;
+                                    }
                                 }
-                            }
-                            else if (ik % 4 == 2)
-                            {
-                                R = Rdat[3 * k];
-                                G = Rdat[3 * k + 1];
-                                B = Rdat[3 * k + 2];
-                                A = 255;
-                                pixelOffset = (dWw + it0 + it + (dHw + jt0 + jt) * wb.PixelWidth) * wb.Format.BitsPerPixel / 8;
-                                pixels[pixelOffset] = (byte)B;
-                                pixels[pixelOffset + 1] = (byte)G;
-                                pixels[pixelOffset + 2] = (byte)R;
-                                pixels[pixelOffset + 3] = (byte)A;
-                                jt--;
-                                if (jt == -1)
+                                else if (ik % 4 == 1)
                                 {
-                                    ik++;
-                                    //jt0--;
+                                    R = Rdat[3 * k];
+                                    G = Rdat[3 * k + 1];
+                                    B = Rdat[3 * k + 2];
+                                    A = 255;
+                                    pixelOffset = (dWw + it0 + it + (dHw + jt0 + jt) * wb.PixelWidth) * wb.Format.BitsPerPixel / 8;
+                                    pixels[pixelOffset] = (byte)B;
+                                    pixels[pixelOffset + 1] = (byte)G;
+                                    pixels[pixelOffset + 2] = (byte)R;
+                                    pixels[pixelOffset + 3] = (byte)A;
+                                    it++;
+                                    if (it == Wwt)
+                                    {
+                                        ik++;
+                                    }
                                 }
-                            }
-                            else
-                            {
-                                R = Rdat[3 * k];
-                                G = Rdat[3 * k + 1];
-                                B = Rdat[3 * k + 2];
-                                A = 255;
-                                pixelOffset = (dWw + it0 + it + (dHw + jt0 + jt) * wb.PixelWidth) * wb.Format.BitsPerPixel / 8;
-                                pixels[pixelOffset] = (byte)B;
-                                pixels[pixelOffset + 1] = (byte)G;
-                                pixels[pixelOffset + 2] = (byte)R;
-                                pixels[pixelOffset + 3] = (byte)A;
-                                it--;
-                                if (it == -1)
+                                else if (ik % 4 == 2)
                                 {
-                                    it = 0;
-                                    jt = 0;
-                                    ik++;
-                                    it0--;
-                                    jt0--;
-                                    Hwt += 2;
-                                    Wwt += 2;
+                                    R = Rdat[3 * k];
+                                    G = Rdat[3 * k + 1];
+                                    B = Rdat[3 * k + 2];
+                                    A = 255;
+                                    pixelOffset = (dWw + it0 + it + (dHw + jt0 + jt) * wb.PixelWidth) * wb.Format.BitsPerPixel / 8;
+                                    pixels[pixelOffset] = (byte)B;
+                                    pixels[pixelOffset + 1] = (byte)G;
+                                    pixels[pixelOffset + 2] = (byte)R;
+                                    pixels[pixelOffset + 3] = (byte)A;
+                                    jt--;
+                                    if (jt == -1)
+                                    {
+                                        ik++;
+                                        //jt0--;
+                                    }
                                 }
+                                else
+                                {
+                                    R = Rdat[3 * k];
+                                    G = Rdat[3 * k + 1];
+                                    B = Rdat[3 * k + 2];
+                                    A = 255;
+                                    pixelOffset = (dWw + it0 + it + (dHw + jt0 + jt) * wb.PixelWidth) * wb.Format.BitsPerPixel / 8;
+                                    pixels[pixelOffset] = (byte)B;
+                                    pixels[pixelOffset + 1] = (byte)G;
+                                    pixels[pixelOffset + 2] = (byte)R;
+                                    pixels[pixelOffset + 3] = (byte)A;
+                                    it--;
+                                    if (it == -1)
+                                    {
+                                        it = 0;
+                                        jt = 0;
+                                        ik++;
+                                        it0--;
+                                        jt0--;
+                                        Hwt += 2;
+                                        Wwt += 2;
+                                    }
+                                }
+                                int stride = ((int)Image1.Width * wb.Format.BitsPerPixel) / 8;
+                                wb.WritePixels(rect, pixels, stride, 0);
+                                k++;
                             }
-                            int stride = ((int)Image1.Width * wb.Format.BitsPerPixel) / 8;
-                            wb.WritePixels(rect, pixels, stride, 0);                            
-                            k++;
+                            // Show the bitmap in an Image element.
+                            Image1.Source = wb;
+                            worker.CancelAsync();
+                            
                         }
-                        // Show the bitmap in an Image element.
-                        Image1.Source = wb;
-                        worker.CancelAsync();                        
+                        
                     }
+                }
+            }
+            catch (Exception ex)
+            {
+                if (langindex == "0")
+                {
+                    string msg = "Ошибка в cmbRecord_SelectionChanged: \r\n" + ex.Message;
+                    MessageBox.Show(msg);
+                    Debug.WriteLine(msg);
+                }
+                else
+                {
+                    string msg = "Error in cmbRecord_SelectionChanged: \r\n" + ex.Message;
+                    MessageBox.Show(msg);
+                    Debug.WriteLine(msg);
                 }
             }
         }        

@@ -66,7 +66,7 @@ namespace SimpleNeurotuner
         private static float MAX, MAX1, MAX2, coeffVol;
         private static long IndexMAX, IndexMAX1, IndexMAX2;
         private static long IndexSTART, IndexEND;
-        private static int MAX_FRAME_LENGTH = 22050;
+        private static int MAX_FRAME_LENGTH = 24000;
         private static float[] gInFIFO = new float[MAX_FRAME_LENGTH];
         private static int[] kt = new int[MAX_FRAME_LENGTH * 2];
         private static int[] minfreq = new int[MAX_FRAME_LENGTH * 2];
@@ -241,6 +241,12 @@ namespace SimpleNeurotuner
                         {
                             gAnaMagn[k] *= coeffVol;
                         }
+                    }
+
+                    for(k = 0; k <= fftFrameSize; k++)
+                    {
+                        gFFTworksp[2 * k] *= kt[k];
+                        gFFTworksp[2 * k + 1] *= kt[k];
                     }
 
                     /* ***************** PROCESSING ******************* */

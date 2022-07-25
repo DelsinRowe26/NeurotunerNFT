@@ -1,17 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.IO;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Shapes;
 
 namespace SimpleNeurotuner
 {
@@ -28,28 +16,35 @@ namespace SimpleNeurotuner
 
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
-            StreamReader FileLanguage = new StreamReader("Data_Language.dat");
-            index = FileLanguage.ReadToEnd();
-            if(index == "0")
+            try
             {
-                Title = "Окно сохранения/удаления";
-                lbSaveDelete.Content = "Сохранить вашу запись или удалить и перезаписать?";
-                btnSave.Content = "Сохранить";
-                btnDelete.Content = "Удалить";
+                StreamReader FileLanguage = new StreamReader("Data_Language.tmp");
+                index = FileLanguage.ReadToEnd();
+                if (index == "0")
+                {
+                    Title = "Окно сохранения/удаления";
+                    lbSaveDelete.Content = "Сохранить вашу запись или удалить и перезаписать?";
+                    btnSave.Content = "Сохранить";
+                    btnDelete.Content = "Удалить";
+                }
+                else
+                {
+                    Title = "Save/Delete Window";
+                    lbSaveDelete.Content = "Keep your recording or delete and overwrite?";
+                    btnSave.Content = "Save";
+                    btnDelete.Content = "Delete";
+                }
             }
-            else
+            catch
             {
-                Title = "Save/Delete Window";
-                lbSaveDelete.Content = "Keep your recording or delete and overwrite?";
-                btnSave.Content = "Save";
-                btnDelete.Content = "Delete";
+
             }
         }
 
         private void btnSave_Click(object sender, RoutedEventArgs e)
         {
-            StreamReader FileCutRecord = new StreamReader("Data_cutCreate.dat");
-            StreamReader FileRecord = new StreamReader("Data_Create.dat");
+            StreamReader FileCutRecord = new StreamReader("Data_cutCreate.tmp");
+            StreamReader FileRecord = new StreamReader("Data_Create.tmp");
             string FileCut = FileCutRecord.ReadToEnd();
             string myfile = FileRecord.ReadToEnd();
             File.Move(myfile, @"Record\" + myfile);
@@ -59,11 +54,10 @@ namespace SimpleNeurotuner
 
         private void btnDelete_Click(object sender, RoutedEventArgs e)
         {
-            StreamReader FileRecord = new StreamReader("Data_Create.dat");
-            StreamReader FileCutRecord = new StreamReader("Data_cutCreate.dat");
+            StreamReader FileRecord = new StreamReader("Data_Create.tmp");
+            StreamReader FileCutRecord = new StreamReader("Data_cutCreate.tmp");
             string myfile = FileRecord.ReadToEnd();
             string cutmyfile = FileCutRecord.ReadToEnd();
-            //File.Delete(@"Record\" + myfile);
             File.Delete(myfile);
             File.Delete(cutmyfile);
             this.Close();
@@ -71,12 +65,10 @@ namespace SimpleNeurotuner
 
         private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
         {
-            StreamReader FileRecord = new StreamReader("Data_Create.dat");
-            StreamReader FileCutRecord = new StreamReader("Data_cutCreate.dat");
+            /*StreamReader FileRecord = new StreamReader("Data_Create.tmp");
+            StreamReader FileCutRecord = new StreamReader("Data_cutCreate.tmp");
             string myfile = FileRecord.ReadToEnd();
-            string cutmyfile = FileCutRecord.ReadToEnd();
-            //File.Delete(@"Record\" + myfile);
-            //File.Delete(cutmyfile);
+            string cutmyfile = FileCutRecord.ReadToEnd();*/
         }
     }
 }

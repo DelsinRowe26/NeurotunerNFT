@@ -50,6 +50,8 @@ using System.Collections.Generic;
 using System.Text;
 using System.IO;
 using System.Threading.Tasks;
+using System.Windows;
+using System.Diagnostics;
 
 namespace SimpleNeurotuner
 {
@@ -67,7 +69,7 @@ namespace SimpleNeurotuner
         public static float MAX, MIN, MAXIN;
         private static long IndexMAX, IndexMAX1, IndexMAX2;
         private static long IndexSTART, IndexEND;
-        private static int MAX_FRAME_LENGTH = 16000;
+        private static int MAX_FRAME_LENGTH = 24000;
         private static float[] gInFIFO = new float[MAX_FRAME_LENGTH];
         private static float[] gOutFIFO = new float[MAX_FRAME_LENGTH];
         private static float[] gFFTworksp = new float[2 * MAX_FRAME_LENGTH];
@@ -103,223 +105,244 @@ namespace SimpleNeurotuner
         public static async void PitchShift(float pitchShift, long offset, long sampleCount, long fftFrameSize,
             long osamp, float sampleRate, float[] indata)
         {
-            double magn, phase, tmp, window, real, imag;
-            double freqPerBin, expct;
-            long i, k, m, qpd, index, inFifoLatency, stepSize, fftFrameSize2;
-            double closestFrequency;//ближайшая частота
-            string noteName;
-
-            float[] outdata = indata;
-            /* set up some handy variables/настроить некоторые удобные переменные */
-            fftFrameSize2 = fftFrameSize / 2;
-            stepSize = fftFrameSize / osamp;
-            freqPerBin = sampleRate / (double)fftFrameSize;
-            expct = 2.0 * Math.PI * (double)stepSize / (double)fftFrameSize;
-            inFifoLatency = fftFrameSize - stepSize;
-            if (gRover == 0) gRover = inFifoLatency;
-
-            /* main processing loop/основной цикл обработки */
-            for (i = offset; i < sampleCount; i++)
+            try
             {
+                double magn, phase, tmp, window, real, imag;
+                double freqPerBin, expct;
+                long i, k, m, qpd, index, inFifoLatency, stepSize, fftFrameSize2;
+                double closestFrequency;//ближайшая частота
+                string noteName;
 
-                /* As long as we have not yet collected enough data just read in/Пока мы еще не собрали достаточно данных, просто читаем в */
-                gInFIFO[gRover] = indata[i];
-                outdata[i] = gOutFIFO[gRover - inFifoLatency];
-                gRover++;
+                float[] outdata = indata;
+                /* set up some handy variables/настроить некоторые удобные переменные */
+                fftFrameSize2 = fftFrameSize / 2;
+                stepSize = fftFrameSize / osamp;
+                freqPerBin = sampleRate / (double)fftFrameSize;
+                expct = 2.0 * Math.PI * (double)stepSize / (double)fftFrameSize;
+                inFifoLatency = fftFrameSize - stepSize;
+                if (gRover == 0) gRover = inFifoLatency;
 
-                /* now we have enough data for processing/теперь у нас достаточно данных для обработки */
-                if (gRover >= fftFrameSize)
+                /* main processing loop/основной цикл обработки */
+                for (i = offset; i < sampleCount; i++)
                 {
-                    gRover = inFifoLatency;
 
-                    /* do windowing and re,im interleave/делать окна и повторно чередовать */
-                    for (k = 0; k < fftFrameSize; k++)
+                    /* As long as we have not yet collected enough data just read in/Пока мы еще не собрали достаточно данных, просто читаем в */
+                    gInFIFO[gRover] = indata[i];
+                    outdata[i] = gOutFIFO[gRover - inFifoLatency];
+                    gRover++;
+
+                    /* now we have enough data for processing/теперь у нас достаточно данных для обработки */
+                    if (gRover >= fftFrameSize)
                     {
-                        window = -.5 * Math.Cos(2.0 * Math.PI * (double)k / (double)fftFrameSize) + .5;
-                        gFFTworksp[2 * k] = (float)(gInFIFO[k] * window);
-                        gFFTworksp[2 * k + 1] = 0.0F;
-                    }
+                        gRover = inFifoLatency;
 
-
-                    /* ***************** ANALYSIS ******************* */
-                    /* do transform */
-                    ShortTimeFourierTransform(gFFTworksp, fftFrameSize, -1);
-
-                    /* this is the analysis step/это этап анализа  */
-                    for (k = 0; k <= fftFrameSize2; k++)
-                    {
-
-                        /* de-interlace FFT buffer/деинтерлейсный буфер FFT  */
-                        real = gFFTworksp[2 * k];
-                        imag = gFFTworksp[2 * k + 1];
-
-                        /* compute magnitude and phase/вычислить амплитуду и фазу  */
-                        magn = Math.Sqrt(real * real + imag * imag);//амплитуда
-                        phase = Math.Atan2(imag, real);//фаза
-
-                        /* compute phase difference/вычислить разность фаз */
-                        tmp = phase - gLastPhase[k];//частота
-                        gLastPhase[k] = (float)phase;
-
-                        /* subtract expected phase difference/вычесть ожидаемую разность фаз */
-                        tmp -= (double)k * expct;
-
-                        /* map delta phase into +/- Pi interval/сопоставить фазу дельты с интервалом +/- Pi */
-                        qpd = (long)(tmp / Math.PI);
-                        if (qpd >= 0) qpd += qpd & 1;
-                        else qpd -= qpd & 1;
-                        tmp -= Math.PI * (double)qpd;
-
-                        /* get deviation from bin frequency from the +/- Pi interval/получить отклонение от частоты бина от интервала +/- Pi */
-                        tmp = osamp * tmp / (2.0 * Math.PI);
-
-                        /* compute the k-th partials' true frequency/вычислить истинную частоту k-го парциала */
-                        tmp = (double)k * freqPerBin + tmp * freqPerBin;
-
-                        //FindClosestNote(tmp, out closestFrequency/*, out noteName*/);
-                        //NoteName = noteName;
-                        //Freq = closestFrequency;
-
-                        /* store magnitude and true frequency in analysis arrays/хранить величину и истинную частоту в массивах анализа */
-                        gAnaMagn[k] = (float)magn;
-                        //File.AppendAllText("magn.txt", gAnaMagn[k].ToString() + "\n");
-                        gAnaFreq[k] = (float)tmp;
-                        //File.AppendAllText("tmp.txt", gAnaFreq[k].ToString() + "\n");
-
-                    }
-
-                    ///<summary>
-                    ///int usefulMinSpectr = Math.Max(0, (int)(30 * gAnaMagn.Length / sampleRate));
-                    ///int usefulMaxSpectr = Math.Max(0, (int)(24000 * gAnaMagn.Length / sampleRate) + 1);
-                    ///int[] indexPeak = MyFrequencyUtils.FindPeaks(gAnaMagn, usefulMinSpectr, usefulMaxSpectr - usefulMinSpectr, 2);
-                    ///int[] result = new int[2];
-                    ///for (int j = 0; j < 2; j++)
-                    ///{
-                    ///    k = indexPeak[j];
-                    ///    KMAX = gAnaMagn[k];
-                    ///    k++;
-                    ///    while (k < fftFrameSize2 && KMAX < gAnaMagn[k])
-                    ///    {
-                    ///        KMAX = gAnaMagn[k++];
-                    ///    }
-                    ///    m = indexPeak[j];
-                    ///    MMAX = gAnaMagn[m];
-                    ///    m--;
-                    ///    while (m >= 0 && MMAX < gAnaMagn[m])
-                    ///    {
-                    ///        MMAX = gAnaMagn[m--];
-                    ///    }
-                    ///    if (Math.Abs(indexPeak[j] - k) > Math.Abs(indexPeak[j] - m))
-                    ///    {
-                    ///        result[j] = (int)m;
-                    ///    }
-                    ///    else
-                    ///    {
-                    ///        result[j] = (int)k;
-                    ///    }
-                    ///    float[] bufRec = new float[20];
-                    ///    for (int l = 0; l < 20; l++)
-                    ///    {
-                    ///        if (Math.Sqrt(Math.Pow(KMAX - MMAX, 2)) < 25)//могу ошибаться с среднеквадратичным отклонением, смотрел на формулу, но с переменными мог ошибиться
-                    ///        {
-                    ///            bufRec[l] = KMAX;
-                    ///        }
-                    ///        else
-                    ///        {
-                    ///            //здесь нужно что-то сделать чтобы всё по новой начиналось
-                    ///        }
-                    ///    }
-                    ///}
-                    ///</summary>
-                    ///
-
-                    MAX = gAnaMagn[0];
-                    MIN = MAX;
-                    for(k = 0; k <= fftFrameSize2; k++)
-                    {
-                        MAX = Math.Max(MAX, gAnaMagn[k]);
-                        MIN = Math.Min(MIN, gAnaMagn[k]);
-                        MAXIN = Math.Max(Math.Abs(MIN), Math.Abs(MAX));
-                    }
-
-                    /* ***************** PROCESSING ******************* */
-                    /* this does the actual pitch shifting/это делает фактическое изменение высоты тона */
-
-                    for (int zero = 0; zero < fftFrameSize; zero++)
-                    {
-                        gSynMagn[zero] = 0;
-                        gSynFreq[zero] = 0;
-                    }
-
-                    for (k = 0; k <= fftFrameSize2; k++)
-                    {
-                        index = (long)(k * pitchShift);
-                        if (index <= fftFrameSize2)
+                        /* do windowing and re,im interleave/делать окна и повторно чередовать */
+                        for (k = 0; k < fftFrameSize; k++)
                         {
-                            gSynMagn[index] += gAnaMagn[k];
-                            gSynFreq[index] = gAnaFreq[k] * pitchShift;
+                            window = -.5 * Math.Cos(2.0 * Math.PI * (double)k / (double)fftFrameSize) + .5;
+                            gFFTworksp[2 * k] = (float)(gInFIFO[k] * window);
+                            gFFTworksp[2 * k + 1] = 0.0F;
+                            gFFTworksp[fftFrameSize * 2 + k] = 0.0F;//заполню нулями до 12288
+                            gFFTworksp[fftFrameSize * 3 + k] = 0.0F;//заполню нулями до 16384
+                            gFFTworksp[fftFrameSize * 4 + k] = 0.0F;//заполню нулями до 20480
+                            gFFTworksp[fftFrameSize * 5 + k] = 0.0F;//заполню нулями до 24576
+                            gFFTworksp[fftFrameSize * 6 + k] = 0.0F;//заполню нулями до 28672
+                            gFFTworksp[fftFrameSize * 7 + k] = 0.0F;//заполню нулями до 32768
+                            gFFTworksp[fftFrameSize * 8 + k] = 0.0F;//заполню нулями до 36864
+                            gFFTworksp[fftFrameSize * 9 + k] = 0.0F;//заполню нулями до 40960
+                            if (fftFrameSize * 10 + k < sampleRate)
+                            {
+                                gFFTworksp[fftFrameSize * 10 + k] = 0.0F;
+                            }
                         }
+
+
+                        /* ***************** ANALYSIS ******************* */
+                        /* do transform */
+                        ShortTimeFourierTransform(gFFTworksp, fftFrameSize, -1);
+
+                        /* this is the analysis step/это этап анализа  */
+                        for (k = 0; k <= fftFrameSize2; k++)
+                        {
+
+                            /* de-interlace FFT buffer/деинтерлейсный буфер FFT  */
+                            real = gFFTworksp[2 * k];
+                            imag = gFFTworksp[2 * k + 1];
+
+                            /* compute magnitude and phase/вычислить амплитуду и фазу  */
+                            magn = Math.Sqrt(real * real + imag * imag);//амплитуда
+                            phase = Math.Atan2(imag, real);//фаза
+
+                            /* compute phase difference/вычислить разность фаз */
+                            tmp = phase - gLastPhase[k];//частота
+                            gLastPhase[k] = (float)phase;
+
+                            /* subtract expected phase difference/вычесть ожидаемую разность фаз */
+                            tmp -= (double)k * expct;
+
+                            /* map delta phase into +/- Pi interval/сопоставить фазу дельты с интервалом +/- Pi */
+                            qpd = (long)(tmp / Math.PI);
+                            if (qpd >= 0) qpd += qpd & 1;
+                            else qpd -= qpd & 1;
+                            tmp -= Math.PI * (double)qpd;
+
+                            /* get deviation from bin frequency from the +/- Pi interval/получить отклонение от частоты бина от интервала +/- Pi */
+                            tmp = osamp * tmp / (2.0 * Math.PI);
+
+                            /* compute the k-th partials' true frequency/вычислить истинную частоту k-го парциала */
+                            tmp = (double)k * freqPerBin + tmp * freqPerBin;
+
+                            //FindClosestNote(tmp, out closestFrequency/*, out noteName*/);
+                            //NoteName = noteName;
+                            //Freq = closestFrequency;
+
+                            /* store magnitude and true frequency in analysis arrays/хранить величину и истинную частоту в массивах анализа */
+                            gAnaMagn[k] = (float)magn;
+                            //File.AppendAllText("magn.txt", gAnaMagn[k].ToString() + "\n");
+                            gAnaFreq[k] = (float)tmp;
+                            //File.AppendAllText("tmp.txt", gAnaFreq[k].ToString() + "\n");
+
+                        }
+
+                        ///<summary>
+                        ///int usefulMinSpectr = Math.Max(0, (int)(30 * gAnaMagn.Length / sampleRate));
+                        ///int usefulMaxSpectr = Math.Max(0, (int)(24000 * gAnaMagn.Length / sampleRate) + 1);
+                        ///int[] indexPeak = MyFrequencyUtils.FindPeaks(gAnaMagn, usefulMinSpectr, usefulMaxSpectr - usefulMinSpectr, 2);
+                        ///int[] result = new int[2];
+                        ///for (int j = 0; j < 2; j++)
+                        ///{
+                        ///    k = indexPeak[j];
+                        ///    KMAX = gAnaMagn[k];
+                        ///    k++;
+                        ///    while (k < fftFrameSize2 && KMAX < gAnaMagn[k])
+                        ///    {
+                        ///        KMAX = gAnaMagn[k++];
+                        ///    }
+                        ///    m = indexPeak[j];
+                        ///    MMAX = gAnaMagn[m];
+                        ///    m--;
+                        ///    while (m >= 0 && MMAX < gAnaMagn[m])
+                        ///    {
+                        ///        MMAX = gAnaMagn[m--];
+                        ///    }
+                        ///    if (Math.Abs(indexPeak[j] - k) > Math.Abs(indexPeak[j] - m))
+                        ///    {
+                        ///        result[j] = (int)m;
+                        ///    }
+                        ///    else
+                        ///    {
+                        ///        result[j] = (int)k;
+                        ///    }
+                        ///    float[] bufRec = new float[20];
+                        ///    for (int l = 0; l < 20; l++)
+                        ///    {
+                        ///        if (Math.Sqrt(Math.Pow(KMAX - MMAX, 2)) < 25)//могу ошибаться с среднеквадратичным отклонением, смотрел на формулу, но с переменными мог ошибиться
+                        ///        {
+                        ///            bufRec[l] = KMAX;
+                        ///        }
+                        ///        else
+                        ///        {
+                        ///            //здесь нужно что-то сделать чтобы всё по новой начиналось
+                        ///        }
+                        ///    }
+                        ///}
+                        ///</summary>
+                        ///
+
+                        MAX = gAnaMagn[0];
+                        MIN = MAX;
+                        for (k = 0; k <= fftFrameSize2; k++)
+                        {
+                            MAX = Math.Max(MAX, gAnaMagn[k]);
+                            MIN = Math.Min(MIN, gAnaMagn[k]);
+                            MAXIN = Math.Max(Math.Abs(MIN), Math.Abs(MAX));
+                        }
+
+                        /* ***************** PROCESSING ******************* */
+                        /* this does the actual pitch shifting/это делает фактическое изменение высоты тона */
+
+                        for (int zero = 0; zero < fftFrameSize; zero++)
+                        {
+                            gSynMagn[zero] = 0;
+                            gSynFreq[zero] = 0;
+                        }
+
+                        for (k = 0; k <= fftFrameSize2; k++)
+                        {
+                            index = (long)(k * pitchShift);
+                            if (index <= fftFrameSize2)
+                            {
+                                gSynMagn[index] += gAnaMagn[k];
+                                gSynFreq[index] = gAnaFreq[k] * pitchShift;
+                            }
+                        }
+
+                        /* ***************** SYNTHESIS ******************* */
+                        /* this is the synthesis step/это этап синтеза */
+                        for (k = 0; k <= fftFrameSize2; k++)
+                        {
+
+                            /* get magnitude and true frequency from synthesis arrays/получить величину и истинную частоту из массивов синтеза */
+                            magn = gSynMagn[k];
+                            tmp = gSynFreq[k];
+
+                            /* subtract bin mid frequency/вычесть среднюю частоту бина */
+                            tmp -= (double)k * freqPerBin;
+
+                            /* get bin deviation from freq deviation/получить отклонение бина от отклонения частоты */
+                            tmp /= freqPerBin;
+
+                            /* take osamp into account/учитывать осамп */
+                            tmp = 2.0 * Math.PI * tmp / osamp;
+
+                            /* add the overlap phase advance back in/добавить фазу перекрытия обратно в */
+                            tmp += (double)k * expct;
+
+
+                            /* accumulate delta phase to get bin phase/накапливать дельта-фазу, чтобы получить бин-фазу */
+                            gSumPhase[k] += (float)tmp;
+                            phase = gSumPhase[k];
+
+                            /* get real and imag part and re-interleave/получить реальную часть и часть изображения и повторно чередовать */
+                            gFFTworksp[2 * k] = (float)(magn * Math.Cos(phase));
+                            gFFTworksp[2 * k + 1] = (float)(magn * Math.Sin(phase));
+                            //File.AppendAllText("AfterSTFT.txt", gFFTworksp[2 *k].ToString() + "\n");
+                            //File.AppendAllText("AfterSTFT.txt", gFFTworksp[2 * k + 1].ToString() + "\n");
+                        }
+
+                        /* zero negative frequencies/ноль отрицательных частот */
+                        for (k = fftFrameSize + 2; k < 2 * fftFrameSize; k++) { gFFTworksp[k] = 0.0F; /*File.AppendAllText("AfterSTFT.txt", gFFTworksp[k].ToString() + "\n");*/ }
+
+                        /* do inverse transform/сделать обратное преобразование */
+                        //await Task.Run(() => FrequencyUtils.FindFundamentalFrequency(gFFTworksp, 44100, 60, 22050));
+                        ShortTimeFourierTransform(gFFTworksp, fftFrameSize, 1);
+
+
+                        /* do windowing and add to output accumulator/делать окна и добавлять в выходной аккумулятор */
+                        for (k = 0; k < fftFrameSize; k++)
+                        {
+                            window = -.5 * Math.Cos(2.0 * Math.PI * (double)k / (double)fftFrameSize) + .5;
+                            gOutputAccum[k] += (float)(2.0 * window * gFFTworksp[2 * k] / (fftFrameSize2 * osamp));
+                        }
+                        for (k = 0; k < stepSize; k++) gOutFIFO[k] = gOutputAccum[k];
+
+                        /* shift accumulator/сменный аккумулятор */
+                        //memmove(gOutputAccum, gOutputAccum + stepSize, fftFrameSize * sizeof(float));
+                        for (k = 0; k < fftFrameSize; k++)
+                        {
+                            gOutputAccum[k] = gOutputAccum[k + stepSize];
+                        }
+
+                        /* move input FIFO/переместить вход FIFO */
+                        for (k = 0; k < inFifoLatency; k++) gInFIFO[k] = gInFIFO[k + stepSize];
                     }
-
-                    /* ***************** SYNTHESIS ******************* */
-                    /* this is the synthesis step/это этап синтеза */
-                    for (k = 0; k <= fftFrameSize2; k++)
-                    {
-
-                        /* get magnitude and true frequency from synthesis arrays/получить величину и истинную частоту из массивов синтеза */
-                        magn = gSynMagn[k];
-                        tmp = gSynFreq[k];
-
-                        /* subtract bin mid frequency/вычесть среднюю частоту бина */
-                        tmp -= (double)k * freqPerBin;
-
-                        /* get bin deviation from freq deviation/получить отклонение бина от отклонения частоты */
-                        tmp /= freqPerBin;
-
-                        /* take osamp into account/учитывать осамп */
-                        tmp = 2.0 * Math.PI * tmp / osamp;
-
-                        /* add the overlap phase advance back in/добавить фазу перекрытия обратно в */
-                        tmp += (double)k * expct;
-
-
-                        /* accumulate delta phase to get bin phase/накапливать дельта-фазу, чтобы получить бин-фазу */
-                        gSumPhase[k] += (float)tmp;
-                        phase = gSumPhase[k];
-
-                        /* get real and imag part and re-interleave/получить реальную часть и часть изображения и повторно чередовать */
-                        gFFTworksp[2 * k] = (float)(magn * Math.Cos(phase));
-                        gFFTworksp[2 * k + 1] = (float)(magn * Math.Sin(phase));
-                        //File.AppendAllText("AfterSTFT.txt", gFFTworksp[2 *k].ToString() + "\n");
-                        //File.AppendAllText("AfterSTFT.txt", gFFTworksp[2 * k + 1].ToString() + "\n");
-                    }
-
-                    /* zero negative frequencies/ноль отрицательных частот */
-                    for (k = fftFrameSize + 2; k < 2 * fftFrameSize; k++) { gFFTworksp[k] = 0.0F; /*File.AppendAllText("AfterSTFT.txt", gFFTworksp[k].ToString() + "\n");*/ }
-
-                    /* do inverse transform/сделать обратное преобразование */
-                    //await Task.Run(() => FrequencyUtils.FindFundamentalFrequency(gFFTworksp, 44100, 60, 22050));
-                    ShortTimeFourierTransform(gFFTworksp, fftFrameSize, 1);
-
-
-                    /* do windowing and add to output accumulator/делать окна и добавлять в выходной аккумулятор */
-                    for (k = 0; k < fftFrameSize; k++)
-                    {
-                        window = -.5 * Math.Cos(2.0 * Math.PI * (double)k / (double)fftFrameSize) + .5;
-                        gOutputAccum[k] += (float)(2.0 * window * gFFTworksp[2 * k] / (fftFrameSize2 * osamp));
-                    }
-                    for (k = 0; k < stepSize; k++) gOutFIFO[k] = gOutputAccum[k];
-
-                    /* shift accumulator/сменный аккумулятор */
-                    //memmove(gOutputAccum, gOutputAccum + stepSize, fftFrameSize * sizeof(float));
-                    for (k = 0; k < fftFrameSize; k++)
-                    {
-                        gOutputAccum[k] = gOutputAccum[k + stepSize];
-                    }
-
-                    /* move input FIFO/переместить вход FIFO */
-                    for (k = 0; k < inFifoLatency; k++) gInFIFO[k] = gInFIFO[k + stepSize];
                 }
+            }
+            catch (Exception ex)
+            {
+                string msg = "Error in PitchShifter: \r\n" + ex.Message;
+                MessageBox.Show(msg);
+                Debug.WriteLine(msg);
             }
         }
         #endregion

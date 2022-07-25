@@ -27,10 +27,10 @@ namespace SimpleNeurotuner
 
         private void ComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            FileInfo FileLanguage = new FileInfo("Data_Language.dat");
+            FileInfo FileLanguage = new FileInfo("Data_Language.tmp");
             if(cmbLanguage.SelectedIndex == 1)
             {
-                File.WriteAllText("DataTemp.dat", "1");
+                File.WriteAllText("DataTemp.tmp", "1");
                 //File.Create("DataTemp.dat");
                 File.WriteAllText(FileLanguage.FullName, "0");
                 Title = "Добро пожаловать";
@@ -39,7 +39,7 @@ namespace SimpleNeurotuner
             } 
             else
             {
-                File.WriteAllText("DataTemp.dat", "1");
+                File.WriteAllText("DataTemp.tmp", "1");
                 //File.Create("DataTemp.dat");
                 File.WriteAllText(FileLanguage.FullName, "1");
                 Title = "Welcome";
@@ -52,7 +52,7 @@ namespace SimpleNeurotuner
         {
             if (cmbLanguage.SelectedIndex != 1)
             {
-                File.WriteAllText("DataTemp.dat", "1");
+                File.WriteAllText("DataTemp.tmp", "1");
                 //File.Create("DataTemp.dat");
             }
         }
