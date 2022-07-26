@@ -1,4 +1,6 @@
-﻿using System.IO;
+﻿using System;
+using System.Diagnostics;
+using System.IO;
 using System.Windows;
 
 namespace SimpleNeurotuner
@@ -8,6 +10,7 @@ namespace SimpleNeurotuner
     /// </summary>
     public partial class SaveDeleteWindow : Window
     {
+        int clickSD;
         string index;
         public SaveDeleteWindow()
         {
@@ -35,40 +38,136 @@ namespace SimpleNeurotuner
                     btnDelete.Content = "Delete";
                 }
             }
-            catch
+            catch (Exception ex)
             {
-
+                if (index == "0")
+                {
+                    string msg = "Ошибка в Loaded: \r\n" + ex.Message;
+                    MessageBox.Show(msg);
+                    Debug.WriteLine(msg);
+                }
+                else
+                {
+                    string msg = "Error in Loaded: \r\n" + ex.Message;
+                    MessageBox.Show(msg);
+                    Debug.WriteLine(msg);
+                }
             }
         }
 
         private void btnSave_Click(object sender, RoutedEventArgs e)
         {
-            StreamReader FileCutRecord = new StreamReader("Data_cutCreate.tmp");
-            StreamReader FileRecord = new StreamReader("Data_Create.tmp");
-            string FileCut = FileCutRecord.ReadToEnd();
-            string myfile = FileRecord.ReadToEnd();
-            File.Move(myfile, @"Record\" + myfile);
-            File.Delete(FileCut);
-            this.Close();
+            try
+            {
+                clickSD = 1;
+                /*StreamReader FileCutRecord = new StreamReader("Data_cutCreate.tmp");
+                StreamReader FileRecord = new StreamReader("Data_Create.tmp");
+                string FileCut = FileCutRecord.ReadToEnd();
+                string myfile = FileRecord.ReadToEnd();
+                File.Move(myfile, @"Record\" + myfile);
+                File.Delete(FileCut);*/
+                this.Close();
+            }
+            catch (Exception ex)
+            {
+                if (index == "0")
+                {
+                    string msg = "Ошибка в btnSave_Click: \r\n" + ex.Message;
+                    MessageBox.Show(msg);
+                    Debug.WriteLine(msg);
+                }
+                else
+                {
+                    string msg = "Error in btnSave_Click: \r\n" + ex.Message;
+                    MessageBox.Show(msg);
+                    Debug.WriteLine(msg);
+                }
+            }
         }
 
         private void btnDelete_Click(object sender, RoutedEventArgs e)
         {
-            StreamReader FileRecord = new StreamReader("Data_Create.tmp");
-            StreamReader FileCutRecord = new StreamReader("Data_cutCreate.tmp");
-            string myfile = FileRecord.ReadToEnd();
-            string cutmyfile = FileCutRecord.ReadToEnd();
-            File.Delete(myfile);
-            File.Delete(cutmyfile);
-            this.Close();
+            try
+            {
+                clickSD = 2;
+                /*StreamReader FileRecord = new StreamReader("Data_Create.tmp");
+                StreamReader FileCutRecord = new StreamReader("Data_cutCreate.tmp");
+                string myfile = FileRecord.ReadToEnd();
+                string cutmyfile = FileCutRecord.ReadToEnd();
+                File.Delete(myfile);
+                File.Delete(cutmyfile);*/
+                this.Close();
+            }
+            catch (Exception ex)
+            {
+                if (index == "0")
+                {
+                    string msg = "Ошибка в btnDelete_Click: \r\n" + ex.Message;
+                    MessageBox.Show(msg);
+                    Debug.WriteLine(msg);
+                }
+                else
+                {
+                    string msg = "Error in btnDelete_Click: \r\n" + ex.Message;
+                    MessageBox.Show(msg);
+                    Debug.WriteLine(msg);
+                }
+            }
         }
 
         private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
         {
-            /*StreamReader FileRecord = new StreamReader("Data_Create.tmp");
-            StreamReader FileCutRecord = new StreamReader("Data_cutCreate.tmp");
-            string myfile = FileRecord.ReadToEnd();
-            string cutmyfile = FileCutRecord.ReadToEnd();*/
+            try
+            {
+                if (clickSD == 1)
+                {
+                    StreamReader FileCutRecord = new StreamReader("Data_cutCreate.tmp");
+                    StreamReader FileRecord = new StreamReader("Data_Create.tmp");
+                    string FileCut = FileCutRecord.ReadToEnd();
+                    string myfile = FileRecord.ReadToEnd();
+                    File.Move(myfile, @"Record\" + myfile);
+                    File.Delete(FileCut);
+                }
+                else if(clickSD == 2)
+                {
+                    StreamReader FileRecord = new StreamReader("Data_Create.tmp");
+                    StreamReader FileCutRecord = new StreamReader("Data_cutCreate.tmp");
+                    string myfile = FileRecord.ReadToEnd();
+                    string cutmyfile = FileCutRecord.ReadToEnd();
+                    File.Delete(myfile);
+                    File.Delete(cutmyfile);
+                }
+                else
+                {
+                    StreamReader FileLanguage = new StreamReader("Data_Language.tmp");
+                    index = FileLanguage.ReadToEnd();
+                    if (index == "0")
+                    {
+                        string msg = "Если выскочило данное окошко,\nто вы нажали на крестик,\n и файл с записью удалится.";
+                        MessageBox.Show(msg);
+                    }
+                    else
+                    {
+                        string msg = "If this window popped up,\nthen you clicked on the cross,\n and the file with the record will be deleted.";
+                        MessageBox.Show(msg);
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                if (index == "0")
+                {
+                    string msg = "Ошибка в Closing: \r\n" + ex.Message;
+                    MessageBox.Show(msg);
+                    Debug.WriteLine(msg);
+                }
+                else
+                {
+                    string msg = "Error in Closing: \r\n" + ex.Message;
+                    MessageBox.Show(msg);
+                    Debug.WriteLine(msg);
+                }
+            }
         }
     }
 }

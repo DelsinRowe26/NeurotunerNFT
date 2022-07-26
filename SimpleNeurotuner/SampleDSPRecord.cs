@@ -24,7 +24,7 @@ namespace SimpleNeurotuner
             try
             {
                 //double[] buffer1 = new double[count];
-                double closestfreq = 0;
+                //double closestfreq = 0;
                 float gainAmplification = (float)(Math.Pow(10.0, GainDB / 20.0));//получить Усиление
                 int samples = mSource.Read(buffer, offset, count);//образцы
                                                                   //if (gainAmplification != 1.0f) 

@@ -153,5 +153,6 @@
         <Label x:Name="lbPBNFT" Content="NFT loading in progress..." HorizontalAlignment="Left" Margin="221,30,0,0" VerticalAlignment="Top" Visibility="Hidden"/>
         <Slider x:Name="slPitch" HorizontalAlignment="Center" Margin="160,79,159,0" VerticalAlignment="Top" Width="250" Maximum="15" Minimum="-15" TickPlacement="BottomRight" ValueChanged="slPitch_ValueChanged" Grid.ColumnSpan="2" Visibility="Hidden"/>
         <Label x:Name="lbPitchValue" Content="0" HorizontalAlignment="Left" Margin="51.757,70,0,0" VerticalAlignment="Top" FontSize="14" Grid.Column="1" Visibility="Hidden"/>
+        <Slider x:Name="slGain" HorizontalAlignment="Left" Margin="160,81,0,0" VerticalAlignment="Top" Width="256" Grid.ColumnSpan="2" TickPlacement="BottomRight" ValueChanged="slGain_ValueChanged" Minimum="1" Maximum="50"/>
     </Grid>
 </Window>

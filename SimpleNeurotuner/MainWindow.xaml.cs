@@ -310,7 +310,7 @@ namespace SimpleNeurotuner
                 if (mMixer != null)
                 {
                     mMixer.Dispose();
-                    //mMp3.ToWaveSource(16).Loop().ToSampleSource().Dispose();
+                    mMp3.ToWaveSource(16).Loop().ToSampleSource().Dispose();
                     mMixer = null;
                 }
                 if (mSoundOut != null)
@@ -339,7 +339,7 @@ namespace SimpleNeurotuner
             }
             catch (Exception ex)
             {
-                if (langindex == "0")
+                /*if (langindex == "0")
                 {
                     string msg = "Ошибка в Stop: \r\n" + ex.Message;
                     MessageBox.Show(msg);
@@ -350,7 +350,7 @@ namespace SimpleNeurotuner
                     string msg = "Error in Stop: \r\n" + ex.Message;
                     MessageBox.Show(msg);
                     Debug.WriteLine(msg);
-                }
+                }*/
             }
         }
 
@@ -367,6 +367,7 @@ namespace SimpleNeurotuner
 
                 //Init DSP для смещения высоты тона
                 mDsp = new SampleDSP(source.ToSampleSource()/*.AppendSource(Equalizer.Create10BandEqualizer, out mEqualizer)*/.ToMono());
+                mDsp.GainDB = -15;
 
                 //SetPitchShiftValue();
                 mSoundIn.Start();
@@ -440,6 +441,8 @@ namespace SimpleNeurotuner
                     Mixer();
                     mMp3 = CodecFactory.Instance.GetCodec(filename).ToMono().ToSampleSource()/*.AppendSource(Equalizer.Create10BandEqualizer, out mEqualizer)*/;
                     mDspRec = new SampleDSPRecord(mMp3.ToWaveSource(16).ToSampleSource());
+                    //mDspRec.GainDB = (float)slGain.Value;
+                    
                     mMixer.AddSource(mDspRec.ChangeSampleRate(mMixer.WaveFormat.SampleRate).ToWaveSource(16).Loop().ToSampleSource());
                     await Task.Run(() => SoundOut());
                 }
@@ -845,6 +848,11 @@ namespace SimpleNeurotuner
 
             SetPitchShiftValue();
             lbPitchValue.Content = slPitch.Value.ToString("f1");
+        }
+
+        private void slGain_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
+        {
+            PitchShifter.Gain = (float)slGain.Value;
         }
 
         private void cmbModes_SelectionChanged(object sender, SelectionChangedEventArgs e)

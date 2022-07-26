@@ -1,17 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Shapes;
+
 
 namespace SimpleNeurotuner
 {
@@ -21,9 +12,12 @@ namespace SimpleNeurotuner
     public partial class CreateWindow : Window
     {
         public string FileName;
+        //string langindex;
         public string cutFileName;
         private FileInfo fileCreate = new FileInfo("Data_Create.tmp");
         private FileInfo fileCutCreate = new FileInfo("Data_cutCreate.tmp");
+        static StreamReader FileLanguage = new StreamReader("Data_Language.tmp");
+        string langindex = FileLanguage.ReadToEnd();
 
         public CreateWindow()
         {
@@ -32,30 +26,90 @@ namespace SimpleNeurotuner
 
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
-            StreamReader FileLanguage = new StreamReader("Data_Language.tmp");
-            string index = FileLanguage.ReadLine();
-            if (index == "0")
+            try
             {
-                lbRecordTitle.Content = "Название записи";
-                Title = "Создание файла";
-                btnCreate.Content = "Создать";
+                //string index = FileLanguage.ReadToEnd();
+                //langindex = FileLanguage.ReadLine();
+                if (langindex == "0")
+                {
+                    lbRecordTitle.Content = "Название записи";
+                    Title = "Создание файла";
+                    btnCreate.Content = "Создать";
+                }
+                else
+                {
+                    lbRecordTitle.Content = "Record title";
+                    Title = "Create window";
+                    btnCreate.Content = "Create";
+                }
             }
-            else
+            catch (Exception ex)
             {
-                lbRecordTitle.Content = "Record title";
-                Title = "Create window";
-                btnCreate.Content = "Create";
+                if (langindex == "0")
+                {
+                    string msg = "Ошибка в CreateWindow_Loaded: \r\n" + ex.Message;
+                    MessageBox.Show(msg);
+                    Debug.WriteLine(msg);
+                }
+                else
+                {
+                    string msg = "Error in CreateWindow_Loaded: \r\n" + ex.Message;
+                    MessageBox.Show(msg);
+                    Debug.WriteLine(msg);
+                }
             }
         }
 
         private void btnCreate_Click(object sender, RoutedEventArgs e)
         {
-            FileName = tbRecordTitle.Text + ".wav";
-            cutFileName = "cut" + tbRecordTitle.Text + ".wav";
-            File.WriteAllText(fileCreate.FullName, FileName);
-            File.WriteAllText(fileCutCreate.FullName, cutFileName);
+            try
+            {
+                FileName = tbRecordTitle.Text + ".wav";
+                cutFileName = "cut" + tbRecordTitle.Text + ".wav";
+                
+                File.WriteAllText(fileCreate.FullName, FileName);
+                File.WriteAllText(fileCutCreate.FullName, cutFileName);
+                if (langindex == "0")
+                {
+                    if (File.Exists(@"Record\" + FileName))
+                    {
+                        string msg = "Файл с таким именем существует,\nпереименуйте файл.";
+                        MessageBox.Show(msg);
+                    }
+                    else
+                    {
+                        this.Close();
+                    }
+                }
+                else
+                {
+                    if (File.Exists(@"Record\" + FileName))
+                    {
+                        string msg = "A file with the same name exists,\nrename the file.";
+                        MessageBox.Show(msg);
+                    }
+                    else
+                    {
+                        this.Close();
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                if (langindex == "0")
+                {
+                    string msg = "Ошибка в CreateWindow_btnCreate_Click: \r\n" + ex.Message;
+                    MessageBox.Show(msg);
+                    Debug.WriteLine(msg);
+                }
+                else
+                {
+                    string msg = "Error in CreateWindow_btnCreate_Click: \r\n" + ex.Message;
+                    MessageBox.Show(msg);
+                    Debug.WriteLine(msg);
+                }
+            }
             //await File.WriteAllTextAsync(fileCreate.FullName, FileName);
-            this.Close();
         }
     }
 }

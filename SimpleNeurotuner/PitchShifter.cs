@@ -57,7 +57,7 @@ namespace SimpleNeurotuner
     {
 
         #region Private Static Memebers
-        public static double Freq;
+        public static float Gain;
         public static string NoteName;
         public static int[] min = new int[10];
         public static int[] max = new int[10];
@@ -239,7 +239,7 @@ namespace SimpleNeurotuner
                         coeffVol = PitchShifter1.MAXIN / MAX;
                         if(coeffVol != 0)
                         {
-                            gAnaMagn[k] *= coeffVol;
+                            gAnaMagn[k] *= coeffVol * Gain;
                         }
                     }
 
