@@ -29,6 +29,7 @@ namespace SimpleNeurotuner
                     lbSaveDelete.Content = "Сохранить вашу запись или удалить и перезаписать?";
                     btnSave.Content = "Сохранить";
                     btnDelete.Content = "Удалить";
+                    LogClass.LogWrite("Открыто окно сохранения.");
                 }
                 else
                 {
@@ -36,6 +37,7 @@ namespace SimpleNeurotuner
                     lbSaveDelete.Content = "Keep your recording or delete and overwrite?";
                     btnSave.Content = "Save";
                     btnDelete.Content = "Delete";
+                    LogClass.LogWrite("The save window is open.");
                 }
             }
             catch (Exception ex)
@@ -43,12 +45,14 @@ namespace SimpleNeurotuner
                 if (index == "0")
                 {
                     string msg = "Ошибка в Loaded: \r\n" + ex.Message;
+                    LogClass.LogWrite(msg);
                     MessageBox.Show(msg);
                     Debug.WriteLine(msg);
                 }
                 else
                 {
                     string msg = "Error in Loaded: \r\n" + ex.Message;
+                    LogClass.LogWrite(msg);
                     MessageBox.Show(msg);
                     Debug.WriteLine(msg);
                 }
@@ -73,12 +77,14 @@ namespace SimpleNeurotuner
                 if (index == "0")
                 {
                     string msg = "Ошибка в btnSave_Click: \r\n" + ex.Message;
+                    LogClass.LogWrite(msg);
                     MessageBox.Show(msg);
                     Debug.WriteLine(msg);
                 }
                 else
                 {
                     string msg = "Error in btnSave_Click: \r\n" + ex.Message;
+                    LogClass.LogWrite(msg);
                     MessageBox.Show(msg);
                     Debug.WriteLine(msg);
                 }
@@ -103,12 +109,14 @@ namespace SimpleNeurotuner
                 if (index == "0")
                 {
                     string msg = "Ошибка в btnDelete_Click: \r\n" + ex.Message;
+                    LogClass.LogWrite(msg);
                     MessageBox.Show(msg);
                     Debug.WriteLine(msg);
                 }
                 else
                 {
                     string msg = "Error in btnDelete_Click: \r\n" + ex.Message;
+                    LogClass.LogWrite(msg);
                     MessageBox.Show(msg);
                     Debug.WriteLine(msg);
                 }
@@ -121,21 +129,41 @@ namespace SimpleNeurotuner
             {
                 if (clickSD == 1)
                 {
+                    StreamReader FileLanguage = new StreamReader("Data_Language.tmp");
+                    index = FileLanguage.ReadToEnd();
                     StreamReader FileCutRecord = new StreamReader("Data_cutCreate.tmp");
                     StreamReader FileRecord = new StreamReader("Data_Create.tmp");
                     string FileCut = FileCutRecord.ReadToEnd();
                     string myfile = FileRecord.ReadToEnd();
                     File.Move(myfile, @"Record\" + myfile);
                     File.Delete(FileCut);
+                    if (index == "0")
+                    {
+                        LogClass.LogWrite("Запись сохранена.");
+                    }
+                    else
+                    {
+                        LogClass.LogWrite("The entry has been saved.");
+                    }
                 }
                 else if(clickSD == 2)
                 {
+                    StreamReader FileLanguage = new StreamReader("Data_Language.tmp");
+                    index = FileLanguage.ReadToEnd();
                     StreamReader FileRecord = new StreamReader("Data_Create.tmp");
                     StreamReader FileCutRecord = new StreamReader("Data_cutCreate.tmp");
                     string myfile = FileRecord.ReadToEnd();
                     string cutmyfile = FileCutRecord.ReadToEnd();
                     File.Delete(myfile);
                     File.Delete(cutmyfile);
+                    if (index == "0")
+                    {
+                        LogClass.LogWrite("Запись удалена.");
+                    }
+                    else
+                    {
+                        LogClass.LogWrite("The entry has been deleted.");
+                    }
                 }
                 else
                 {
@@ -144,11 +172,13 @@ namespace SimpleNeurotuner
                     if (index == "0")
                     {
                         string msg = "Если выскочило данное окошко,\nто вы нажали на крестик,\n и файл с записью удалится.";
+                        LogClass.LogWrite(msg);
                         MessageBox.Show(msg);
                     }
                     else
                     {
                         string msg = "If this window popped up,\nthen you clicked on the cross,\n and the file with the record will be deleted.";
+                        LogClass.LogWrite(msg);
                         MessageBox.Show(msg);
                     }
                 }
@@ -158,12 +188,14 @@ namespace SimpleNeurotuner
                 if (index == "0")
                 {
                     string msg = "Ошибка в Closing: \r\n" + ex.Message;
+                    LogClass.LogWrite(msg);
                     MessageBox.Show(msg);
                     Debug.WriteLine(msg);
                 }
                 else
                 {
                     string msg = "Error in Closing: \r\n" + ex.Message;
+                    LogClass.LogWrite(msg);
                     MessageBox.Show(msg);
                     Debug.WriteLine(msg);
                 }

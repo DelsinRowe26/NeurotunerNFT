@@ -48,12 +48,14 @@ namespace SimpleNeurotuner
                 if (langindex == "0")
                 {
                     string msg = "Ошибка в CreateWindow_Loaded: \r\n" + ex.Message;
+                    LogClass.LogWrite(msg);
                     MessageBox.Show(msg);
                     Debug.WriteLine(msg);
                 }
                 else
                 {
                     string msg = "Error in CreateWindow_Loaded: \r\n" + ex.Message;
+                    LogClass.LogWrite(msg);
                     MessageBox.Show(msg);
                     Debug.WriteLine(msg);
                 }
@@ -74,10 +76,12 @@ namespace SimpleNeurotuner
                     if (File.Exists(@"Record\" + FileName))
                     {
                         string msg = "Файл с таким именем существует,\nпереименуйте файл.";
+                        LogClass.LogWrite(msg);
                         MessageBox.Show(msg);
                     }
                     else
                     {
+                        LogClass.LogWrite("Файл создан.");
                         this.Close();
                     }
                 }
@@ -86,10 +90,12 @@ namespace SimpleNeurotuner
                     if (File.Exists(@"Record\" + FileName))
                     {
                         string msg = "A file with the same name exists,\nrename the file.";
+                        LogClass.LogWrite(msg);
                         MessageBox.Show(msg);
                     }
                     else
                     {
+                        LogClass.LogWrite("The file has been created.");
                         this.Close();
                     }
                 }
@@ -99,12 +105,14 @@ namespace SimpleNeurotuner
                 if (langindex == "0")
                 {
                     string msg = "Ошибка в CreateWindow_btnCreate_Click: \r\n" + ex.Message;
+                    LogClass.LogWrite(msg);
                     MessageBox.Show(msg);
                     Debug.WriteLine(msg);
                 }
                 else
                 {
                     string msg = "Error in CreateWindow_btnCreate_Click: \r\n" + ex.Message;
+                    LogClass.LogWrite(msg);
                     MessageBox.Show(msg);
                     Debug.WriteLine(msg);
                 }

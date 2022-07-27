@@ -223,18 +223,31 @@ namespace SimpleNeurotuner
                 {
                     Languages();
                 }
+                if (!File.Exists("log.tmp"))
+                {
+                    File.Create("log.tmp").Close();
+                }
+                else 
+                {
+                    if (File.ReadAllLines("log.tmp").Length < 1000)
+                    {
+                        File.WriteAllText("log.tmp", " ");
+                    }
+                }
             }
             catch (Exception ex)
             {
                 if (langindex == "0")
                 {
                     string msg = "Ошибка в Loaded: \r\n" + ex.Message;
+                    LogClass.LogWrite(msg);
                     MessageBox.Show(msg);
                     Debug.WriteLine(msg);
                 }
                 else
                 {
                     string msg = "Error in Loaded: \r\n" + ex.Message;
+                    LogClass.LogWrite(msg);
                     MessageBox.Show(msg);
                     Debug.WriteLine(msg);
                 }
@@ -258,12 +271,14 @@ namespace SimpleNeurotuner
                 if (langindex == "0")
                 {
                     string msg = "Ошибка в Filling: \r\n" + ex.Message;
+                    LogClass.LogWrite(msg);
                     MessageBox.Show(msg);
                     Debug.WriteLine(msg);
                 }
                 else
                 {
                     string msg = "Error in Filling: \r\n" + ex.Message;
+                    LogClass.LogWrite(msg);
                     MessageBox.Show(msg);
                     Debug.WriteLine(msg);
                 }
@@ -277,6 +292,15 @@ namespace SimpleNeurotuner
                 if (cmbModes.SelectedIndex == 0)
                 {
                     Recording();
+                    btnStart_Open.IsEnabled = false;
+                    if (langindex == "0")
+                    {
+                        LogClass.LogWrite("Начало записи голоса.");
+                    }
+                    else
+                    {
+                        LogClass.LogWrite("Start voice recording.");
+                    }
                     //Recordind2();
                 }
                 else
@@ -284,6 +308,17 @@ namespace SimpleNeurotuner
                     click = 1;
                     await Task.Run(() => Sound(file));
                     StartFullDuplex();
+                    if (langindex == "0")
+                    {
+                        LogClass.LogWrite("Начало прослушивания записи.");
+                    }
+                    else
+                    {
+                        LogClass.LogWrite("Start listening to the recording.");
+                    }
+                    btnStart_Open.IsEnabled = false;
+
+                    
                 }
             }
             catch (Exception ex)
@@ -291,12 +326,14 @@ namespace SimpleNeurotuner
                 if (langindex == "0")
                 {
                     string msg = "Ошибка в btnStart: \r\n" + ex.Message;
+                    LogClass.LogWrite(msg);
                     MessageBox.Show(msg);
                     Debug.WriteLine(msg);
                 }
                 else
                 {
                     string msg = "Error in btnStart: \r\n" + ex.Message;
+                    LogClass.LogWrite(msg);
                     MessageBox.Show(msg);
                     Debug.WriteLine(msg);
                 }
@@ -367,7 +404,6 @@ namespace SimpleNeurotuner
 
                 //Init DSP для смещения высоты тона
                 mDsp = new SampleDSP(source.ToSampleSource()/*.AppendSource(Equalizer.Create10BandEqualizer, out mEqualizer)*/.ToMono());
-                mDsp.GainDB = -15;
 
                 //SetPitchShiftValue();
                 mSoundIn.Start();
@@ -386,12 +422,14 @@ namespace SimpleNeurotuner
                 if (langindex == "0")
                 {
                     string msg = "Ошибка в StartFullDuplex: \r\n" + ex.Message;
+                    LogClass.LogWrite(msg);
                     MessageBox.Show(msg);
                     Debug.WriteLine(msg);
                 }
                 else
                 {
                     string msg = "Error in StartFullDuplex: \r\n" + ex.Message;
+                    LogClass.LogWrite(msg);
                     MessageBox.Show(msg);
                     Debug.WriteLine(msg);
                 }
@@ -414,12 +452,14 @@ namespace SimpleNeurotuner
                 if (langindex == "0")
                 {
                     string msg = "Ошибка в SoundOut: \r\n" + ex.Message;
+                    LogClass.LogWrite(msg);
                     MessageBox.Show(msg);
                     Debug.WriteLine(msg);
                 }
                 else
                 {
                     string msg = "Error in SoundOut: \r\n" + ex.Message;
+                    LogClass.LogWrite(msg);
                     MessageBox.Show(msg);
                     Debug.WriteLine(msg);
                 }
@@ -456,12 +496,14 @@ namespace SimpleNeurotuner
                 if (langindex == "0")
                 {
                     string msg = "Ошибка в Sound: \r\n" + ex.Message;
+                    LogClass.LogWrite(msg);
                     MessageBox.Show(msg);
                     Debug.WriteLine(msg);
                 }
                 else
                 {
                     string msg = "Error in Sound: \r\n" + ex.Message;
+                    LogClass.LogWrite(msg);
                     MessageBox.Show(msg);
                     Debug.WriteLine(msg);
                 }
@@ -473,8 +515,17 @@ namespace SimpleNeurotuner
             try
             {
                 Stop();
+                btnStart_Open.IsEnabled = true;
                 click = 0;
                 audioclick = 0;
+                if (langindex == "0")
+                {
+                    LogClass.LogWrite("Остановка записи.");
+                }
+                else
+                {
+                    LogClass.LogWrite("Stop recording.");
+                }
                 if (cmbModes.SelectedIndex == 0)
                 {
                     if (audioclick == 0)
@@ -489,12 +540,14 @@ namespace SimpleNeurotuner
                 if (langindex == "0")
                 {
                     string msg = "Ошибка в btnStop: \r\n" + ex.Message;
+                    LogClass.LogWrite(msg);
                     MessageBox.Show(msg);
                     Debug.WriteLine(msg);
                 }
                 else
                 {
                     string msg = "Error in btnStop: \r\n" + ex.Message;
+                    LogClass.LogWrite(msg);
                     MessageBox.Show(msg);
                     Debug.WriteLine(msg);
                 }
@@ -513,12 +566,14 @@ namespace SimpleNeurotuner
                 if (langindex == "0")
                 {
                     string msg = "Ошибка в SimpleNeurotuner_Closing: \r\n" + ex.Message;
+                    LogClass.LogWrite(msg);
                     MessageBox.Show(msg);
                     Debug.WriteLine(msg);
                 }
                 else
                 {
                     string msg = "Error in SimpleNeurotuner_Closing: \r\n" + ex.Message;
+                    LogClass.LogWrite(msg);
                     MessageBox.Show(msg);
                     Debug.WriteLine(msg);
                 }
@@ -577,12 +632,14 @@ namespace SimpleNeurotuner
                 if (langindex == "0")
                 {
                     string msg = "Ошибка в MenuItem_Click: \r\n" + ex.Message;
+                    LogClass.LogWrite(msg);
                     MessageBox.Show(msg);
                     Debug.WriteLine(msg);
                 }
                 else
                 {
                     string msg = "Error in MenuItem_Click: \r\n" + ex.Message;
+                    LogClass.LogWrite(msg);
                     MessageBox.Show(msg);
                     Debug.WriteLine(msg);
                 }
@@ -616,6 +673,14 @@ namespace SimpleNeurotuner
                 //audioclick = 1;
                 //mDsp.PitchShift = 0;
                 click = 1;
+                if(langindex == "0")
+                {
+                    LogClass.LogWrite("Прослушивание собственной записи.");
+                }
+                else
+                {
+                    LogClass.LogWrite("Listening to your own recording.");
+                }
                 Audition();
             }
             catch (Exception ex)
@@ -623,12 +688,14 @@ namespace SimpleNeurotuner
                 if (langindex == "0")
                 {
                     string msg = "Ошибка в btnRecord_Click: \r\n" + ex.Message;
+                    LogClass.LogWrite(msg);
                     MessageBox.Show(msg);
                     Debug.WriteLine(msg);
                 }
                 else
                 {
                     string msg = "Error in btnRecord_Click: \r\n" + ex.Message;
+                    LogClass.LogWrite(msg);
                     MessageBox.Show(msg);
                     Debug.WriteLine(msg);
                 }
@@ -674,25 +741,31 @@ namespace SimpleNeurotuner
                 if (langindex == "0")
                 {
                     string msg = "Запись и обработка завершена.";
+                    LogClass.LogWrite(msg);
                     MessageBox.Show(msg);
                 }
                 else
                 {
                     string msg = "Recording and processing completed.";
+                    LogClass.LogWrite(msg);
                     MessageBox.Show(msg);
                 }
             }
-            catch
+            catch (Exception ex)
             {
                 if (langindex == "0")
                 {
-                    string msg = "Произошла ошибка, если она выскочила,\nзначит что-то сломалось,\nлибо вы удалили что-то нужное.";
+                    string msg = "Ошибка в Recording: \r\n" + ex.Message;
+                    LogClass.LogWrite(msg);
                     MessageBox.Show(msg);
+                    Debug.WriteLine(msg);
                 }
                 else
                 {
-                    string msg = "An error occurred, if it popped up,\nsomething is broken,\nor you deleted something you needed.";
+                    string msg = "Error in Recording: \r\n" + ex.Message;
+                    LogClass.LogWrite(msg);
                     MessageBox.Show(msg);
+                    Debug.WriteLine(msg);
                 }
             }
         }
@@ -785,12 +858,14 @@ namespace SimpleNeurotuner
                 if (langindex == "0")
                 {
                     string msg = "Ошибка в Languages: \r\n" + ex.Message;
+                    LogClass.LogWrite(msg);
                     MessageBox.Show(msg);
                     Debug.WriteLine(msg);
                 }
                 else
                 {
                     string msg = "Error in Languages: \r\n" + ex.Message;
+                    LogClass.LogWrite(msg);
                     MessageBox.Show(msg);
                     Debug.WriteLine(msg);
                 }
@@ -831,12 +906,14 @@ namespace SimpleNeurotuner
                 if (langindex == "0")
                 {
                     string msg = "Ошибка в SimpleNeurotuner_Activated: \r\n" + ex.Message;
+                    LogClass.LogWrite(msg);
                     MessageBox.Show(msg);
                     Debug.WriteLine(msg);
                 }
                 else
                 {
                     string msg = "Error in SimpleNeurotuner_Activated: \r\n" + ex.Message;
+                    LogClass.LogWrite(msg);
                     MessageBox.Show(msg);
                     Debug.WriteLine(msg);
                 }
@@ -863,9 +940,18 @@ namespace SimpleNeurotuner
                 {
                     CreateWindow window = new CreateWindow();
                     window.Show();
+
                     btnRecord.Visibility = Visibility.Visible;
                     pbRecord.Visibility = Visibility.Visible;
                     pbRecord.Value = 0;
+                    if(langindex == "0")
+                    {
+                        LogClass.LogWrite("Включен режим записи.");
+                    }
+                    else
+                    {
+                        LogClass.LogWrite("Recording mode is on.");
+                    }
                 }
                 else if (cmbModes.SelectedIndex != 0)
                 {
@@ -877,6 +963,7 @@ namespace SimpleNeurotuner
                         cmbRecord.Items.Add("Выберите запись");
                         cmbRecord.SelectedIndex = cmbRecord.Items.Count - 1;
                         Filling();
+                        LogClass.LogWrite("Включен режим прослушивания.");
                     }
                     else
                     {
@@ -884,6 +971,7 @@ namespace SimpleNeurotuner
                         cmbRecord.Items.Add("Select a record");
                         cmbRecord.SelectedIndex = cmbRecord.Items.Count - 1;
                         Filling();
+                        LogClass.LogWrite("Listening mode is on.");
                     }
                 }
             }
@@ -892,12 +980,14 @@ namespace SimpleNeurotuner
                 if (langindex == "0")
                 {
                     string msg = "Ошибка в cmbModes_SelectionChanged: \r\n" + ex.Message;
+                    LogClass.LogWrite(msg);
                     MessageBox.Show(msg);
                     Debug.WriteLine(msg);
                 }
                 else
                 {
                     string msg = "Error in cmbModes_SelectionChanged: \r\n" + ex.Message;
+                    LogClass.LogWrite(msg);
                     MessageBox.Show(msg);
                     Debug.WriteLine(msg);
                 }
@@ -921,12 +1011,14 @@ namespace SimpleNeurotuner
                 if (langindex == "0")
                 {
                     string msg = "Ошибка в Audition: \r\n" + ex.Message;
+                    LogClass.LogWrite(msg);
                     MessageBox.Show(msg);
                     Debug.WriteLine(msg);
                 }
                 else
                 {
                     string msg = "Error in Audition: \r\n" + ex.Message;
+                    LogClass.LogWrite(msg);
                     MessageBox.Show(msg);
                     Debug.WriteLine(msg);
                 }
@@ -944,6 +1036,14 @@ namespace SimpleNeurotuner
                         filename = @"Record\" + cmbRecord.SelectedItem.ToString();
                         if ((filename != "Record\\Select a record") && (filename != "Record\\Выберите запись"))
                         {
+                            if(langindex == "0")
+                            {
+                                LogClass.LogWrite("Выбрана запись " + filename);
+                            }
+                            else
+                            {
+                                LogClass.LogWrite("Record selected " + filename);
+                            }
                             PBNFT.Visibility = Visibility.Visible;
                             lbPBNFT.Visibility = Visibility.Visible;
                             double closestFreq;
@@ -1070,12 +1170,14 @@ namespace SimpleNeurotuner
                 if (langindex == "0")
                 {
                     string msg = "Ошибка в cmbRecord_SelectionChanged: \r\n" + ex.Message;
+                    LogClass.LogWrite(msg);
                     MessageBox.Show(msg);
                     Debug.WriteLine(msg);
                 }
                 else
                 {
                     string msg = "Error in cmbRecord_SelectionChanged: \r\n" + ex.Message;
+                    LogClass.LogWrite(msg);
                     MessageBox.Show(msg);
                     Debug.WriteLine(msg);
                 }

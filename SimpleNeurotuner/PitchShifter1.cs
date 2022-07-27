@@ -258,6 +258,11 @@ namespace SimpleNeurotuner
                             MAXIN = Math.Max(Math.Abs(MIN), Math.Abs(MAX));
                         }
 
+                        for (k = 0; k <= fftFrameSize2; k++)
+                        {
+                            gAnaMagn[k] *= 0;
+                        }
+
                         /* ***************** PROCESSING ******************* */
                         /* this does the actual pitch shifting/это делает фактическое изменение высоты тона */
 
