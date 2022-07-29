@@ -22,7 +22,7 @@
         <Button x:Name="btnStart_Open" Content="Start" HorizontalAlignment="Center" Margin="0,439,0,0" VerticalAlignment="Top" Height="30" Width="80" Click="btnStart_Open_Click" MouseMove="btnStart_Open_MouseMove" MouseLeave="btnStart_Open_MouseLeave" FontSize="14" Background="{x:Null}">
             <Button.Template>
                 <ControlTemplate>
-                    <Border BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="2" CornerRadius="25">
+                    <Border BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="2" CornerRadius="25" Margin="0,5,0,-5">
                         <FocusManager.FocusedElement>
                             <Button Content="btnStart"/>
                         </FocusManager.FocusedElement>
@@ -39,7 +39,7 @@
                 </Style>
             </Button.Style>
         </Button>
-        <Button x:Name="btnStop" Content="Stop" HorizontalAlignment="Left" Margin="350,440,0,0" VerticalAlignment="Top" Height="30" Width="80" Click="btnStop_Click" MouseMove="btnStop_MouseMove" MouseLeave="btnStop_MouseLeave" FontSize="14" Background="{x:Null}" Grid.ColumnSpan="2">
+        <Button x:Name="btnStop" Content="Stop" HorizontalAlignment="Left" Margin="349,444,0,0" VerticalAlignment="Top" Height="30" Width="80" Click="btnStop_Click" MouseMove="btnStop_MouseMove" MouseLeave="btnStop_MouseLeave" FontSize="14" Background="{x:Null}" Grid.ColumnSpan="2">
             <Button.Template>
                 <ControlTemplate>
                     <Border BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="2" CornerRadius="25" Background="{x:Null}">
@@ -153,6 +153,46 @@
         <Label x:Name="lbPBNFT" Content="NFT loading in progress..." HorizontalAlignment="Left" Margin="221,30,0,0" VerticalAlignment="Top" Visibility="Hidden"/>
         <Slider x:Name="slPitch" HorizontalAlignment="Center" Margin="160,79,159,0" VerticalAlignment="Top" Width="250" Maximum="15" Minimum="-15" TickPlacement="BottomRight" ValueChanged="slPitch_ValueChanged" Grid.ColumnSpan="2" Visibility="Hidden"/>
         <Label x:Name="lbPitchValue" Content="0" HorizontalAlignment="Left" Margin="51.757,70,0,0" VerticalAlignment="Top" FontSize="14" Grid.Column="1" Visibility="Hidden"/>
-        <Slider x:Name="slGain" HorizontalAlignment="Left" Margin="160,73,0,0" VerticalAlignment="Top" Width="256" Grid.ColumnSpan="2" TickPlacement="BottomRight" ValueChanged="slGain_ValueChanged" Minimum="1" Maximum="15"/>
+        <Slider x:Name="slGain" HorizontalAlignment="Left" Margin="160,73,0,0" VerticalAlignment="Top" Width="256" Grid.ColumnSpan="2" TickPlacement="BottomRight" Maximum="50" Minimum="1" ValueChanged="slGain_ValueChanged"/>
+        <Button x:Name="btnTurbo" Content="Turbo" HorizontalAlignment="Left" Margin="250,475,0,0" VerticalAlignment="Top" Height="30" Width="80" Click="btnTurbo_Click" MouseMove="btnTurbo_MouseMove" MouseLeave="btnTurbo_MouseLeave" FontSize="14" Background="{x:Null}">
+            <Button.Template>
+                <ControlTemplate>
+                    <Border BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="2" CornerRadius="25" Margin="0,5,0,-5">
+                        <FocusManager.FocusedElement>
+                            <Button Content="btnStart"/>
+                        </FocusManager.FocusedElement>
+                        <ContentPresenter Content="{TemplateBinding ContentControl.Content}" HorizontalAlignment="Center" VerticalAlignment="Center" />
+                    </Border>
+                </ControlTemplate>
+            </Button.Template>
+            <Button.Style>
+                <Style>
+                    <Setter Property="Control.FontFamily" Value="Verdana"/>
+                    <Setter Property="Control.Background" Value="Aquamarine"/>
+                    <Setter Property="Control.Foreground" Value="Black"/>
+                    <Setter Property="Control.Margin" Value="10"/>
+                </Style>
+            </Button.Style>
+        </Button>
+        <Button x:Name="btnPlayer" Content="Player" HorizontalAlignment="Left" Margin="249,439,0,0" VerticalAlignment="Top" Height="30" Width="80" Click="btnPlayer_Click" MouseMove="btnPlayer_MouseMove" MouseLeave="btnPlayer_MouseLeave" FontSize="14" Background="{x:Null}">
+            <Button.Template>
+                <ControlTemplate>
+                    <Border BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="2" CornerRadius="25" Margin="0,5,0,-5">
+                        <FocusManager.FocusedElement>
+                            <Button Content="btnStart"/>
+                        </FocusManager.FocusedElement>
+                        <ContentPresenter Content="{TemplateBinding ContentControl.Content}" HorizontalAlignment="Center" VerticalAlignment="Center" />
+                    </Border>
+                </ControlTemplate>
+            </Button.Template>
+            <Button.Style>
+                <Style>
+                    <Setter Property="Control.FontFamily" Value="Verdana"/>
+                    <Setter Property="Control.Background" Value="Aquamarine"/>
+                    <Setter Property="Control.Foreground" Value="Black"/>
+                    <Setter Property="Control.Margin" Value="10"/>
+                </Style>
+            </Button.Style>
+        </Button>
     </Grid>
 </Window>

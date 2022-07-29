@@ -7,14 +7,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SimpleNeurotuner", "SimpleN
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SoundAnalysis", "SoundAnalysis\SoundAnalysis.csproj", "{ABA54DC3-324B-49DE-B79E-C4F573306E4F}"
 EndProject
-Project("{54435603-DBB4-11D2-8724-00A0C9A8B90C}") = "Neurotuner without Mixer and Tembro Setup", "Neurotuner without Mixer and Tembro Setup\Neurotuner without Mixer and Tembro Setup.vdproj", "{98F852F5-8A00-4234-8E9E-E98F039552F8}"
-EndProject
-Project("{54435603-DBB4-11D2-8724-00A0C9A8B90C}") = "Neurotuner NFT without Mixer Setup", "Neurotuner NFT without Mixer Setup\Neurotuner NFT without Mixer Setup.vdproj", "{8708FA82-FF2A-461A-B2E2-AD2AC6092840}"
-EndProject
-Project("{54435603-DBB4-11D2-8724-00A0C9A8B90C}") = "Neurotuner NFT without Tembro Setup", "Neurotuner NFT without Tembro Setup\Neurotuner NFT without Tembro Setup.vdproj", "{E7EAC174-1B32-452C-B1EE-014992BBA2EC}"
-EndProject
-Project("{54435603-DBB4-11D2-8724-00A0C9A8B90C}") = "Neurotuner NFT Setup", "Neurotuner NFT Setup\Neurotuner NFT Setup.vdproj", "{4D3ADB9E-C7EF-44B5-9661-8799E50C39F2}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -29,14 +21,6 @@ Global
 		{ABA54DC3-324B-49DE-B79E-C4F573306E4F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{ABA54DC3-324B-49DE-B79E-C4F573306E4F}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{ABA54DC3-324B-49DE-B79E-C4F573306E4F}.Release|Any CPU.Build.0 = Release|Any CPU
-		{98F852F5-8A00-4234-8E9E-E98F039552F8}.Debug|Any CPU.ActiveCfg = Debug
-		{98F852F5-8A00-4234-8E9E-E98F039552F8}.Release|Any CPU.ActiveCfg = Release
-		{8708FA82-FF2A-461A-B2E2-AD2AC6092840}.Debug|Any CPU.ActiveCfg = Debug
-		{8708FA82-FF2A-461A-B2E2-AD2AC6092840}.Release|Any CPU.ActiveCfg = Release
-		{E7EAC174-1B32-452C-B1EE-014992BBA2EC}.Debug|Any CPU.ActiveCfg = Debug
-		{E7EAC174-1B32-452C-B1EE-014992BBA2EC}.Release|Any CPU.ActiveCfg = Release
-		{4D3ADB9E-C7EF-44B5-9661-8799E50C39F2}.Debug|Any CPU.ActiveCfg = Debug
-		{4D3ADB9E-C7EF-44B5-9661-8799E50C39F2}.Release|Any CPU.ActiveCfg = Release
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -55,6 +55,7 @@ namespace SimpleNeurotuner
         private WasapiCapture mSoundIn;
         private SampleDSP mDsp;
         private SampleDSPRecord mDspRec;
+        private SampleDSPTurbo mDspTurbo;
         string[] file1 = File.ReadAllLines("window.tmp");
 
         string folder = "Record";
@@ -74,6 +75,7 @@ namespace SimpleNeurotuner
         private System.Windows.Point startPoint;
         //public Image ImgSpectr;
         private System.Windows.Shapes.Rectangle rectangle;
+        float Vol;
         //private PitchShifter _pitchShifter;
 
         private const double MaxDB = 20;
@@ -229,7 +231,7 @@ namespace SimpleNeurotuner
                 }
                 else 
                 {
-                    if (File.ReadAllLines("log.tmp").Length < 1000)
+                    if (File.ReadAllLines("log.tmp").Length > 1000)
                     {
                         File.WriteAllText("log.tmp", " ");
                     }
@@ -317,7 +319,8 @@ namespace SimpleNeurotuner
                         LogClass.LogWrite("Start listening to the recording.");
                     }
                     btnStart_Open.IsEnabled = false;
-
+                    btnPlayer.IsEnabled = false;
+                    btnTurbo.IsEnabled = false;
                     
                 }
             }
@@ -413,9 +416,11 @@ namespace SimpleNeurotuner
 
                 //Добавляем наш источник звука в микшер
                 mMixer.AddSource(mDsp.ChangeSampleRate(mMixer.WaveFormat.SampleRate));
-                
+
                 //Запускает устройство воспроизведения звука с задержкой 1 мс.
+                
                 await Task.Run(() => SoundOut());
+
             }
             catch (Exception ex)
             {
@@ -437,15 +442,69 @@ namespace SimpleNeurotuner
             //return false;
         }
 
+        private async void StartFullDuplexTurbo()//запуск пича и громкости
+        {
+            try
+            {
+                //Запускает устройство захвата звука с задержкой 1 мс.
+                mSoundIn = new WasapiCapture(/*false, AudioClientShareMode.Exclusive, 1*/);
+                mSoundIn.Device = mInputDevices[cmbInput.SelectedIndex];
+                mSoundIn.Initialize();
+
+                var source = new SoundInSource(mSoundIn) { FillWithZeros = true };
+
+                //Init DSP для смещения высоты тона
+                mDspTurbo = new SampleDSPTurbo(source.ToSampleSource()/*.AppendSource(Equalizer.Create10BandEqualizer, out mEqualizer)*/.ToMono());
+                SetPitchShiftValue();
+
+                //SetPitchShiftValue();
+                mSoundIn.Start();
+
+                //Инициальный микшер
+                Mixer();
+
+                //Добавляем наш источник звука в микшер
+                mMixer.AddSource(mDspTurbo.ChangeSampleRate(mMixer.WaveFormat.SampleRate));
+
+                //Запускает устройство воспроизведения звука с задержкой 1 мс.
+
+                await Task.Run(() => SoundOut());
+
+            }
+            catch (Exception ex)
+            {
+                if (langindex == "0")
+                {
+                    string msg = "Ошибка в StartFullDuplexTurbo: \r\n" + ex.Message;
+                    LogClass.LogWrite(msg);
+                    MessageBox.Show(msg);
+                    Debug.WriteLine(msg);
+                }
+                else
+                {
+                    string msg = "Error in StartFullDuplexTurbo: \r\n" + ex.Message;
+                    LogClass.LogWrite(msg);
+                    MessageBox.Show(msg);
+                    Debug.WriteLine(msg);
+                }
+            }
+            //return false;
+        }
+
         private void SoundOut()
         {
             try
             {
                 mSoundOut = new WasapiOut(/*false, AudioClientShareMode.Exclusive, 1*/);
+                
                 //mSoundOut.Device = mOutputDevices[cmbOutput.SelectedIndex];
                 mSoundOut.Initialize(mMixer.ToWaveSource(32));
+
+                //mSoundOut.Volume = Vol;
                 //mSoundOut.Initialize(mSource);
                 mSoundOut.Play();
+                //mSoundOut.Volume = (float)slGain.Value;
+
             }
             catch (Exception ex)
             {
@@ -468,7 +527,8 @@ namespace SimpleNeurotuner
 
         private void SetPitchShiftValue()
         {
-            mDspRec.PitchShift = (float)Math.Pow(2.0F, slPitch.Value / 13.0F);
+            //mDspRec.PitchShift = (float)Math.Pow(2.0F, 0 / 13.0F);
+            mDspTurbo.PitchShift = (float)Math.Pow(2.0F, 0 / 13.0F);
         }
 
         private async void Sound(string file)
@@ -485,6 +545,7 @@ namespace SimpleNeurotuner
                     
                     mMixer.AddSource(mDspRec.ChangeSampleRate(mMixer.WaveFormat.SampleRate).ToWaveSource(16).Loop().ToSampleSource());
                     await Task.Run(() => SoundOut());
+                    
                 }
                 else
                 {
@@ -516,6 +577,8 @@ namespace SimpleNeurotuner
             {
                 Stop();
                 btnStart_Open.IsEnabled = true;
+                btnPlayer.IsEnabled = true;
+                btnTurbo.IsEnabled = true;
                 click = 0;
                 audioclick = 0;
                 if (langindex == "0")
@@ -590,6 +653,26 @@ namespace SimpleNeurotuner
             btnStart_Open.Style = style;
         }
 
+        private void btnTurbo_MouseMove(object sender, MouseEventArgs e)
+        {
+            Style style = new Style();
+            style.Setters.Add(new Setter { Property = Control.FontFamilyProperty, Value = new System.Windows.Media.FontFamily("Verdana") });
+            style.Setters.Add(new Setter { Property = Control.MarginProperty, Value = new Thickness(10) });
+            style.Setters.Add(new Setter { Property = Control.BackgroundProperty, Value = new SolidColorBrush(Colors.Blue) });
+            style.Setters.Add(new Setter { Property = Control.ForegroundProperty, Value = new SolidColorBrush(Colors.White) });
+            btnTurbo.Style = style;
+        }
+
+        private void btnPlayer_MouseMove(object sender, MouseEventArgs e)
+        {
+            Style style = new Style();
+            style.Setters.Add(new Setter { Property = Control.FontFamilyProperty, Value = new System.Windows.Media.FontFamily("Verdana") });
+            style.Setters.Add(new Setter { Property = Control.MarginProperty, Value = new Thickness(10) });
+            style.Setters.Add(new Setter { Property = Control.BackgroundProperty, Value = new SolidColorBrush(Colors.Blue) });
+            style.Setters.Add(new Setter { Property = Control.ForegroundProperty, Value = new SolidColorBrush(Colors.White) });
+            btnPlayer.Style = style;
+        }
+
         private void btnStart_Open_MouseLeave(object sender, MouseEventArgs e)
         {
             Style style = new Style();
@@ -598,6 +681,26 @@ namespace SimpleNeurotuner
             style.Setters.Add(new Setter { Property = Control.BackgroundProperty, Value = new SolidColorBrush(Colors.Blue) });
             style.Setters.Add(new Setter { Property = Control.ForegroundProperty, Value = new SolidColorBrush(Colors.Black) });
             btnStart_Open.Style = style;
+        }
+
+        private void btnTurbo_MouseLeave(object sender, MouseEventArgs e)
+        {
+            Style style = new Style();
+            style.Setters.Add(new Setter { Property = Control.FontFamilyProperty, Value = new System.Windows.Media.FontFamily("Verdana") });
+            style.Setters.Add(new Setter { Property = Control.MarginProperty, Value = new Thickness(10) });
+            style.Setters.Add(new Setter { Property = Control.BackgroundProperty, Value = new SolidColorBrush(Colors.Blue) });
+            style.Setters.Add(new Setter { Property = Control.ForegroundProperty, Value = new SolidColorBrush(Colors.Black) });
+            btnTurbo.Style = style;
+        }
+
+        private void btnPlayer_MouseLeave(object sender, MouseEventArgs e)
+        {
+            Style style = new Style();
+            style.Setters.Add(new Setter { Property = Control.FontFamilyProperty, Value = new System.Windows.Media.FontFamily("Verdana") });
+            style.Setters.Add(new Setter { Property = Control.MarginProperty, Value = new Thickness(10) });
+            style.Setters.Add(new Setter { Property = Control.BackgroundProperty, Value = new SolidColorBrush(Colors.Blue) });
+            style.Setters.Add(new Setter { Property = Control.ForegroundProperty, Value = new SolidColorBrush(Colors.Black) });
+            btnPlayer.Style = style;
         }
 
         private void btnStop_MouseMove(object sender, MouseEventArgs e)
@@ -779,7 +882,7 @@ namespace SimpleNeurotuner
 
             var source = new SoundInSource(mSoundIn) { FillWithZeros = true };
 
-            mDsp = new SampleDSP(source.ToSampleSource().ToStereo());
+            mDsp = new SampleDSP(source.ToSampleSource().ToMono());
             
             mSoundIn.Start();
 
@@ -813,6 +916,8 @@ namespace SimpleNeurotuner
                     cmbModes.SelectedIndex = cmbModes.Items.Count - 1;
                     Title = "Нейротюнер NFT";
                     btnStart_Open.Content = "Старт";
+                    btnTurbo.Content = "Турбо";
+                    btnPlayer.Content = "Плеер";
                     btnStop.Content = "Стоп";
                     Help.Header = "Помощь";
                     TabNFT.Header = "gNeuro NFT";
@@ -839,6 +944,8 @@ namespace SimpleNeurotuner
                     cmbModes.SelectedIndex = cmbModes.Items.Count - 1;
                     Title = "Neurotuner NFT";
                     btnStart_Open.Content = "Start";
+                    btnTurbo.Content = "Turbo";
+                    btnPlayer.Content = "Player";
                     btnStop.Content = "Stop";
                     Help.Header = "Help";
                     TabNFT.Header = "gNeuro NFT";
@@ -927,9 +1034,29 @@ namespace SimpleNeurotuner
             lbPitchValue.Content = slPitch.Value.ToString("f1");
         }
 
-        private void slGain_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
+        public void slGain_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
         {
-            PitchShifter.Gain = (float)slGain.Value;
+            //PitchShifter.Gain = (float)slGain.Value;
+
+            //Vol = (float)slGain.Value;
+            //await Task.Run(() => SoundOut());
+            //mSoundOut.Volume = (float)slGain.Value;
+        }
+
+        private void btnPlayer_Click(object sender, RoutedEventArgs e)
+        {
+            AuditionTurbo();
+            btnStart_Open.IsEnabled = false;
+            btnTurbo.IsEnabled = false;
+            btnPlayer.IsEnabled = false;
+        }
+
+        private void btnTurbo_Click(object sender, RoutedEventArgs e)
+        {
+            StartFullDuplexTurbo();
+            btnStart_Open.IsEnabled = false;
+            btnPlayer.IsEnabled = false;
+            btnTurbo.IsEnabled = false;
         }
 
         private void cmbModes_SelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -941,6 +1068,8 @@ namespace SimpleNeurotuner
                     CreateWindow window = new CreateWindow();
                     window.Show();
 
+                    btnPlayer.Visibility = Visibility.Hidden;
+                    btnTurbo.Visibility = Visibility.Hidden;
                     btnRecord.Visibility = Visibility.Visible;
                     pbRecord.Visibility = Visibility.Visible;
                     pbRecord.Value = 0;
@@ -957,6 +1086,8 @@ namespace SimpleNeurotuner
                 {
                     btnRecord.Visibility = Visibility.Hidden;
                     pbRecord.Visibility = Visibility.Hidden;
+                    btnPlayer.Visibility = Visibility.Visible;
+                    btnTurbo.Visibility = Visibility.Visible;
                     if (langindex == "0")
                     {
                         cmbRecord.Items.Clear();
@@ -1003,6 +1134,37 @@ namespace SimpleNeurotuner
                 //Stop();
                 Mixer();
                 mMp3 = CodecFactory.Instance.GetCodec(/*@"Record\" + */myfile).ToMono().ToSampleSource();
+                mMixer.AddSource(mMp3.ChangeSampleRate(mMixer.WaveFormat.SampleRate).ToWaveSource(32).Loop().ToSampleSource());
+                await Task.Run(() => SoundOut());
+            }
+            catch (Exception ex)
+            {
+                if (langindex == "0")
+                {
+                    string msg = "Ошибка в Audition: \r\n" + ex.Message;
+                    LogClass.LogWrite(msg);
+                    MessageBox.Show(msg);
+                    Debug.WriteLine(msg);
+                }
+                else
+                {
+                    string msg = "Error in Audition: \r\n" + ex.Message;
+                    LogClass.LogWrite(msg);
+                    MessageBox.Show(msg);
+                    Debug.WriteLine(msg);
+                }
+            }
+        }
+
+        private async void AuditionTurbo()
+        {
+            try
+            {
+                StreamReader FileRecord = new StreamReader("Data_Create.tmp");
+                myfile = FileRecord.ReadToEnd();
+                //Stop();
+                Mixer();
+                mMp3 = CodecFactory.Instance.GetCodec(filename).ToMono().ToSampleSource();
                 mMixer.AddSource(mMp3.ChangeSampleRate(mMixer.WaveFormat.SampleRate).ToWaveSource(32).Loop().ToSampleSource());
                 await Task.Run(() => SoundOut());
             }
