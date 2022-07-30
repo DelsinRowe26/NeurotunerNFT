@@ -31,9 +31,6 @@ namespace SimpleNeurotuner
 
                 }
 
-                //PitchShifterTurbo.PitchShift(PitchShift, offset, count, 4096, 4, mSource.WaveFormat.SampleRate, buffer);
-                    //FrequencyUtils.FindFundamentalFrequency(buffer1, mSource.WaveFormat.SampleRate, 60, 22050);
-
                 PitchShifterTurbo.PitchShift(PitchShift, offset, count, 4096, 4, mSource.WaveFormat.SampleRate, buffer);
 
                 return samples;

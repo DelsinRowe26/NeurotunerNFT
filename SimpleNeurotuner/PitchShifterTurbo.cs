@@ -9,7 +9,7 @@ using System.Diagnostics;
 
 namespace SimpleNeurotuner
 {
-    public static class PitchShifterTurbo
+    public class PitchShifterTurbo
     {
 
         #region Private Static Memebers
@@ -45,19 +45,17 @@ namespace SimpleNeurotuner
         #endregion
 
         #region Public Static  Methods
-        public static void PitchShift(float pitchShift, long sampleCount, float sampleRate, float[] indata)
+        public static void PitchShift(float pitchShift, int sampleCount, float sampleRate, float[] indata)
         {
-            PitchShift(pitchShift, 0, sampleCount, (long)2048, (long)4, sampleRate, indata);
+            PitchShift(pitchShift, 0, sampleCount, 4096, 4, sampleRate, indata);
         }
 
-        public static void PitchShift(float pitchShift, long offset, long sampleCount, long fftFrameSize,
-            long osamp, float sampleRate, float[] indata)
+        public static void PitchShift(float pitchShift, int offset, int sampleCount, int fftFrameSize,
+            int osamp, float sampleRate, float[] indata)
         {
             double magn, phase, tmp, window, real, imag;
             double freqPerBin, expct;
-            long i, k, qpd, index, inFifoLatency, stepSize, fftFrameSize2;
-            double closestFrequency;//ближайшая частота
-            string noteName;
+            int i, k, qpd, index, inFifoLatency, stepSize, fftFrameSize2;
 
             float[] outdata = indata;
             /* set up some handy variables/настроить некоторые удобные переменные */
@@ -102,7 +100,7 @@ namespace SimpleNeurotuner
                         }
                     }
 
-                    for (int f = 0; f < sampleRate; f++)
+                    /*for (int f = 0; f < sampleRate; f++)
                     {
                         kt[f] = 1;
                     }
@@ -124,7 +122,7 @@ namespace SimpleNeurotuner
                             kt[l] = coef[t];
                             kt[(int)sampleRate - l] = coef[t];
                         }
-                    }
+                    }*/
 
                     /* ***************** ANALYSIS ******************* */
                     /* do transform */
@@ -133,7 +131,6 @@ namespace SimpleNeurotuner
                     /* this is the analysis step/это этап анализа  */
                     for (k = 0; k < fftFrameSize2; k++)
                     {
-
                         /* de-interlace FFT buffer/деинтерлейсный буфер FFT  */
                         real = gFFTworksp[2 * k];
                         imag = gFFTworksp[2 * k + 1];
@@ -150,7 +147,7 @@ namespace SimpleNeurotuner
                         tmp -= (double)k * expct;
 
                         /* map delta phase into +/- Pi interval/сопоставить фазу дельты с интервалом +/- Pi */
-                        qpd = (long)(tmp / Math.PI);
+                        qpd = (int)(tmp / Math.PI);
                         if (qpd >= 0) qpd += qpd & 1;
                         else qpd -= qpd & 1;
                         tmp -= Math.PI * (double)qpd;
@@ -161,10 +158,6 @@ namespace SimpleNeurotuner
                         /* compute the k-th partials' true frequency/вычислить истинную частоту k-го парциала */
                         tmp = (double)k * freqPerBin + tmp * freqPerBin;
 
-                        //FindClosestNote(tmp, out closestFrequency/*, out noteName*/);
-                        //NoteName = noteName;
-                        //Freq = closestFrequency;
-
                         /* store magnitude and true frequency in analysis arrays/хранить величину и истинную частоту в массивах анализа */
                         gAnaMagn[k] = (float)magn;
                         //File.AppendAllText("magn.txt", gAnaMagn[k].ToString() + "\n");
@@ -173,11 +166,11 @@ namespace SimpleNeurotuner
 
                     }
 
-                    /*for (k = 0; k <= fftFrameSize; k++)
+                    for (k = 0; k <= fftFrameSize; k++)
                     {
-                        gFFTworksp[2 * k] *= kt[k];
-                        gFFTworksp[2 * k + 1] *= kt[k];
-                    }*/
+                        gFFTworksp[2 * k] *= TembroClass.kt[k];
+                        gFFTworksp[2 * k + 1] *= TembroClass.kt[k];
+                    }
 
                     /* ***************** PROCESSING ******************* */
                     /* this does the actual pitch shifting/это делает фактическое изменение высоты тона */
@@ -190,11 +183,11 @@ namespace SimpleNeurotuner
 
                     for (k = 0; k <= fftFrameSize2; k++)
                     {
-                        index = (long)(k/* * pitchShift*/);
+                        index = (int)(k * pitchShift);
                         if (index <= fftFrameSize2)
                         {
                             gSynMagn[index] += gAnaMagn[k];
-                            gSynFreq[index] = gAnaFreq[k]/* * pitchShift*/;
+                            gSynFreq[index] = gAnaFreq[k] * pitchShift;
                         }
                     }
 

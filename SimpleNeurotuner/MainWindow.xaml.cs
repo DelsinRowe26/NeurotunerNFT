@@ -164,7 +164,7 @@ namespace SimpleNeurotuner
         {
             try
             {
-                mMixer = new SimpleMixer(1, SampleRate) //стерео, 44,1 КГц
+                mMixer = new SimpleMixer(1, mSoundIn.WaveFormat.SampleRate) //стерео, 44,1 КГц
                 {
                     FillWithZeros = true,
                     DivideResult = true, //Для этого установлено значение true, чтобы избежать звуков тиков из-за превышения -1 и 1.
@@ -191,6 +191,7 @@ namespace SimpleNeurotuner
         {
             try
             {
+                
                 if (file1.Length == 0)
                 {
                     //File.Create("DataTemp.dat");
@@ -236,6 +237,7 @@ namespace SimpleNeurotuner
                         File.WriteAllText("log.tmp", " ");
                     }
                 }
+                TembroClass.Tembro(48000);
             }
             catch (Exception ex)
             {
@@ -498,7 +500,7 @@ namespace SimpleNeurotuner
                 mSoundOut = new WasapiOut(/*false, AudioClientShareMode.Exclusive, 1*/);
                 
                 //mSoundOut.Device = mOutputDevices[cmbOutput.SelectedIndex];
-                mSoundOut.Initialize(mMixer.ToWaveSource(32));
+                mSoundOut.Initialize(mMixer.ToWaveSource(16));
 
                 //mSoundOut.Volume = Vol;
                 //mSoundOut.Initialize(mSource);
@@ -1134,7 +1136,7 @@ namespace SimpleNeurotuner
                 //Stop();
                 Mixer();
                 mMp3 = CodecFactory.Instance.GetCodec(/*@"Record\" + */myfile).ToMono().ToSampleSource();
-                mMixer.AddSource(mMp3.ChangeSampleRate(mMixer.WaveFormat.SampleRate).ToWaveSource(32).Loop().ToSampleSource());
+                mMixer.AddSource(mMp3.ChangeSampleRate(mMixer.WaveFormat.SampleRate).ToWaveSource(16).Loop().ToSampleSource());
                 await Task.Run(() => SoundOut());
             }
             catch (Exception ex)
@@ -1165,7 +1167,7 @@ namespace SimpleNeurotuner
                 //Stop();
                 Mixer();
                 mMp3 = CodecFactory.Instance.GetCodec(filename).ToMono().ToSampleSource();
-                mMixer.AddSource(mMp3.ChangeSampleRate(mMixer.WaveFormat.SampleRate).ToWaveSource(32).Loop().ToSampleSource());
+                mMixer.AddSource(mMp3.ChangeSampleRate(mMixer.WaveFormat.SampleRate).ToWaveSource(16).Loop().ToSampleSource());
                 await Task.Run(() => SoundOut());
             }
             catch (Exception ex)
