@@ -19,9 +19,9 @@ namespace SimpleNeurotuner
 
         public static void Tembro(int sampleRate)
         {
-            for (int i = 0; i < 48000; i++)
+            for (int k = 0; k < 48000; k++)
             {
-                kt[i] = 1;
+                kt[k] = 1;
             }
 
             for (int p = 0; p < Nlines; p++)
@@ -36,10 +36,10 @@ namespace SimpleNeurotuner
 
             for (int t = 0; t < Nlines; t++)
             {
-                for (int l = minfreq[t]; l < maxfreq[t]; l++)
+                for (int k = minfreq[t]; k < maxfreq[t]; k++)
                 {
-                    kt[l] = coef[t];
-                    kt[(int)sampleRate - l] = coef[t];
+                    kt[k] *= coef[t];
+                    kt[(int)sampleRate - k] *= coef[t];
                 }
             }
         }

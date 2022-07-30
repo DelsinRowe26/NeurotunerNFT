@@ -502,7 +502,7 @@ namespace SimpleNeurotuner
                 //mSoundOut.Device = mOutputDevices[cmbOutput.SelectedIndex];
                 mSoundOut.Initialize(mMixer.ToWaveSource(16));
 
-                //mSoundOut.Volume = Vol;
+                mSoundOut.Volume = Vol;
                 //mSoundOut.Initialize(mSource);
                 mSoundOut.Play();
                 //mSoundOut.Volume = (float)slGain.Value;
@@ -1040,7 +1040,7 @@ namespace SimpleNeurotuner
         {
             //PitchShifter.Gain = (float)slGain.Value;
 
-            //Vol = (float)slGain.Value;
+            Vol = (float)slGain.Value;
             //await Task.Run(() => SoundOut());
             //mSoundOut.Volume = (float)slGain.Value;
         }

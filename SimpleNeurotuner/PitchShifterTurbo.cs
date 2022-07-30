@@ -103,9 +103,9 @@ namespace SimpleNeurotuner
                     /*for (int f = 0; f < sampleRate; f++)
                     {
                         kt[f] = 1;
-                    }
+                    }*/
 
-                    for (int p = 0; p < Nlines; p++)
+                    /*for (int p = 0; p < Nlines; p++)
                     {
                         for (int q = 0, r = 1, e = 2; q < Nlines && r < Nlines && e < Nlines; q += 3, r += 3, e += 3)
                         {
@@ -119,8 +119,8 @@ namespace SimpleNeurotuner
                     {
                         for (int l = minfreq[t]; l < maxfreq[t]; l++)
                         {
-                            kt[l] = coef[t];
-                            kt[(int)sampleRate - l] = coef[t];
+                            kt[l] *= coef[t];
+                            kt[(int)sampleRate - l] *= coef[t];
                         }
                     }*/
 
@@ -132,8 +132,8 @@ namespace SimpleNeurotuner
                     for (k = 0; k < fftFrameSize2; k++)
                     {
                         /* de-interlace FFT buffer/деинтерлейсный буфер FFT  */
-                        real = gFFTworksp[2 * k];
-                        imag = gFFTworksp[2 * k + 1];
+                        real = gFFTworksp[2 * k] * TembroClass.kt[k];
+                        imag = gFFTworksp[2 * k + 1] * TembroClass.kt[k];
 
                         /* compute magnitude and phase/вычислить амплитуду и фазу  */
                         magn = Math.Sqrt(real * real + imag * imag);//амплитуда
@@ -166,11 +166,11 @@ namespace SimpleNeurotuner
 
                     }
 
-                    for (k = 0; k <= fftFrameSize; k++)
+                    /*for (k = 0; k <= fftFrameSize; k++)
                     {
                         gFFTworksp[2 * k] *= TembroClass.kt[k];
                         gFFTworksp[2 * k + 1] *= TembroClass.kt[k];
-                    }
+                    }*/
 
                     /* ***************** PROCESSING ******************* */
                     /* this does the actual pitch shifting/это делает фактическое изменение высоты тона */
