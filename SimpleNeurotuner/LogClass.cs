@@ -13,7 +13,7 @@ namespace SimpleNeurotuner
         {
             FileStream fs = new FileStream("log.tmp", FileMode.Append);
             StreamWriter sw = new StreamWriter(fs);
-            sw.WriteLine(DateTime.Now + " " + logtxt);
+            sw.WriteLineAsync(DateTime.Now + " " + logtxt);
             sw.Close();
             fs.Close();
         }

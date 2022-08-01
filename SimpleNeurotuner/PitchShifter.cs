@@ -57,7 +57,6 @@ namespace SimpleNeurotuner
     {
 
         #region Private Static Memebers
-        public static float Gain;
         public static string NoteName;
         public static int[] min = new int[10];
         public static int[] max = new int[10];
@@ -66,7 +65,7 @@ namespace SimpleNeurotuner
         private static float MAX, MAXIN, MAX2, coeffVol;
         private static long IndexMAX, IndexMAX1, IndexMAX2;
         private static long IndexSTART, IndexEND;
-        private static int MAX_FRAME_LENGTH = 24000;
+        private static int MAX_FRAME_LENGTH = 48000;
         private static float[] gInFIFO = new float[MAX_FRAME_LENGTH];
         private static int[] kt = new int[MAX_FRAME_LENGTH * 2];
         private static int[] minfreq = new int[MAX_FRAME_LENGTH * 2];
@@ -134,42 +133,12 @@ namespace SimpleNeurotuner
                         window = -.5 * Math.Cos(2.0 * Math.PI * (double)k / (double)fftFrameSize) + .5;
                         gFFTworksp[2 * k] = (float)(gInFIFO[k] * window);
                         gFFTworksp[2 * k + 1] = 0.0F;
-                        gFFTworksp[fftFrameSize * 2 + k] = 0.0F;//заполню нулями до 12288
-                        gFFTworksp[fftFrameSize * 3 + k] = 0.0F;//заполню нулями до 16384
-                        gFFTworksp[fftFrameSize * 4 + k] = 0.0F;//заполню нулями до 20480
-                        gFFTworksp[fftFrameSize * 5 + k] = 0.0F;//заполню нулями до 24576
-                        gFFTworksp[fftFrameSize * 6 + k] = 0.0F;//заполню нулями до 28672
-                        gFFTworksp[fftFrameSize * 7 + k] = 0.0F;//заполню нулями до 32768
-                        gFFTworksp[fftFrameSize * 8 + k] = 0.0F;//заполню нулями до 36864
-                        gFFTworksp[fftFrameSize * 9 + k] = 0.0F;//заполню нулями до 40960
-                        if (fftFrameSize * 10 + k < sampleRate)
-                        {
-                            gFFTworksp[fftFrameSize * 10 + k] = 0.0F;
-                        }
                     }
 
-                    for(int f = 0; f < sampleRate; f++)
+                    for(k = fftFrameSize; k < sampleRate; k++)
                     {
-                        kt[f] = 1;
-                    }
-
-                    for(int p = 0; p < Nlines; p++)
-                    {
-                        for(int q = 0, r = 1, e = 2; q < Nlines && r < Nlines && e < Nlines; q += 3, r += 3, e += 3)
-                        {
-                            minfreq[p] = int.Parse(txt[q]);
-                            maxfreq[p] = int.Parse(txt[r]);
-                            coef[p] = int.Parse(txt[e]);
-                        }
-                    }
-
-                    for(int t = 0; t < Nlines; t++)
-                    {
-                        for (int l = minfreq[t]; l < maxfreq[t]; l++)
-                        {
-                            kt[l] = coef[t];
-                            kt[(int)sampleRate - l] = coef[t];
-                        }
+                        gFFTworksp[k * 2] = 0.0f;
+                        gFFTworksp[k * 2 + 1] = 0.0f;
                     }
 
                     /* ***************** ANALYSIS ******************* */
@@ -181,8 +150,8 @@ namespace SimpleNeurotuner
                     {
 
                         /* de-interlace FFT buffer/деинтерлейсный буфер FFT  */
-                        real = gFFTworksp[2 * k];
-                        imag = gFFTworksp[2 * k + 1];
+                        real = gFFTworksp[2 * k] * TembroClass.kt[k];
+                        imag = gFFTworksp[2 * k + 1] * TembroClass.kt[k];
 
                         /* compute magnitude and phase/вычислить амплитуду и фазу  */
                         magn = Math.Sqrt(real * real+ imag * imag);//амплитуда
@@ -229,9 +198,9 @@ namespace SimpleNeurotuner
                         MAXIN = PitchShifter1.MAXIN;
                         coeffVol = MAXIN / MAX;
                         //gAnaMagn[k] *= coeffVol * Gain;
-                        if (MAXIN > 1)
+                        if (MAXIN > 2)
                         {
-                            gAnaMagn[k] *= coeffVol/* * Gain*/;
+                            gAnaMagn[k] *= coeffVol;
                         }
                         else
                         {
@@ -239,11 +208,11 @@ namespace SimpleNeurotuner
                         }
                     }
 
-                    for(k = 0; k <= fftFrameSize; k++)
+                    /*for(k = 0; k <= fftFrameSize; k++)
                     {
-                        gFFTworksp[2 * k] *= kt[k];
-                        gFFTworksp[2 * k + 1] *= kt[k];
-                    }
+                        gFFTworksp[2 * k] *= TembroClass.kt[k];
+                        gFFTworksp[2 * k + 1] *= TembroClass.kt[k];
+                    }*/
 
                     /* ***************** PROCESSING ******************* */
                     /* this does the actual pitch shifting/это делает фактическое изменение высоты тона */

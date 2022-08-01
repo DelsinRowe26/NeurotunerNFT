@@ -49,7 +49,7 @@ namespace SimpleNeurotuner
         private FileInfo FileLanguage = new FileInfo("Data_Language.tmp");
         private FileInfo fileinfo = new FileInfo("DataTemp.tmp");
         private SimpleMixer mMixer;
-        private int SampleRate = 44100;//44100;
+        private int SampleRate;//44100;
         //private Equalizer equalizer;
         private WasapiOut mSoundOut;
         private WasapiCapture mSoundIn;
@@ -164,7 +164,7 @@ namespace SimpleNeurotuner
         {
             try
             {
-                mMixer = new SimpleMixer(1, mSoundIn.WaveFormat.SampleRate) //стерео, 44,1 КГц
+                mMixer = new SimpleMixer(1, SampleRate) //стерео, 44,1 КГц
                 {
                     FillWithZeros = true,
                     DivideResult = true, //Для этого установлено значение true, чтобы избежать звуков тиков из-за превышения -1 и 1.
@@ -203,6 +203,7 @@ namespace SimpleNeurotuner
                 MMDeviceEnumerator deviceEnum = new MMDeviceEnumerator();
                 mInputDevices = deviceEnum.EnumAudioEndpoints(DataFlow.Capture, DeviceState.Active);
                 MMDevice activeDevice = deviceEnum.GetDefaultAudioEndpoint(DataFlow.Capture, Role.Multimedia);
+                SampleRate = activeDevice.DeviceFormat.SampleRate;
                 foreach (MMDevice device in mInputDevices)
                 {
                     cmbInput.Items.Add(device.FriendlyName);
@@ -237,7 +238,10 @@ namespace SimpleNeurotuner
                         File.WriteAllText("log.tmp", " ");
                     }
                 }
-                TembroClass.Tembro(48000);
+                //SampleRate = mSoundIn.WaveFormat.SampleRate;
+                TembroClass tembro = new TembroClass();
+                tembro.Tembro(48000);
+                //lbVolGain.Content = 0;
             }
             catch (Exception ex)
             {
@@ -309,20 +313,37 @@ namespace SimpleNeurotuner
                 }
                 else
                 {
-                    click = 1;
-                    await Task.Run(() => Sound(file));
-                    StartFullDuplex();
-                    if (langindex == "0")
+                    if ((filename != "Record\\Select a record") && (filename != "Record\\Выберите запись"))
                     {
-                        LogClass.LogWrite("Начало прослушивания записи.");
+                        click = 1;
+                        await Task.Run(() => Sound(file));
+                        StartFullDuplex();
+                        if (langindex == "0")
+                        {
+                            LogClass.LogWrite("Начало прослушивания записи.");
+                        }
+                        else
+                        {
+                            LogClass.LogWrite("Start listening to the recording.");
+                        }
+                    
+                        btnStart_Open.IsEnabled = false;
+                        btnPlayer.IsEnabled = false;
+                        btnTurbo.IsEnabled = false;
                     }
                     else
                     {
-                        LogClass.LogWrite("Start listening to the recording.");
+                        if (langindex == "0")
+                        {
+                            string msg = "Выберите запись.";
+                            MessageBox.Show(msg);
+                        }
+                        else
+                        {
+                            string msg = "Select a record.";
+                            MessageBox.Show(msg);
+                        }
                     }
-                    btnStart_Open.IsEnabled = false;
-                    btnPlayer.IsEnabled = false;
-                    btnTurbo.IsEnabled = false;
                     
                 }
             }
@@ -493,18 +514,19 @@ namespace SimpleNeurotuner
             //return false;
         }
 
-        private void SoundOut()
+        private async void SoundOut()
         {
             try
             {
                 mSoundOut = new WasapiOut(/*false, AudioClientShareMode.Exclusive, 1*/);
                 
                 //mSoundOut.Device = mOutputDevices[cmbOutput.SelectedIndex];
-                mSoundOut.Initialize(mMixer.ToWaveSource(16));
+                mSoundOut.Initialize(mMixer.ToWaveSource(32));
 
-                mSoundOut.Volume = Vol;
                 //mSoundOut.Initialize(mSource);
                 mSoundOut.Play();
+                mSoundOut.Volume = Vol;
+                //await Task.Run(() => mSoundOut.Volume = Vol);
                 //mSoundOut.Volume = (float)slGain.Value;
 
             }
@@ -1036,13 +1058,10 @@ namespace SimpleNeurotuner
             lbPitchValue.Content = slPitch.Value.ToString("f1");
         }
 
-        public void slGain_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
+        private void slGain_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
         {
-            //PitchShifter.Gain = (float)slGain.Value;
-
-            Vol = (float)slGain.Value;
-            //await Task.Run(() => SoundOut());
-            //mSoundOut.Volume = (float)slGain.Value;
+            /*Vol = (float)slGain.Value;
+            lbVolGain.Content = slGain.Value.ToString("f1");*/
         }
 
         private void btnPlayer_Click(object sender, RoutedEventArgs e)
@@ -1127,6 +1146,16 @@ namespace SimpleNeurotuner
             }
         }
 
+        private void slVolumeGain_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
+        {
+            Vol = (float)slVolumeGain.Value;
+            /*if(Vol != 0)
+            {
+                SoundOut();
+            }*/
+            lbVolValue.Content = slVolumeGain.Value.ToString("f1");
+        }
+
         private async void Audition()
         {
             try
@@ -1136,7 +1165,7 @@ namespace SimpleNeurotuner
                 //Stop();
                 Mixer();
                 mMp3 = CodecFactory.Instance.GetCodec(/*@"Record\" + */myfile).ToMono().ToSampleSource();
-                mMixer.AddSource(mMp3.ChangeSampleRate(mMixer.WaveFormat.SampleRate).ToWaveSource(16).Loop().ToSampleSource());
+                mMixer.AddSource(mMp3.ChangeSampleRate(mMixer.WaveFormat.SampleRate).ToWaveSource(32).Loop().ToSampleSource());
                 await Task.Run(() => SoundOut());
             }
             catch (Exception ex)
@@ -1167,7 +1196,7 @@ namespace SimpleNeurotuner
                 //Stop();
                 Mixer();
                 mMp3 = CodecFactory.Instance.GetCodec(filename).ToMono().ToSampleSource();
-                mMixer.AddSource(mMp3.ChangeSampleRate(mMixer.WaveFormat.SampleRate).ToWaveSource(16).Loop().ToSampleSource());
+                mMixer.AddSource(mMp3.ChangeSampleRate(mMixer.WaveFormat.SampleRate).ToWaveSource(32).Loop().ToSampleSource());
                 await Task.Run(() => SoundOut());
             }
             catch (Exception ex)

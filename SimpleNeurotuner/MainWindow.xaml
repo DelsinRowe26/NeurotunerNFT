@@ -16,10 +16,9 @@
     </Window.Background>
     <Grid x:Name="grid" Margin="0,0,-6,-19">
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="369*"/>
-            <ColumnDefinition Width="200*"/>
+            <ColumnDefinition/>
         </Grid.ColumnDefinitions>
-        <Button x:Name="btnStart_Open" Content="Start" HorizontalAlignment="Center" Margin="0,439,0,0" VerticalAlignment="Top" Height="30" Width="80" Click="btnStart_Open_Click" MouseMove="btnStart_Open_MouseMove" MouseLeave="btnStart_Open_MouseLeave" FontSize="14" Background="{x:Null}">
+        <Button x:Name="btnStart_Open" Content="Start" HorizontalAlignment="Left" Margin="139,439,0,0" VerticalAlignment="Top" Height="30" Width="80" Click="btnStart_Open_Click" MouseMove="btnStart_Open_MouseMove" MouseLeave="btnStart_Open_MouseLeave" FontSize="14" Background="{x:Null}">
             <Button.Template>
                 <ControlTemplate>
                     <Border BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="2" CornerRadius="25" Margin="0,5,0,-5">
@@ -39,7 +38,7 @@
                 </Style>
             </Button.Style>
         </Button>
-        <Button x:Name="btnStop" Content="Stop" HorizontalAlignment="Left" Margin="349,444,0,0" VerticalAlignment="Top" Height="30" Width="80" Click="btnStop_Click" MouseMove="btnStop_MouseMove" MouseLeave="btnStop_MouseLeave" FontSize="14" Background="{x:Null}" Grid.ColumnSpan="2">
+        <Button x:Name="btnStop" Content="Stop" HorizontalAlignment="Left" Margin="349,444,0,0" VerticalAlignment="Top" Height="30" Width="80" Click="btnStop_Click" MouseMove="btnStop_MouseMove" MouseLeave="btnStop_MouseLeave" FontSize="14" Background="{x:Null}">
             <Button.Template>
                 <ControlTemplate>
                     <Border BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="2" CornerRadius="25" Background="{x:Null}">
@@ -58,24 +57,24 @@
         </Button>
 
 
-        <Label x:Name="lbSpeaker" Content="Speaker" HorizontalAlignment="Left" Margin="73,164,0,0" VerticalAlignment="Top" Visibility="Hidden"/>
-        <Label x:Name="lbMicrophone" Content="Microphone" HorizontalAlignment="Left" Margin="53,129,0,0" VerticalAlignment="Top" Visibility="Hidden"/>
-        <ComboBox x:Name="cmbRecord" HorizontalAlignment="Left" Margin="192,406,0,0" VerticalAlignment="Top" Width="190" SelectionChanged="cmbRecord_SelectionChanged" ToolTip="Record" SelectedIndex="0" Height="23" Grid.ColumnSpan="2">
+        <Label x:Name="lbSpeaker" Content="Speaker" HorizontalAlignment="Left" Margin="73,164,0,0" VerticalAlignment="Top" Visibility="Hidden" Height="26" Width="52"/>
+        <Label x:Name="lbMicrophone" Content="Microphone" HorizontalAlignment="Left" Margin="53,129,0,0" VerticalAlignment="Top" Visibility="Hidden" Height="26" Width="74"/>
+        <ComboBox x:Name="cmbRecord" HorizontalAlignment="Center" Margin="0,406,0,0" VerticalAlignment="Top" Width="190" SelectionChanged="cmbRecord_SelectionChanged" ToolTip="Record" SelectedIndex="0" Height="23">
             <ComboBox.Style>
                 <Style>
                     <Setter Property="Control.Background" Value="Gainsboro"/>
                 </Style>
             </ComboBox.Style>
         </ComboBox>
-        <Menu x:Name="menu" VerticalAlignment="Top" Height="25" Background="#FFF0F0F0" Grid.ColumnSpan="2">
+        <Menu x:Name="menu" VerticalAlignment="Top" Height="25" Background="#FFF0F0F0">
             <MenuItem x:Name="Help" Header="Help" Click="MenuItem_Click"></MenuItem>
             <ComboBox x:Name="cmbModes" Width="120" SelectionChanged="cmbModes_SelectionChanged" ToolTip="Modes">
                 <!--<ComboBoxItem Content="Audition"/>-->
                 <ComboBoxItem Content="Record"/>
             </ComboBox>
         </Menu>
-        <Label x:Name="label" Content="Label" HorizontalAlignment="Left" Margin="372.757,354,-173,0" VerticalAlignment="Top" Grid.Column="1"/>
-        <Label x:Name="lbVersion" Content="Version: 1.1" HorizontalAlignment="Left" Margin="82.757,500,0,0" VerticalAlignment="Top" FontSize="18" Visibility="Hidden" Grid.Column="1">
+        <Label x:Name="label" Content="Label" HorizontalAlignment="Left" Margin="731,354,0,0" VerticalAlignment="Top" Height="26" Width="0"/>
+        <Label x:Name="lbVersion" Content="Version: 1.1" HorizontalAlignment="Left" Margin="441,500,0,0" VerticalAlignment="Top" FontSize="18" Visibility="Hidden" Height="31" Width="97">
             <Label.Style>
                 <Style>
                     <Setter Property="Control.FontFamily" Value="Times New Roman"/>
@@ -83,7 +82,7 @@
             </Label.Style>
         </Label>
         <Label x:Name="lbVolValue5" Content="0" HorizontalAlignment="Left" Margin="206,376,0,0" VerticalAlignment="Top" Height="32" Width="36" FontSize="18" Visibility="Hidden"/>
-        <Button x:Name="btnRecord" Content="Audition" HorizontalAlignment="Left" Margin="247,440,0,0" VerticalAlignment="Top" Height="30" Width="80" MouseMove="btnRecord_MouseMove" MouseLeave="btnRecord_MouseLeave" Click="btnRecord_Click" Visibility="Hidden" Background="{x:Null}" FontSize="10">
+        <Button x:Name="btnRecord" Content="Audition" HorizontalAlignment="Left" Margin="250,444,0,0" VerticalAlignment="Top" Height="30" Width="80" MouseMove="btnRecord_MouseMove" MouseLeave="btnRecord_MouseLeave" Click="btnRecord_Click" Visibility="Hidden" Background="{x:Null}" FontSize="10">
             <Button.Template>
                 <ControlTemplate>
                     <Border BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="2" CornerRadius="25" Background="{x:Null}">
@@ -100,7 +99,7 @@
                 </Style>
             </Button.Style>
         </Button>
-        <ProgressBar x:Name="pbRecord" HorizontalAlignment="Left" Height="16" VerticalAlignment="Top" Width="200" Visibility="Hidden" Margin="188,103,0,0" BorderBrush="Black" Grid.ColumnSpan="2" Background="{x:Null}">
+        <ProgressBar x:Name="pbRecord" HorizontalAlignment="Center" Height="16" VerticalAlignment="Top" Width="200" Visibility="Hidden" Margin="0,103,0,0" BorderBrush="Black" Background="{x:Null}">
             <ProgressBar.Foreground>
                 <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
                     <GradientStop Color="#FF00DCDC"/>
@@ -108,8 +107,8 @@
                 </LinearGradientBrush>
             </ProgressBar.Foreground>
         </ProgressBar>
-        <Label x:Name="lbRecordPB" Content="Recording in progress..." HorizontalAlignment="Left" Margin="221,97,0,0" VerticalAlignment="Top" Visibility="Hidden"/>
-        <TabControl x:Name="tabControl" Margin="159,136,159,166" Visibility="Visible" Background="{x:Null}" BorderBrush="{x:Null}" Grid.ColumnSpan="2" TabStripPlacement="Top">
+        <Label x:Name="lbRecordPB" Content="Recording in progress..." HorizontalAlignment="Center" Margin="0,97,0,0" VerticalAlignment="Top" Visibility="Hidden" Height="26" Width="134"/>
+        <TabControl x:Name="tabControl" Margin="159,136,159,166" Visibility="Visible" Background="{x:Null}" BorderBrush="{x:Null}" TabStripPlacement="Top">
             <TabItem x:Name="TabNFT" Header="gNeuro NFT" Background="{x:Null}" BorderBrush="{x:Null}" Margin="46,-2,-50,0">
                 <Grid Width="230" Margin="7,0,8,0" Height="230">
                     <Grid.ColumnDefinitions>
@@ -142,7 +141,7 @@
                 </Grid>
             </TabItem>
         </TabControl>
-        <ProgressBar x:Name="PBNFT" HorizontalAlignment="Left" Height="24" Margin="188,32,0,0" VerticalAlignment="Top" Width="200" BorderBrush="Black" Background="{x:Null}" Grid.ColumnSpan="2" Visibility="Hidden">
+        <ProgressBar x:Name="PBNFT" HorizontalAlignment="Center" Height="24" Margin="0,32,0,0" VerticalAlignment="Top" Width="200" BorderBrush="Black" Background="{x:Null}" Visibility="Hidden">
             <ProgressBar.Foreground>
                 <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
                     <GradientStop Color="#FF067515"/>
@@ -150,10 +149,9 @@
                 </LinearGradientBrush>
             </ProgressBar.Foreground>
         </ProgressBar>
-        <Label x:Name="lbPBNFT" Content="NFT loading in progress..." HorizontalAlignment="Left" Margin="221,30,0,0" VerticalAlignment="Top" Visibility="Hidden"/>
-        <Slider x:Name="slPitch" HorizontalAlignment="Center" Margin="160,79,159,0" VerticalAlignment="Top" Width="250" Maximum="15" Minimum="-15" TickPlacement="BottomRight" ValueChanged="slPitch_ValueChanged" Grid.ColumnSpan="2" Visibility="Hidden"/>
-        <Label x:Name="lbPitchValue" Content="0" HorizontalAlignment="Left" Margin="51.757,70,0,0" VerticalAlignment="Top" FontSize="14" Grid.Column="1" Visibility="Hidden"/>
-        <Slider x:Name="slGain" HorizontalAlignment="Left" Margin="160,73,0,0" VerticalAlignment="Top" Width="256" Grid.ColumnSpan="2" TickPlacement="BottomRight" Maximum="50" Minimum="1" ValueChanged="slGain_ValueChanged"/>
+        <Label x:Name="lbPBNFT" Content="NFT loading in progress..." HorizontalAlignment="Left" Margin="221,30,0,0" VerticalAlignment="Top" Visibility="Hidden" Height="26" Width="144"/>
+        <Slider x:Name="slPitch" HorizontalAlignment="Center" Margin="0,79,0,0" VerticalAlignment="Top" Width="250" Maximum="15" Minimum="-15" TickPlacement="BottomRight" ValueChanged="slPitch_ValueChanged" Visibility="Hidden" Height="24"/>
+        <Label x:Name="lbPitchValue" Content="0" HorizontalAlignment="Left" Margin="410,70,0,0" VerticalAlignment="Top" FontSize="14" Visibility="Hidden" Height="29" Width="17"/>
         <Button x:Name="btnTurbo" Content="Turbo" HorizontalAlignment="Left" Margin="250,475,0,0" VerticalAlignment="Top" Height="30" Width="80" Click="btnTurbo_Click" MouseMove="btnTurbo_MouseMove" MouseLeave="btnTurbo_MouseLeave" FontSize="14" Background="{x:Null}">
             <Button.Template>
                 <ControlTemplate>
@@ -174,7 +172,7 @@
                 </Style>
             </Button.Style>
         </Button>
-        <Button x:Name="btnPlayer" Content="Player" HorizontalAlignment="Left" Margin="249,439,0,0" VerticalAlignment="Top" Height="30" Width="80" Click="btnPlayer_Click" MouseMove="btnPlayer_MouseMove" MouseLeave="btnPlayer_MouseLeave" FontSize="14" Background="{x:Null}">
+        <Button x:Name="btnPlayer" Content="Player" HorizontalAlignment="Left" Margin="249,439,0,0" VerticalAlignment="Top" Height="30" Width="80" Click="btnPlayer_Click" MouseMove="btnPlayer_MouseMove" MouseLeave="btnPlayer_MouseLeave" FontSize="14" Background="{x:Null}" Visibility="Visible">
             <Button.Template>
                 <ControlTemplate>
                     <Border BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="2" CornerRadius="25" Margin="0,5,0,-5">
@@ -194,5 +192,7 @@
                 </Style>
             </Button.Style>
         </Button>
+        <Slider x:Name="slVolumeGain" HorizontalAlignment="Left" Margin="179,67,0,0" VerticalAlignment="Top" Width="237" TickPlacement="BottomRight" Maximum="100" ValueChanged="slVolumeGain_ValueChanged"/>
+        <Label x:Name="lbVolValue" Content="0" HorizontalAlignment="Left" Margin="432,65,0,0" VerticalAlignment="Top" Width="57" FontSize="16"/>
     </Grid>
 </Window>

@@ -69,7 +69,7 @@ namespace SimpleNeurotuner
         public static float MAX, MIN, MAXIN;
         private static long IndexMAX, IndexMAX1, IndexMAX2;
         private static long IndexSTART, IndexEND;
-        private static int MAX_FRAME_LENGTH = 24000;
+        private static int MAX_FRAME_LENGTH = 48000;
         private static float[] gInFIFO = new float[MAX_FRAME_LENGTH];
         private static float[] gOutFIFO = new float[MAX_FRAME_LENGTH];
         private static float[] gFFTworksp = new float[2 * MAX_FRAME_LENGTH];
@@ -142,18 +142,12 @@ namespace SimpleNeurotuner
                             window = -.5 * Math.Cos(2.0 * Math.PI * (double)k / (double)fftFrameSize) + .5;
                             gFFTworksp[2 * k] = (float)(gInFIFO[k] * window);
                             gFFTworksp[2 * k + 1] = 0.0F;
-                            gFFTworksp[fftFrameSize * 2 + k] = 0.0F;//заполню нулями до 12288
-                            gFFTworksp[fftFrameSize * 3 + k] = 0.0F;//заполню нулями до 16384
-                            gFFTworksp[fftFrameSize * 4 + k] = 0.0F;//заполню нулями до 20480
-                            gFFTworksp[fftFrameSize * 5 + k] = 0.0F;//заполню нулями до 24576
-                            gFFTworksp[fftFrameSize * 6 + k] = 0.0F;//заполню нулями до 28672
-                            gFFTworksp[fftFrameSize * 7 + k] = 0.0F;//заполню нулями до 32768
-                            gFFTworksp[fftFrameSize * 8 + k] = 0.0F;//заполню нулями до 36864
-                            gFFTworksp[fftFrameSize * 9 + k] = 0.0F;//заполню нулями до 40960
-                            if (fftFrameSize * 10 + k < sampleRate)
-                            {
-                                gFFTworksp[fftFrameSize * 10 + k] = 0.0F;
-                            }
+                        }
+
+                        for(k = fftFrameSize; k < sampleRate; k++)
+                        {
+                            gFFTworksp[k * 2] = 0.0f;
+                            gFFTworksp[k * 2 + 1] = 0.0f;
                         }
 
 
