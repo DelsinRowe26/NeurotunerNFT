@@ -63,8 +63,6 @@ namespace SimpleNeurotuner
         private MMDeviceCollection mOutputDevices;
         private MMDeviceCollection mInputDevices;
         public double Magn;
-        string start = "00:00:03,25";
-        string end = "00:00:04,25";
         string myfile;
         string cutmyfile;
         public int index = 1;
@@ -75,11 +73,9 @@ namespace SimpleNeurotuner
         private System.Windows.Point startPoint;
         //public Image ImgSpectr;
         private System.Windows.Shapes.Rectangle rectangle;
-        float Vol;
+        float Vol = 1;
         //private PitchShifter _pitchShifter;
 
-        private const double MaxDB = 20;
-        private Equalizer mEqualizer;
         private ISampleSource mMp3;
         private string file, filename;
         private string record;
@@ -157,6 +153,52 @@ namespace SimpleNeurotuner
                     MessageBox.Show(msg);
                     Debug.WriteLine(msg);
                 }
+            }
+        }
+
+        private void select_an_entry()
+        {
+            try
+            {
+                if (langindex == "0")
+                {
+                    string msg = "Выберите запись.";
+                    MessageBox.Show(msg);
+                }
+                else
+                {
+                    string msg = "Select a record.";
+                    MessageBox.Show(msg);
+                }
+            }
+            catch (Exception ex)
+            {
+                if (langindex == "0")
+                {
+                    string msg = "Ошибка в select_an_entry: \r\n" + ex.Message;
+                    MessageBox.Show(msg);
+                    Debug.WriteLine(msg);
+                }
+                else
+                {
+                    string msg = "Error in select_an_entry: \r\n" + ex.Message;
+                    MessageBox.Show(msg);
+                    Debug.WriteLine(msg);
+                }
+            }
+        }
+
+        private void NFT_download()
+        {
+            if (langindex == "0")
+            {
+                string msg = "Подождите пока загрузится NFT картинка.";
+                MessageBox.Show(msg);
+            }
+            else
+            {
+                string msg = "Wait for the NFT image to load.";
+                MessageBox.Show(msg);
             }
         }
 
@@ -315,34 +357,32 @@ namespace SimpleNeurotuner
                 {
                     if ((filename != "Record\\Select a record") && (filename != "Record\\Выберите запись"))
                     {
-                        click = 1;
-                        await Task.Run(() => Sound(file));
-                        StartFullDuplex();
-                        if (langindex == "0")
+                        if (PBNFT.Value == 100)
                         {
-                            LogClass.LogWrite("Начало прослушивания записи.");
+                            click = 1;
+                            await Task.Run(() => Sound(file));
+                            StartFullDuplex();
+                            if (langindex == "0")
+                            {
+                                LogClass.LogWrite("Начало прослушивания записи.");
+                            }
+                            else
+                            {
+                                LogClass.LogWrite("Start listening to the recording.");
+                            }
+
+                            btnStart_Open.IsEnabled = false;
+                            btnPlayer.IsEnabled = false;
+                            btnTurbo.IsEnabled = false;
                         }
                         else
                         {
-                            LogClass.LogWrite("Start listening to the recording.");
+                            NFT_download();
                         }
-                    
-                        btnStart_Open.IsEnabled = false;
-                        btnPlayer.IsEnabled = false;
-                        btnTurbo.IsEnabled = false;
                     }
                     else
                     {
-                        if (langindex == "0")
-                        {
-                            string msg = "Выберите запись.";
-                            MessageBox.Show(msg);
-                        }
-                        else
-                        {
-                            string msg = "Select a record.";
-                            MessageBox.Show(msg);
-                        }
+                        select_an_entry();
                     }
                     
                 }
@@ -395,10 +435,42 @@ namespace SimpleNeurotuner
                 }
                 if (mMp3 != null)
                 {
-                    mDspRec.Dispose();
+                    if (mDspRec != null)
+                    {
+                        mDspRec.Dispose();
+                    }
                     mMp3.Dispose();
                     mMp3 = null;
                 }
+            }
+            catch (Exception ex)
+            {
+                /*if (langindex == "0")
+                {
+                    string msg = "Ошибка в Stop: \r\n" + ex.Message;
+                    MessageBox.Show(msg);
+                    Debug.WriteLine(msg);
+                }
+                else
+                {
+                    string msg = "Error in Stop: \r\n" + ex.Message;
+                    MessageBox.Show(msg);
+                    Debug.WriteLine(msg);
+                }*/
+            }
+        }
+
+        private void StopOut()
+        {
+            try
+            {
+                mSoundOut.Stop();
+                /*if (mSoundOut != null)
+                {
+                    mSoundOut.Stop();
+                    //mSoundOut.Dispose();
+                    //mSoundOut = null;
+                }*/
             }
             catch (Exception ex)
             {
@@ -514,7 +586,7 @@ namespace SimpleNeurotuner
             //return false;
         }
 
-        private async void SoundOut()
+        private void SoundOut()
         {
             try
             {
@@ -525,7 +597,7 @@ namespace SimpleNeurotuner
 
                 //mSoundOut.Initialize(mSource);
                 mSoundOut.Play();
-                mSoundOut.Volume = Vol;
+                mSoundOut.Volume = 10;
                 //await Task.Run(() => mSoundOut.Volume = Vol);
                 //mSoundOut.Volume = (float)slGain.Value;
 
@@ -1058,18 +1130,26 @@ namespace SimpleNeurotuner
             lbPitchValue.Content = slPitch.Value.ToString("f1");
         }
 
-        private void slGain_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
-        {
-            /*Vol = (float)slGain.Value;
-            lbVolGain.Content = slGain.Value.ToString("f1");*/
-        }
-
         private void btnPlayer_Click(object sender, RoutedEventArgs e)
         {
-            AuditionTurbo();
-            btnStart_Open.IsEnabled = false;
-            btnTurbo.IsEnabled = false;
-            btnPlayer.IsEnabled = false;
+            if ((filename != "Record\\Select a record") && (filename != "Record\\Выберите запись"))
+            {
+                if (PBNFT.Value == 100)
+                {
+                    AuditionTurbo();
+                    btnStart_Open.IsEnabled = false;
+                    btnTurbo.IsEnabled = false;
+                    btnPlayer.IsEnabled = false;
+                }
+                else
+                {
+                    NFT_download();
+                }
+            }
+            else
+            {
+                select_an_entry();
+            }
         }
 
         private void btnTurbo_Click(object sender, RoutedEventArgs e)
@@ -1151,6 +1231,7 @@ namespace SimpleNeurotuner
             Vol = (float)slVolumeGain.Value;
             /*if(Vol != 0)
             {
+                StopOut();
                 SoundOut();
             }*/
             lbVolValue.Content = slVolumeGain.Value.ToString("f1");
@@ -1239,7 +1320,6 @@ namespace SimpleNeurotuner
                             }
                             PBNFT.Visibility = Visibility.Visible;
                             lbPBNFT.Visibility = Visibility.Visible;
-                            double closestFreq;
                             int[] Rdat = new int[250000];
                             int Ndt;
                             int Ww, Hw, k, ik, dWw, dHw;
