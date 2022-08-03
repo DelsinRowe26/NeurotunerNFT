@@ -110,7 +110,7 @@
         <Label x:Name="lbRecordPB" Content="Recording in progress..." HorizontalAlignment="Center" Margin="0,97,0,0" VerticalAlignment="Top" Visibility="Hidden" Height="26" Width="134"/>
         <TabControl x:Name="tabControl" Margin="159,136,159,166" Visibility="Visible" Background="{x:Null}" BorderBrush="{x:Null}" TabStripPlacement="Top">
             <TabItem x:Name="TabNFT" Header="gNeuro NFT" Background="{x:Null}" BorderBrush="{x:Null}" Margin="46,-2,-50,0">
-                <Grid Width="230" Margin="7,0,8,0" Height="230">
+                <Grid x:Name="GridName" Width="230" Margin="7,0,8,0" Height="230">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="82*"/>
                         <ColumnDefinition Width="33*"/>
@@ -194,5 +194,7 @@
         </Button>
         <Slider x:Name="slVolumeGain" HorizontalAlignment="Left" Margin="179,67,0,0" VerticalAlignment="Top" Width="237" TickPlacement="BottomRight" Maximum="100" ValueChanged="slVolumeGain_ValueChanged"/>
         <Label x:Name="lbVolValue" Content="0" HorizontalAlignment="Left" Margin="432,65,0,0" VerticalAlignment="Top" Width="57" FontSize="16"/>
+        <Button x:Name="btnDecVol" Content="-" HorizontalAlignment="Left" Margin="73,177,0,0" VerticalAlignment="Top" Height="34" Width="66" Click="btnDecVol_Click" RenderTransformOrigin="0.435,0.248"/>
+        <Button x:Name="btnIncVol" Content="+" HorizontalAlignment="Left" Margin="73,240,0,0" VerticalAlignment="Top" Height="48" Width="66" Click="btnIncVol_Click"/>
     </Grid>
 </Window>

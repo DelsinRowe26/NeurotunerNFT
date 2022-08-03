@@ -5,6 +5,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
+using System.Windows.Interop;
 using CSCore;
 using CSCore.SoundIn;//Вход звука
 using CSCore.SoundOut;//Выход звука
@@ -38,8 +39,13 @@ namespace SimpleNeurotuner
     /// </summary>
     public partial class MainWindow : Window
     {
-        
-            
+
+        [DllImport("user32.dll")]
+        public static extern IntPtr SendMessageW(IntPtr hWnd, int Msg, IntPtr wParam, IntPtr lParam);
+
+        [DllImport("winmm.dll")]
+        public static extern int waveOutGetVolume(IntPtr hwo, out uint pdwVolume);
+
         [DllImport("BiblZvuk.dll", CallingConvention = CallingConvention.Cdecl)]
         //unsafe
           static extern int vizualzvuk(string filename, string secfile, int[] Rdat,int ParV);
@@ -77,22 +83,30 @@ namespace SimpleNeurotuner
         //private PitchShifter _pitchShifter;
 
         private ISampleSource mMp3;
-        private string file, filename;
+        private string file, filename, RecordName;
         private string record;
         private string[] allfile;
         private int click, audioclick = 0;
+
+        private const int APPCOMMAND_VOLUME_MUTE = 0x80000;
+        private const int APPCOMMAND_VOLUME_UP = 0xA0000;
+        private const int APPCOMMAND_VOLUME_DOWN = 0x90000;
+        private const int WM_APPCOMMAND = 0x319;
 
         BackgroundWorker worker;
         
         public MainWindow()
         {
             InitializeComponent();
+            //ShowCurrentVolume();
             worker = new BackgroundWorker();
             worker.WorkerReportsProgress = true;
             worker.WorkerSupportsCancellation = true;
             worker.DoWork += worker_DoWork;
             worker.ProgressChanged += worker_ProgressChanged;
         }
+
+
 
         void worker_DoWork(object sender, DoWorkEventArgs e)
         {
@@ -246,6 +260,7 @@ namespace SimpleNeurotuner
                 mInputDevices = deviceEnum.EnumAudioEndpoints(DataFlow.Capture, DeviceState.Active);
                 MMDevice activeDevice = deviceEnum.GetDefaultAudioEndpoint(DataFlow.Capture, Role.Multimedia);
                 SampleRate = activeDevice.DeviceFormat.SampleRate;
+                
                 foreach (MMDevice device in mInputDevices)
                 {
                     cmbInput.Items.Add(device.FriendlyName);
@@ -283,6 +298,13 @@ namespace SimpleNeurotuner
                 //SampleRate = mSoundIn.WaveFormat.SampleRate;
                 TembroClass tembro = new TembroClass();
                 tembro.Tembro(48000);
+                var wih = new WindowInteropHelper(this);
+                var hWnd = wih.Handle;
+                /*uint volume;
+                waveOutGetVolume(IntPtr.Zero, out volume);
+                int vol = (int)((volume >> 16) & 0xffff);*/
+                //lbVolValue.Content = volume;
+                
                 //lbVolGain.Content = 0;
             }
             catch (Exception ex)
@@ -302,7 +324,16 @@ namespace SimpleNeurotuner
                     Debug.WriteLine(msg);
                 }
             }
+           
         }
+
+        /*private void ShowCurrentVolume()
+        {
+            uint volume;
+            waveOutGetVolume(IntPtr.Zero, out volume);
+            int left = (int)(volume & 0xFFFF);
+            int right = (int)((volume >> 16) & 0xFFFF);
+        }*/
 
         private void Filling()
         {
@@ -372,6 +403,7 @@ namespace SimpleNeurotuner
                             }
 
                             btnStart_Open.IsEnabled = false;
+                            cmbRecord.IsEnabled = false;
                             btnPlayer.IsEnabled = false;
                             btnTurbo.IsEnabled = false;
                         }
@@ -413,7 +445,7 @@ namespace SimpleNeurotuner
                 if (mMixer != null)
                 {
                     mMixer.Dispose();
-                    mMp3.ToWaveSource(16).Loop().ToSampleSource().Dispose();
+                    mMp3.ToWaveSource(32).Loop().ToSampleSource().Dispose();
                     mMixer = null;
                 }
                 if (mSoundOut != null)
@@ -597,7 +629,8 @@ namespace SimpleNeurotuner
 
                 //mSoundOut.Initialize(mSource);
                 mSoundOut.Play();
-                mSoundOut.Volume = 10;
+                mSoundOut.Volume = 5;
+                //lbVolValue.Content = mSoundOut.Volume;
                 //await Task.Run(() => mSoundOut.Volume = Vol);
                 //mSoundOut.Volume = (float)slGain.Value;
 
@@ -675,6 +708,8 @@ namespace SimpleNeurotuner
                 btnStart_Open.IsEnabled = true;
                 btnPlayer.IsEnabled = true;
                 btnTurbo.IsEnabled = true;
+                cmbRecord.IsEnabled = true;
+                btnRecord.IsEnabled = true;
                 click = 0;
                 audioclick = 0;
                 if (langindex == "0")
@@ -871,6 +906,7 @@ namespace SimpleNeurotuner
             {
                 //audioclick = 1;
                 //mDsp.PitchShift = 0;
+                btnRecord.IsEnabled = false;
                 click = 1;
                 if(langindex == "0")
                 {
@@ -1075,6 +1111,29 @@ namespace SimpleNeurotuner
             }
         }
 
+        public static void SaveToBmp(FrameworkElement visual, string fileName)
+        {
+            var encoder = new BmpBitmapEncoder();
+            SaveUsingEncoder(visual, fileName, encoder);
+        }
+
+        public static void SaveUsingEncoder(FrameworkElement visual, string fileName, BitmapEncoder encoder)
+        {
+            RenderTargetBitmap bitmap = new RenderTargetBitmap((int)visual.Width, (int)visual.Height, 99, 98, PixelFormats.Pbgra32);
+            Size visualSize = new Size(visual.Width, visual.Height);
+            visual.Measure(visualSize);
+            visual.Arrange(new Rect(visualSize));
+            bitmap.Render(visual);
+            BitmapFrame frame = BitmapFrame.Create(bitmap);
+            bitmap.Render(visual);
+            encoder.Frames.Add(frame);
+
+            using(var stream = File.Create(fileName))
+            {
+                encoder.Save(stream);
+            }
+        }
+
         private void SimpleNeurotuner_Activated(object sender, EventArgs e)
         {
             try
@@ -1169,6 +1228,8 @@ namespace SimpleNeurotuner
                     CreateWindow window = new CreateWindow();
                     window.Show();
 
+                    btnStart_Open.IsEnabled = true;
+                    cmbRecord.IsEnabled = false;
                     btnPlayer.Visibility = Visibility.Hidden;
                     btnTurbo.Visibility = Visibility.Hidden;
                     btnRecord.Visibility = Visibility.Visible;
@@ -1185,6 +1246,7 @@ namespace SimpleNeurotuner
                 }
                 else if (cmbModes.SelectedIndex != 0)
                 {
+                    cmbRecord.IsEnabled = true;
                     btnRecord.Visibility = Visibility.Hidden;
                     pbRecord.Visibility = Visibility.Hidden;
                     btnPlayer.Visibility = Visibility.Visible;
@@ -1224,6 +1286,21 @@ namespace SimpleNeurotuner
                     Debug.WriteLine(msg);
                 }
             }
+        }
+
+        private void btnDecVol_Click(object sender, RoutedEventArgs e)
+        {
+            var wih = new WindowInteropHelper(this);
+            var hWnd = wih.Handle;
+            SendMessageW(hWnd, WM_APPCOMMAND, hWnd, (IntPtr)APPCOMMAND_VOLUME_DOWN);
+        }
+
+        private void btnIncVol_Click(object sender, RoutedEventArgs e)
+        {
+            var wih = new WindowInteropHelper(this);
+            var hWnd = wih.Handle;
+            SendMessageW(hWnd, WM_APPCOMMAND, hWnd, (IntPtr)APPCOMMAND_VOLUME_UP);
+            
         }
 
         private void slVolumeGain_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
@@ -1308,9 +1385,13 @@ namespace SimpleNeurotuner
                     //unsafe
                     {
                         filename = @"Record\" + cmbRecord.SelectedItem.ToString();
+                        
                         if ((filename != "Record\\Select a record") && (filename != "Record\\Выберите запись"))
                         {
-                            if(langindex == "0")
+                            RecordName = cmbRecord.SelectedItem.ToString();
+                            int indexOfChar = RecordName.IndexOf(".");
+                            RecordName = RecordName.Substring(0, indexOfChar);
+                            if (langindex == "0")
                             {
                                 LogClass.LogWrite("Выбрана запись " + filename);
                             }
@@ -1431,6 +1512,23 @@ namespace SimpleNeurotuner
                             }
                             // Show the bitmap in an Image element.
                             Image1.Source = wb;
+                            Image1.UpdateLayout();
+                            if (!File.Exists(@"Image\" + RecordName + ".bmp"))
+                            {
+                                SaveToBmp(GridName, @"Image\" + RecordName + ".bmp");
+                                if (langindex == "0")
+                                {
+                                    string msg = "NFT картинка сохранена.";
+                                    LogClass.LogWrite(msg);
+                                    MessageBox.Show(msg);
+                                }
+                                else
+                                {
+                                    string msg = "NFT picture saved.";
+                                    LogClass.LogWrite(msg);
+                                    MessageBox.Show(msg);
+                                }
+                            }
                             worker.CancelAsync();
                             
                         }
