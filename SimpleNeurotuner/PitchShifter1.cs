@@ -255,7 +255,7 @@ namespace SimpleNeurotuner
                         for (k = 0; k <= fftFrameSize2; k++)
                         {//eekekekeke
                             gAnaMagn[k] *= 0;
-                        }
+                        }///dsdsds
 
                         /* ***************** PROCESSING ******************* */
                         /* this does the actual pitch shifting/это делает фактическое изменение высоты тона */
