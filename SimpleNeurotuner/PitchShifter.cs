@@ -55,6 +55,12 @@ namespace SimpleNeurotuner
 {
     public class PitchShifter
     {
+        public static float AmpDSP { get; set; }
+        public static float ItDSP { get; set; }
+        public static float AmpDSPR { get; set; }
+        public static float ItDSPR { get; set; }
+        public static float Kamp { get; set; }
+        public static float Kampp { get; set; }
 
         #region Private Static Memebers
         public static string NoteName;
@@ -150,8 +156,8 @@ namespace SimpleNeurotuner
                     {
 
                         /* de-interlace FFT buffer/деинтерлейсный буфер FFT  */
-                        real = gFFTworksp[2 * k] * TembroClass.kt[k];
-                        imag = gFFTworksp[2 * k + 1] * TembroClass.kt[k];
+                        real = gFFTworksp[2 * k];
+                        imag = gFFTworksp[2 * k + 1];
 
                         /* compute magnitude and phase/вычислить амплитуду и фазу  */
                         magn = Math.Sqrt(real * real+ imag * imag);//амплитуда
@@ -176,10 +182,6 @@ namespace SimpleNeurotuner
                         /* compute the k-th partials' true frequency/вычислить истинную частоту k-го парциала */
                         tmp = (double)k * freqPerBin + tmp * freqPerBin;
 
-                        //FindClosestNote(tmp, out closestFrequency/*, out noteName*/);
-                        //NoteName = noteName;
-                        //Freq = closestFrequency;
-
                         /* store magnitude and true frequency in analysis arrays/хранить величину и истинную частоту в массивах анализа */
                         gAnaMagn[k] = (float)magn;
                         //File.AppendAllText("magn.txt", gAnaMagn[k].ToString() + "\n");
@@ -188,8 +190,6 @@ namespace SimpleNeurotuner
 
                     }
 
-
-
                     MAX = gAnaMagn[0];
                     IndexMAX = 0;
                     for(k = 0; k <= fftFrameSize2; k++)
@@ -197,10 +197,9 @@ namespace SimpleNeurotuner
                         MAX = Math.Max(MAX, gAnaMagn[k]);
                         MAXIN = PitchShifter1.MAXIN;
                         coeffVol = MAXIN / MAX;
-                        //gAnaMagn[k] *= coeffVol * Gain;
-                        if (MAXIN > 2)
+                        if (MAXIN > 1.8)
                         {
-                            gAnaMagn[k] *= coeffVol;
+                            gAnaMagn[k] *= coeffVol * 0.9f;
                         }
                         else
                         {
@@ -208,11 +207,11 @@ namespace SimpleNeurotuner
                         }
                     }
 
-                    /*for(k = 0; k <= fftFrameSize; k++)
+                    for(k = 0; k <= fftFrameSize; k++)
                     {
                         gFFTworksp[2 * k] *= TembroClass.kt[k];
                         gFFTworksp[2 * k + 1] *= TembroClass.kt[k];
-                    }*/
+                    }
 
                     /* ***************** PROCESSING ******************* */
                     /* this does the actual pitch shifting/это делает фактическое изменение высоты тона */

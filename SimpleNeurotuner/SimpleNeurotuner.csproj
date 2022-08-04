@@ -207,5 +207,14 @@
       <Install>false</Install>
     </BootstrapperPackage>
   </ItemGroup>
+  <ItemGroup>
+    <Resource Include="button-soundup-inactive.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="button-sounddown-inactive.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="background-shadow.png" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

@@ -23,7 +23,8 @@ namespace SimpleNeurotuner
             {
                 //double[] buffer1 = new double[count];
                 double closestfreq = 0;
-                float gainAmplification = (float)(Math.Pow(10.0, GainDB / 20.0));//получить Усиление
+                float AmpSr = 0;
+                float gainAmplification = (float)(Math.Pow(10.0, (GainDB) / 20.0));//получить Усиление
                 int samples = mSource.Read(buffer, offset, count);//образцы
                                                                   //if (gainAmplification != 1.0f) 
                                                                   //{
@@ -31,10 +32,21 @@ namespace SimpleNeurotuner
                 {
                     buffer[i] = Math.Max(Math.Min(buffer[i] * gainAmplification, 1), -1);
                     //buffer1[i] = (double)buffer[i];
-
+                    AmpSr += Math.Abs(buffer[i]);
                 }
 
-                PitchShifter1.PitchShift(PitchShift, offset, count, 4096, 4, mSource.WaveFormat.SampleRate, buffer);
+                PitchShifter.AmpDSP += AmpSr;
+                PitchShifter.ItDSP += samples;
+
+                for (int i = offset; i < offset + samples; i++)
+                {
+                    if (i == offset)
+                        buffer[i] = 0.001f;
+                    else
+                        buffer[i] = 0;  // Math.Max(Math.Min(buffer[i] * 0.01f, 1), -1);
+                    //buffer1[i] = (double)buffer[i];
+
+                }
 
                 return samples;
             }

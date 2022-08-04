@@ -106,8 +106,6 @@ namespace SimpleNeurotuner
             worker.ProgressChanged += worker_ProgressChanged;
         }
 
-
-
         void worker_DoWork(object sender, DoWorkEventArgs e)
         {
             try
@@ -295,6 +293,10 @@ namespace SimpleNeurotuner
                         File.WriteAllText("log.tmp", " ");
                     }
                 }
+                if (!Directory.Exists("Image"))
+                {
+                    Directory.CreateDirectory("Image");
+                }
                 //SampleRate = mSoundIn.WaveFormat.SampleRate;
                 TembroClass tembro = new TembroClass();
                 tembro.Tembro(48000);
@@ -382,7 +384,6 @@ namespace SimpleNeurotuner
                     {
                         LogClass.LogWrite("Start voice recording.");
                     }
-                    //Recordind2();
                 }
                 else
                 {
@@ -391,6 +392,7 @@ namespace SimpleNeurotuner
                         if (PBNFT.Value == 100)
                         {
                             click = 1;
+                            PitchShifter.Kamp = -1;
                             await Task.Run(() => Sound(file));
                             StartFullDuplex();
                             if (langindex == "0")
@@ -539,14 +541,13 @@ namespace SimpleNeurotuner
                 mSoundIn.Start();
 
                 //Инициальный микшер
-                Mixer();
+                //Mixer();
 
                 //Добавляем наш источник звука в микшер
                 mMixer.AddSource(mDsp.ChangeSampleRate(mMixer.WaveFormat.SampleRate));
 
                 //Запускает устройство воспроизведения звука с задержкой 1 мс.
-                
-                await Task.Run(() => SoundOut());
+                //await Task.Run(() => SoundOut());
 
             }
             catch (Exception ex)
@@ -629,10 +630,6 @@ namespace SimpleNeurotuner
 
                 //mSoundOut.Initialize(mSource);
                 mSoundOut.Play();
-                mSoundOut.Volume = 5;
-                //lbVolValue.Content = mSoundOut.Volume;
-                //await Task.Run(() => mSoundOut.Volume = Vol);
-                //mSoundOut.Volume = (float)slGain.Value;
 
             }
             catch (Exception ex)
@@ -656,7 +653,6 @@ namespace SimpleNeurotuner
 
         private void SetPitchShiftValue()
         {
-            //mDspRec.PitchShift = (float)Math.Pow(2.0F, 0 / 13.0F);
             mDspTurbo.PitchShift = (float)Math.Pow(2.0F, 0 / 13.0F);
         }
 
@@ -669,10 +665,8 @@ namespace SimpleNeurotuner
                 {
                     Mixer();
                     mMp3 = CodecFactory.Instance.GetCodec(filename).ToMono().ToSampleSource()/*.AppendSource(Equalizer.Create10BandEqualizer, out mEqualizer)*/;
-                    mDspRec = new SampleDSPRecord(mMp3.ToWaveSource(16).ToSampleSource());
-                    //mDspRec.GainDB = (float)slGain.Value;
-                    
-                    mMixer.AddSource(mDspRec.ChangeSampleRate(mMixer.WaveFormat.SampleRate).ToWaveSource(16).Loop().ToSampleSource());
+                    mDspRec = new SampleDSPRecord(mMp3.ToWaveSource(32).ToSampleSource());
+                    mMixer.AddSource(mDspRec.ChangeSampleRate(mMixer.WaveFormat.SampleRate).ToWaveSource(32).Loop().ToSampleSource());
                     await Task.Run(() => SoundOut());
                     
                 }
@@ -724,6 +718,9 @@ namespace SimpleNeurotuner
                 {
                     if (audioclick == 0)
                     {
+                        /*int[] Rdat = new int[5000];
+                        int Ndt;
+                        Ndt = vizualzvuk(cutmyfile, myfile, Rdat, 2);*/
                         SaveDeleteWindow saveDelete = new SaveDeleteWindow();
                         saveDelete.Show();
                     }
@@ -1303,15 +1300,37 @@ namespace SimpleNeurotuner
             
         }
 
-        private void slVolumeGain_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
+        private void btnIncInactive_MouseMove(object sender, MouseEventArgs e)
         {
-            Vol = (float)slVolumeGain.Value;
-            /*if(Vol != 0)
-            {
-                StopOut();
-                SoundOut();
-            }*/
-            lbVolValue.Content = slVolumeGain.Value.ToString("f1");
+            
+            Style style = new Style();
+            style.Setters.Add(new Setter { Property = Control.FontFamilyProperty, Value = new System.Windows.Media.FontFamily("Verdana") });
+            style.Setters.Add(new Setter { Property = Control.MarginProperty, Value = new Thickness(10) });
+            style.Setters.Add(new Setter { Property = Control.BackgroundProperty, Value = new ImageBrush() });
+            style.Setters.Add(new Setter { Property = Control.ForegroundProperty, Value = new SolidColorBrush(Colors.White) });
+            ControlTemplate control = new ControlTemplate();
+            
+            //control.Resources.Add(new Setter { Property = Control.BackgroundProperty, Value = new ImageBrush(new ImageSource(@"E:\programs\СНейро\SNero\SimpleNeurotuner\bin\Debug\Neurotuners\button\button - soundup - hover.png")) });
+        }
+
+        private void btnIncVol_MouseMove(object sender, MouseEventArgs e)
+        {
+            BitmapImage bmp = new BitmapImage();
+            Uri uri = new Uri(@"E:\programs\СНейро\SNero\SimpleNeurotuner\bin\Debug\Neurotuners\button\button-soundup-hover.png");
+            bmp.UriSource = uri;
+            Image background = new Image();
+            background.Source = bmp;
+            //btnIncVol.Template.Resources.Add(new Setter { Property = Control.BackgroundProperty, Value = new ImageBrush(bmp)}, new Setter { Property = Control.BackgroundProperty, Value = new ImageBrush(bmp) });
+        }
+
+        private void btnDecVol_MouseMove(object sender, MouseEventArgs e)
+        {
+            BitmapImage bmp = new BitmapImage();
+            Uri uri = new Uri(@"E:\programs\СНейро\SNero\SimpleNeurotuner\bin\Debug\Neurotuners\button\button - sounddown - hover.png");
+            bmp.UriSource = uri;
+            Image background = new Image();
+            background.Source = bmp;
+            btnDecVol.Content = background;
         }
 
         private async void Audition()
