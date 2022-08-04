@@ -136,6 +136,10 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Thems\btnIncActiveVol.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="WelcomeWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -215,6 +219,39 @@
   </ItemGroup>
   <ItemGroup>
     <Resource Include="background-shadow.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Button\button-back.png" />
+    <Resource Include="Button\button-listen-active.png" />
+    <Resource Include="Button\button-listen-hover.png" />
+    <Resource Include="Button\button-listen-inactive.png" />
+    <Resource Include="Button\button-play-active.png" />
+    <Resource Include="Button\button-play-hover.png" />
+    <Resource Include="Button\button-play-inactive.png" />
+    <Resource Include="Button\button-record-active.png" />
+    <Resource Include="Button\button-record-hover.png" />
+    <Resource Include="Button\button-record-inactive.png" />
+    <Resource Include="Button\button-settings-active.png" />
+    <Resource Include="Button\button-settings-hover.png" />
+    <Resource Include="Button\button-settings-inactive.png" />
+    <Resource Include="Button\button-sounddown-active.png" />
+    <Resource Include="Button\button-sounddown-hover.png" />
+    <Resource Include="Button\button-sounddown-inactive.png" />
+    <Resource Include="Button\button-soundup-active.png" />
+    <Resource Include="Button\button-soundup-hover.png" />
+    <Resource Include="Button\button-soundup-inactive.png" />
+    <Resource Include="Button\button-stop-active.png" />
+    <Resource Include="Button\button-stop-hover.png" />
+    <Resource Include="Button\button-stop-inactive.png" />
+    <Resource Include="Button\button-turbo-active.png" />
+    <Resource Include="Button\button-turbo-hover.png" />
+    <Resource Include="Button\button-turbo-inactive.png" />
+    <Resource Include="Button\listen-mode-active.png" />
+    <Resource Include="Button\listen-mode-hover.png" />
+    <Resource Include="Button\listen-mode-inactive.png" />
+    <Resource Include="Button\record-mode-active.png" />
+    <Resource Include="Button\record-mode-hover.png" />
+    <Resource Include="Button\record-mode-inactive.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

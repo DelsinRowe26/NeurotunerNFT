@@ -630,6 +630,7 @@ namespace SimpleNeurotuner
 
                 //mSoundOut.Initialize(mSource);
                 mSoundOut.Play();
+                mSoundOut.Volume = 10;
 
             }
             catch (Exception ex)
@@ -1290,6 +1291,11 @@ namespace SimpleNeurotuner
             var wih = new WindowInteropHelper(this);
             var hWnd = wih.Handle;
             SendMessageW(hWnd, WM_APPCOMMAND, hWnd, (IntPtr)APPCOMMAND_VOLUME_DOWN);
+            string uri = @"Button\button-sounddown-active.png";
+            imgBTNinacDown.ImageSource = new ImageSourceConverter().ConvertFromString(uri) as ImageSource;
+            /*Thread.Sleep(2000);
+            string uri1 = @"Button\button-sounddown-inactive.png";
+            imgBTNinacDown.ImageSource = new ImageSourceConverter().ConvertFromString(uri1) as ImageSource;*/
         }
 
         private void btnIncVol_Click(object sender, RoutedEventArgs e)
@@ -1297,40 +1303,32 @@ namespace SimpleNeurotuner
             var wih = new WindowInteropHelper(this);
             var hWnd = wih.Handle;
             SendMessageW(hWnd, WM_APPCOMMAND, hWnd, (IntPtr)APPCOMMAND_VOLUME_UP);
-            
-        }
-
-        private void btnIncInactive_MouseMove(object sender, MouseEventArgs e)
-        {
-            
-            Style style = new Style();
-            style.Setters.Add(new Setter { Property = Control.FontFamilyProperty, Value = new System.Windows.Media.FontFamily("Verdana") });
-            style.Setters.Add(new Setter { Property = Control.MarginProperty, Value = new Thickness(10) });
-            style.Setters.Add(new Setter { Property = Control.BackgroundProperty, Value = new ImageBrush() });
-            style.Setters.Add(new Setter { Property = Control.ForegroundProperty, Value = new SolidColorBrush(Colors.White) });
-            ControlTemplate control = new ControlTemplate();
-            
-            //control.Resources.Add(new Setter { Property = Control.BackgroundProperty, Value = new ImageBrush(new ImageSource(@"E:\programs\СНейро\SNero\SimpleNeurotuner\bin\Debug\Neurotuners\button\button - soundup - hover.png")) });
+            string uri = @"Button\button-soundup-active.png";
+            imgBTNinaUp.ImageSource = new ImageSourceConverter().ConvertFromString(uri) as ImageSource;
         }
 
         private void btnIncVol_MouseMove(object sender, MouseEventArgs e)
         {
-            BitmapImage bmp = new BitmapImage();
-            Uri uri = new Uri(@"E:\programs\СНейро\SNero\SimpleNeurotuner\bin\Debug\Neurotuners\button\button-soundup-hover.png");
-            bmp.UriSource = uri;
-            Image background = new Image();
-            background.Source = bmp;
-            //btnIncVol.Template.Resources.Add(new Setter { Property = Control.BackgroundProperty, Value = new ImageBrush(bmp)}, new Setter { Property = Control.BackgroundProperty, Value = new ImageBrush(bmp) });
+            string uri = @"Button\button-soundup-hover.png";
+            imgBTNinaUp.ImageSource = new ImageSourceConverter().ConvertFromString(uri) as ImageSource;
+        }
+
+        private void Border_MouseLeave(object sender, MouseEventArgs e)
+        {
+            string uri = @"Button\button-sounddown-inactive.png";
+            imgBTNinacDown.ImageSource = new ImageSourceConverter().ConvertFromString(uri) as ImageSource;
+        }
+
+        private void btnIncVol_MouseLeave(object sender, MouseEventArgs e)
+        {
+            string uri = @"Button\button-soundup-inactive.png";
+            imgBTNinaUp.ImageSource = new ImageSourceConverter().ConvertFromString(uri) as ImageSource;
         }
 
         private void btnDecVol_MouseMove(object sender, MouseEventArgs e)
         {
-            BitmapImage bmp = new BitmapImage();
-            Uri uri = new Uri(@"E:\programs\СНейро\SNero\SimpleNeurotuner\bin\Debug\Neurotuners\button\button - sounddown - hover.png");
-            bmp.UriSource = uri;
-            Image background = new Image();
-            background.Source = bmp;
-            btnDecVol.Content = background;
+            string uri = @"Button\button-sounddown-hover.png";
+            imgBTNinacDown.ImageSource = new ImageSourceConverter().ConvertFromString(uri) as ImageSource;
         }
 
         private async void Audition()

@@ -15,6 +15,8 @@ Project("{54435603-DBB4-11D2-8724-00A0C9A8B90C}") = "Neurotuner NFT 1.2.1 Setup"
 EndProject
 Project("{54435603-DBB4-11D2-8724-00A0C9A8B90C}") = "Neurotuner NFT 1.2.2 Setup", "Neurotuner NFT 1.2.2 Setup\Neurotuner NFT 1.2.2 Setup.vdproj", "{B9BD8198-1BBA-42CB-8472-ECECDB8252C4}"
 EndProject
+Project("{54435603-DBB4-11D2-8724-00A0C9A8B90C}") = "Neurotuner NFT 1.2.3 Setup", "Neurotuner NFT 1.2.3 Setup\Neurotuner NFT 1.2.3 Setup.vdproj", "{9DE3FED1-8C8A-4A51-8AE0-AEDE7DE10DA8}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -37,6 +39,8 @@ Global
 		{83421AE4-D50A-42BD-802B-9BBD09923BB9}.Release|Any CPU.ActiveCfg = Release
 		{B9BD8198-1BBA-42CB-8472-ECECDB8252C4}.Debug|Any CPU.ActiveCfg = Debug
 		{B9BD8198-1BBA-42CB-8472-ECECDB8252C4}.Release|Any CPU.ActiveCfg = Release
+		{9DE3FED1-8C8A-4A51-8AE0-AEDE7DE10DA8}.Debug|Any CPU.ActiveCfg = Debug
+		{9DE3FED1-8C8A-4A51-8AE0-AEDE7DE10DA8}.Release|Any CPU.ActiveCfg = Release
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

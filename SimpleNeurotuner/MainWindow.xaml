@@ -197,40 +197,26 @@
         </Button>
         <Button x:Name="btnDecVol" Content="-" HorizontalAlignment="Left" Margin="73,177,0,0" VerticalAlignment="Top" Height="52" Width="52" Click="btnDecVol_Click" RenderTransformOrigin="0.435,0.248" BorderBrush="{x:Null}" MouseMove="btnDecVol_MouseMove" Foreground="{x:Null}" Focusable="False">
             <Button.Background>
-                <ImageBrush ImageSource="/button-sounddown-inactive.png"/>
-            </Button.Background>
-            <Button.Style>
-                <Style TargetType="{x:Type Button}">
-                    
-                </Style>
-            </Button.Style>
-        </Button>
-        <Button x:Name="btnIncVol" Content="+" HorizontalAlignment="Left" Margin="66,240,0,0" VerticalAlignment="Top" Height="46" Width="46" Click="btnIncVol_Click" MouseMove="btnIncVol_MouseMove">
-            <Button.Background>
-                <ImageBrush ImageSource="/button-soundup-inactive.png"/>
+                <ImageBrush x:Name="imgBTNinacDown" ImageSource="/button-sounddown-inactive.png"/>
             </Button.Background>
             <Button.Template>
                 <ControlTemplate>
-                    <Border x:Name="border"  BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="2" CornerRadius="20" Margin="0,5,0,-5">
-                        
-                        <!--<Image Source="E:\programs\СНейро\SNero\SimpleNeurotuner\bin\Debug\Neurotuners\button\button-soundup-inactive.png"/>-->
-                        <FocusManager.FocusedElement>
-                            <Button Content="+"/>
-                        </FocusManager.FocusedElement>
-                        <ContentPresenter Content="{TemplateBinding ContentControl.Content}" HorizontalAlignment="Center" VerticalAlignment="Center" />
-                        <!--<Image x:Name="btnIncInactive" Source="E:\programs\СНейро\SNero\SimpleNeurotuner\bin\Debug\Neurotuners\button\button-soundup-inactive.png" Width="50" Height="50" HorizontalAlignment="Center" VerticalAlignment="Center"/>-->
-                    </Border>
+                    <Border Background="{TemplateBinding Background}" MouseLeave="Border_MouseLeave" Width="52" Height="52">
 
+                    </Border>
                 </ControlTemplate>
             </Button.Template>
-            <Button.Style>
-                <Style>
-                    <Setter Property="Control.FontFamily" Value="Verdana"/>
-                    <Setter Property="Control.Background" Value="Aquamarine"/>
-                    <Setter Property="Control.Foreground" Value="Black"/>
-                    <Setter Property="Control.Margin" Value="10"/>
-                </Style>
-            </Button.Style>
+        </Button>
+        <Button x:Name="btnIncVol" Content="+" HorizontalAlignment="Left" Margin="66,240,0,0" VerticalAlignment="Top" Height="52" Width="52" Click="btnIncVol_Click" MouseMove="btnIncVol_MouseMove" MouseLeave="btnIncVol_MouseLeave">
+            <Button.Background>
+                <ImageBrush x:Name="imgBTNinaUp" ImageSource="/button-soundup-inactive.png"/>
+            </Button.Background>
+
+            <Button.Template>
+                <ControlTemplate>
+                    <Border Background="{TemplateBinding Background}" Width="52" Height="52"/>
+                </ControlTemplate>
+            </Button.Template>
         </Button>
     </Grid>
 </Window>
