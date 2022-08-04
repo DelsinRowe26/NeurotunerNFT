@@ -253,7 +253,7 @@ namespace SimpleNeurotuner
                         }
 
                         for (k = 0; k <= fftFrameSize2; k++)
-                        {
+                        {//eekekekeke
                             gAnaMagn[k] *= 0;
                         }
 

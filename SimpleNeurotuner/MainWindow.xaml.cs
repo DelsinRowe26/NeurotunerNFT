@@ -1311,7 +1311,7 @@ namespace SimpleNeurotuner
         {
             string uri = @"Button\button-soundup-hover.png";
             imgBTNinaUp.ImageSource = new ImageSourceConverter().ConvertFromString(uri) as ImageSource;
-        }
+        }//hdchdhddhdhhd
 
         private void Border_MouseLeave(object sender, MouseEventArgs e)
         {
