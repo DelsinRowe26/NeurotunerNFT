@@ -55,7 +55,7 @@
                 </Style>
             </ComboBox.Style>
         </ComboBox>
-        <Menu x:Name="menu" VerticalAlignment="Top" Height="25" Background="#FFF0F0F0">
+        <Menu x:Name="menu" VerticalAlignment="Top" Height="25" Background="#FFF0F0F0" Visibility="Hidden">
             <MenuItem x:Name="Help" Header="Help" Click="MenuItem_Click"></MenuItem>
             <ComboBox x:Name="cmbModes" Width="120" SelectionChanged="cmbModes_SelectionChanged" ToolTip="Modes">
                 <!--<ComboBoxItem Content="Audition"/>-->
@@ -151,7 +151,7 @@
                 </ControlTemplate>
             </Button.Template>
         </Button>
-        <Image x:Name="imgBack" HorizontalAlignment="Left" Height="100" Margin="431,177,0,0" VerticalAlignment="Top" Width="50" Source="/button-back.png" StretchDirection="DownOnly">
+        <Image x:Name="imgBack" HorizontalAlignment="Left" Height="100" Margin="440,0,0,0" VerticalAlignment="Center" Width="50" Source="/button-back.png" StretchDirection="DownOnly">
             <Image.OpacityMask>
                 <ImageBrush ImageSource="/button-back.png"/>
             </Image.OpacityMask>
@@ -189,7 +189,7 @@
                 </ControlTemplate>
             </Button.Template>
         </Button>
-        <Button x:Name="btnModeAudio" Content="" HorizontalAlignment="Left" Margin="431,226,0,0" VerticalAlignment="Top" Width="50" Height="50" BorderBrush="{x:Null}" Foreground="{x:Null}" MouseMove="btnModeAudio_MouseMove" MouseLeave="btnModeAudio_MouseLeave" Click="btnModeAudio_Click">
+        <Button x:Name="btnModeAudio" Content="" HorizontalAlignment="Left" Margin="440,302,0,0" VerticalAlignment="Top" Width="50" Height="50" BorderBrush="{x:Null}" Foreground="{x:Null}" MouseMove="btnModeAudio_MouseMove" MouseLeave="btnModeAudio_MouseLeave" Click="btnModeAudio_Click">
             <Button.Background>
                 <ImageBrush x:Name="ImgBtnModeAudio" ImageSource="/listen-mode-inactive.png"/>
             </Button.Background>
@@ -199,13 +199,20 @@
                 </ControlTemplate>
             </Button.Template>
         </Button>
-        <Button x:Name="btnModeRecord" Content="" HorizontalAlignment="Left" Margin="431,177,0,0" VerticalAlignment="Top" Width="50" Height="50" BorderBrush="{x:Null}" Foreground="{x:Null}" MouseMove="btnModeRecord_MouseMove" MouseLeave="btnModeRecord_MouseLeave" Click="btnModeRecord_Click">
+        <Button x:Name="btnModeRecord" Content="" HorizontalAlignment="Left" Margin="440,253,0,0" VerticalAlignment="Top" Width="50" Height="50" BorderBrush="{x:Null}" Foreground="{x:Null}" MouseMove="btnModeRecord_MouseMove" MouseLeave="btnModeRecord_MouseLeave" Click="btnModeRecord_Click">
             <Button.Background>
                 <ImageBrush x:Name="ImgBtnModeRecord" ImageSource="/record-mode-inactive.png"/>
             </Button.Background>
             <Button.Template>
                 <ControlTemplate>
                     <Border Background="{TemplateBinding Background}" Width="50" Height="50"/>
+                </ControlTemplate>
+            </Button.Template>
+        </Button>
+        <Button x:Name="btnHelp" Content="Button" HorizontalAlignment="Left" Margin="12,0,0,0" VerticalAlignment="Top" Width="80" Height="80" Background="White" BorderBrush="{x:Null}" Foreground="{x:Null}" Click="MenuItem_Click" Opacity="0">
+            <Button.Template>
+                <ControlTemplate>
+                    <Border Background="{TemplateBinding Background}" Width="80" Height="80"/>
                 </ControlTemplate>
             </Button.Template>
         </Button>
