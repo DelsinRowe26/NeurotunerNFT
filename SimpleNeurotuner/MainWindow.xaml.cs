@@ -48,7 +48,7 @@ namespace SimpleNeurotuner
 
         [DllImport("BiblZvuk.dll", CallingConvention = CallingConvention.Cdecl)]
         //unsafe
-          static extern int vizualzvuk(string filename, string secfile, int[] Rdat,int ParV);
+        public static extern int vizualzvuk(string filename, string secfile, int[] Rdat,int ParV);
         
         private FileInfo fileInfo = new FileInfo("window.tmp");
         private FileInfo fileInfo1 = new FileInfo("Data_Load.tmp");
@@ -83,10 +83,13 @@ namespace SimpleNeurotuner
         //private PitchShifter _pitchShifter;
 
         private ISampleSource mMp3;
+        private string path;
         private string file, filename, RecordName;
         private string record;
         private string[] allfile;
         private int click, audioclick = 0;
+
+        private int ImgBtnStartClick = 0, ImgBtnRecordClick = 0, ImgBtnListenClick = 0, ImgBtnTurboClick = 0, ModeIndex;
 
         private const int APPCOMMAND_VOLUME_MUTE = 0x80000;
         private const int APPCOMMAND_VOLUME_UP = 0xA0000;
@@ -302,6 +305,9 @@ namespace SimpleNeurotuner
                 tembro.Tembro(48000);
                 var wih = new WindowInteropHelper(this);
                 var hWnd = wih.Handle;
+                ModeIndex = -1;
+                Modes();
+                //path = System.IO.Path.GetFullPath("Zvuk.dll");
                 /*uint volume;
                 waveOutGetVolume(IntPtr.Zero, out volume);
                 int vol = (int)((volume >> 16) & 0xffff);*/
@@ -372,27 +378,15 @@ namespace SimpleNeurotuner
         {
             try
             {
-                if (cmbModes.SelectedIndex == 0)
-                {
-                    Recording();
-                    btnStart_Open.IsEnabled = false;
-                    if (langindex == "0")
-                    {
-                        LogClass.LogWrite("Начало записи голоса.");
-                    }
-                    else
-                    {
-                        LogClass.LogWrite("Start voice recording.");
-                    }
-                }
-                else
-                {
                     if ((filename != "Record\\Select a record") && (filename != "Record\\Выберите запись"))
                     {
                         if (PBNFT.Value == 100)
                         {
                             click = 1;
                             PitchShifter.Kamp = -1;
+                            ImgBtnStartClick = 1;
+                            string uri = @"Neurotuners\button\button-play-active.png";
+                            ImgStart.ImageSource = new ImageSourceConverter().ConvertFromString(uri) as ImageSource;
                             await Task.Run(() => Sound(file));
                             StartFullDuplex();
                             if (langindex == "0")
@@ -418,8 +412,6 @@ namespace SimpleNeurotuner
                     {
                         select_an_entry();
                     }
-                    
-                }
             }
             catch (Exception ex)
             {
@@ -492,6 +484,19 @@ namespace SimpleNeurotuner
                     Debug.WriteLine(msg);
                 }*/
             }
+        }
+
+        private void StopImg()
+        {
+            ImgBtnStartClick = 0;
+            ImgBtnListenClick = 0;
+            ImgBtnTurboClick = 0;
+            string uri = @"Neurotuners\button\button-play-inactive.png";
+            ImgStart.ImageSource = new ImageSourceConverter().ConvertFromString(uri) as ImageSource;
+            string uri1 = @"Neurotuners\button\button-listen-inactive.png";
+            ImgListenBtn.ImageSource = new ImageSourceConverter().ConvertFromString(uri1) as ImageSource;
+            string uri2 = @"Neurotuners\button\button-turbo-inactive.png";
+            ImgTurboBtn.ImageSource = new ImageSourceConverter().ConvertFromString(uri2) as ImageSource;
         }
 
         private void StopOut()
@@ -699,12 +704,19 @@ namespace SimpleNeurotuner
         {
             try
             {
-                Stop();
-                btnStart_Open.IsEnabled = true;
-                btnPlayer.IsEnabled = true;
-                btnTurbo.IsEnabled = true;
-                cmbRecord.IsEnabled = true;
-                btnRecord.IsEnabled = true;
+                if (ModeIndex == -1)
+                {
+                    Stop();
+                    StopImg();
+                    string uri = @"Neurotuners\button\button-stop-active.png";
+                    ImgStopBtn.ImageSource = new ImageSourceConverter().ConvertFromString(uri) as ImageSource;
+                    btnStart_Open.IsEnabled = true;
+                    btnPlayer.IsEnabled = true;
+                    btnTurbo.IsEnabled = true;
+                    cmbRecord.IsEnabled = true;
+                    //btnRecord.IsEnabled = true;
+                    btnRecording.IsEnabled = false;
+                }
                 click = 0;
                 audioclick = 0;
                 if (langindex == "0")
@@ -715,13 +727,16 @@ namespace SimpleNeurotuner
                 {
                     LogClass.LogWrite("Stop recording.");
                 }
-                if (cmbModes.SelectedIndex == 0)
+                if (ModeIndex == 0)
                 {
                     if (audioclick == 0)
                     {
                         /*int[] Rdat = new int[5000];
                         int Ndt;
                         Ndt = vizualzvuk(cutmyfile, myfile, Rdat, 2);*/
+                        Stop();
+                        StopImg();
+                        btnRecording.IsEnabled = true;
                         SaveDeleteWindow saveDelete = new SaveDeleteWindow();
                         saveDelete.Show();
                     }
@@ -774,82 +789,74 @@ namespace SimpleNeurotuner
 
         private void btnStart_Open_MouseMove(object sender, MouseEventArgs e)
         {
-            Style style = new Style();
-            style.Setters.Add(new Setter { Property = Control.FontFamilyProperty, Value = new System.Windows.Media.FontFamily("Verdana") });
-            style.Setters.Add(new Setter { Property = Control.MarginProperty, Value = new Thickness(10) });
-            style.Setters.Add(new Setter { Property = Control.BackgroundProperty, Value = new SolidColorBrush(Colors.Blue) });
-            style.Setters.Add(new Setter { Property = Control.ForegroundProperty, Value = new SolidColorBrush(Colors.White) });
-            btnStart_Open.Style = style;
+            string uri = @"Neurotuners\button\button-play-hover.png";
+            ImgStart.ImageSource = new ImageSourceConverter().ConvertFromString(uri) as ImageSource;
         }
 
         private void btnTurbo_MouseMove(object sender, MouseEventArgs e)
         {
-            Style style = new Style();
-            style.Setters.Add(new Setter { Property = Control.FontFamilyProperty, Value = new System.Windows.Media.FontFamily("Verdana") });
-            style.Setters.Add(new Setter { Property = Control.MarginProperty, Value = new Thickness(10) });
-            style.Setters.Add(new Setter { Property = Control.BackgroundProperty, Value = new SolidColorBrush(Colors.Blue) });
-            style.Setters.Add(new Setter { Property = Control.ForegroundProperty, Value = new SolidColorBrush(Colors.White) });
-            btnTurbo.Style = style;
+            string uri = @"Neurotuners\button\button-turbo-hover.png";
+            ImgTurboBtn.ImageSource = new ImageSourceConverter().ConvertFromString(uri) as ImageSource;
         }
 
         private void btnPlayer_MouseMove(object sender, MouseEventArgs e)
         {
-            Style style = new Style();
-            style.Setters.Add(new Setter { Property = Control.FontFamilyProperty, Value = new System.Windows.Media.FontFamily("Verdana") });
-            style.Setters.Add(new Setter { Property = Control.MarginProperty, Value = new Thickness(10) });
-            style.Setters.Add(new Setter { Property = Control.BackgroundProperty, Value = new SolidColorBrush(Colors.Blue) });
-            style.Setters.Add(new Setter { Property = Control.ForegroundProperty, Value = new SolidColorBrush(Colors.White) });
-            btnPlayer.Style = style;
+            string uri = @"Neurotuners\button\button-listen-hover.png";
+            ImgListenBtn.ImageSource = new ImageSourceConverter().ConvertFromString(uri) as ImageSource;
         }
 
         private void btnStart_Open_MouseLeave(object sender, MouseEventArgs e)
         {
-            Style style = new Style();
-            style.Setters.Add(new Setter { Property = Control.FontFamilyProperty, Value = new System.Windows.Media.FontFamily("Verdana") });
-            style.Setters.Add(new Setter { Property = Control.MarginProperty, Value = new Thickness(10) });
-            style.Setters.Add(new Setter { Property = Control.BackgroundProperty, Value = new SolidColorBrush(Colors.Blue) });
-            style.Setters.Add(new Setter { Property = Control.ForegroundProperty, Value = new SolidColorBrush(Colors.Black) });
-            btnStart_Open.Style = style;
+            if (ImgBtnStartClick == 1)
+            {
+                string uri = @"Neurotuners\button\button-play-active.png";
+                ImgStart.ImageSource = new ImageSourceConverter().ConvertFromString(uri) as ImageSource;
+            }
+            else
+            {
+                string uri = @"Neurotuners\button\button-play-inactive.png";
+                ImgStart.ImageSource = new ImageSourceConverter().ConvertFromString(uri) as ImageSource;
+            }
         }
 
         private void btnTurbo_MouseLeave(object sender, MouseEventArgs e)
         {
-            Style style = new Style();
-            style.Setters.Add(new Setter { Property = Control.FontFamilyProperty, Value = new System.Windows.Media.FontFamily("Verdana") });
-            style.Setters.Add(new Setter { Property = Control.MarginProperty, Value = new Thickness(10) });
-            style.Setters.Add(new Setter { Property = Control.BackgroundProperty, Value = new SolidColorBrush(Colors.Blue) });
-            style.Setters.Add(new Setter { Property = Control.ForegroundProperty, Value = new SolidColorBrush(Colors.Black) });
-            btnTurbo.Style = style;
+            if (ImgBtnTurboClick == 1)
+            {
+                string uri = @"Neurotuners\button\button-turbo-active.png";
+                ImgTurboBtn.ImageSource = new ImageSourceConverter().ConvertFromString(uri) as ImageSource;
+            }
+            else
+            {
+                string uri = @"Neurotuners\button\button-turbo-inactive.png";
+                ImgTurboBtn.ImageSource = new ImageSourceConverter().ConvertFromString(uri) as ImageSource;
+            }
         }
 
         private void btnPlayer_MouseLeave(object sender, MouseEventArgs e)
         {
-            Style style = new Style();
-            style.Setters.Add(new Setter { Property = Control.FontFamilyProperty, Value = new System.Windows.Media.FontFamily("Verdana") });
-            style.Setters.Add(new Setter { Property = Control.MarginProperty, Value = new Thickness(10) });
-            style.Setters.Add(new Setter { Property = Control.BackgroundProperty, Value = new SolidColorBrush(Colors.Blue) });
-            style.Setters.Add(new Setter { Property = Control.ForegroundProperty, Value = new SolidColorBrush(Colors.Black) });
-            btnPlayer.Style = style;
+            if(ImgBtnListenClick == 1)
+            {
+                string uri = @"Neurotuners\button\button-listen-active.png";
+                ImgListenBtn.ImageSource = new ImageSourceConverter().ConvertFromString(uri) as ImageSource;
+            }
+            else
+            {
+                string uri = @"Neurotuners\button\button-listen-inactive.png";
+                ImgListenBtn.ImageSource = new ImageSourceConverter().ConvertFromString(uri) as ImageSource;
+            }
         }
 
         private void btnStop_MouseMove(object sender, MouseEventArgs e)
         {
-            Style style = new Style();
-            style.Setters.Add(new Setter { Property = Control.FontFamilyProperty, Value = new System.Windows.Media.FontFamily("Verdana") });
-            style.Setters.Add(new Setter { Property = Control.MarginProperty, Value = new Thickness(10) });
-            style.Setters.Add(new Setter { Property = Control.BackgroundProperty, Value = new SolidColorBrush(Colors.Blue) });
-            style.Setters.Add(new Setter { Property = Control.ForegroundProperty, Value = new SolidColorBrush(Colors.White) });
-            btnStop.Style = style;
+            string uri = @"Neurotuners\button\button-stop-hover.png";
+            ImgStopBtn.ImageSource = new ImageSourceConverter().ConvertFromString(uri) as ImageSource;
         }
 
         private void btnStop_MouseLeave(object sender, MouseEventArgs e)
         {
-            Style style = new Style();
-            style.Setters.Add(new Setter { Property = Control.FontFamilyProperty, Value = new System.Windows.Media.FontFamily("Verdana") });
-            style.Setters.Add(new Setter { Property = Control.MarginProperty, Value = new Thickness(10) });
-            style.Setters.Add(new Setter { Property = Control.BackgroundProperty, Value = new SolidColorBrush(Colors.Blue) });
-            style.Setters.Add(new Setter { Property = Control.ForegroundProperty, Value = new SolidColorBrush(Colors.Black) });
-            btnStop.Style = style;
+            string uri = @"Neurotuners\button\button-stop-inactive.png";
+            ImgStopBtn.ImageSource = new ImageSourceConverter().ConvertFromString(uri) as ImageSource;
         }
 
         private void MenuItem_Click(object sender, RoutedEventArgs e)
@@ -871,63 +878,6 @@ namespace SimpleNeurotuner
                 else
                 {
                     string msg = "Error in MenuItem_Click: \r\n" + ex.Message;
-                    LogClass.LogWrite(msg);
-                    MessageBox.Show(msg);
-                    Debug.WriteLine(msg);
-                }
-            }
-        }
-
-        private void btnRecord_MouseMove(object sender, MouseEventArgs e)
-        {
-            Style style = new Style();
-            style.Setters.Add(new Setter { Property = Control.FontFamilyProperty, Value = new System.Windows.Media.FontFamily("Verdana") });
-            style.Setters.Add(new Setter { Property = Control.MarginProperty, Value = new Thickness(10) });
-            style.Setters.Add(new Setter { Property = Control.BackgroundProperty, Value = new SolidColorBrush(Colors.Blue) });
-            style.Setters.Add(new Setter { Property = Control.ForegroundProperty, Value = new SolidColorBrush(Colors.White) });
-            btnRecord.Style = style;
-        }
-
-        private void btnRecord_MouseLeave(object sender, MouseEventArgs e)
-        {
-            Style style = new Style();
-            style.Setters.Add(new Setter { Property = Control.FontFamilyProperty, Value = new System.Windows.Media.FontFamily("Verdana") });
-            style.Setters.Add(new Setter { Property = Control.MarginProperty, Value = new Thickness(10) });
-            style.Setters.Add(new Setter { Property = Control.BackgroundProperty, Value = new SolidColorBrush(Colors.Blue) });
-            style.Setters.Add(new Setter { Property = Control.ForegroundProperty, Value = new SolidColorBrush(Colors.Black) });
-            btnRecord.Style = style;
-        }
-
-        private void btnRecord_Click(object sender, RoutedEventArgs e)
-        {
-            try
-            {
-                //audioclick = 1;
-                //mDsp.PitchShift = 0;
-                btnRecord.IsEnabled = false;
-                click = 1;
-                if(langindex == "0")
-                {
-                    LogClass.LogWrite("Прослушивание собственной записи.");
-                }
-                else
-                {
-                    LogClass.LogWrite("Listening to your own recording.");
-                }
-                Audition();
-            }
-            catch (Exception ex)
-            {
-                if (langindex == "0")
-                {
-                    string msg = "Ошибка в btnRecord_Click: \r\n" + ex.Message;
-                    LogClass.LogWrite(msg);
-                    MessageBox.Show(msg);
-                    Debug.WriteLine(msg);
-                }
-                else
-                {
-                    string msg = "Error in btnRecord_Click: \r\n" + ex.Message;
                     LogClass.LogWrite(msg);
                     MessageBox.Show(msg);
                     Debug.WriteLine(msg);
@@ -973,12 +923,22 @@ namespace SimpleNeurotuner
                 }
                 if (langindex == "0")
                 {
+                    ImgBtnRecordClick = 0;
+                    string uri = @"Neurotuners\button\button-record-inactive.png";
+                    ImgRecordingBtn.ImageSource = new ImageSourceConverter().ConvertFromString(uri) as ImageSource;
+                    btnPlayer.IsEnabled = true;
+                    btnRecording.IsEnabled = false;
                     string msg = "Запись и обработка завершена.";
                     LogClass.LogWrite(msg);
                     MessageBox.Show(msg);
                 }
                 else
                 {
+                    ImgBtnRecordClick = 0;
+                    string uri = @"Neurotuners\button\button-record-inactive.png";
+                    ImgRecordingBtn.ImageSource = new ImageSourceConverter().ConvertFromString(uri) as ImageSource;
+                    btnPlayer.IsEnabled = true;
+                    btnRecording.IsEnabled = false;
                     string msg = "Recording and processing completed.";
                     LogClass.LogWrite(msg);
                     MessageBox.Show(msg);
@@ -1053,7 +1013,6 @@ namespace SimpleNeurotuner
                     TabNFT.Header = "gNeuro NFT";
                     TabSettings.Header = "Настройки";
                     lbVersion.Content = "Версия: 1.1";
-                    btnRecord.Content = "Прослушать";
                     cmbInput.ToolTip = "Микрофон";
                     cmbOutput.ToolTip = "Наушники";
                     cmbRecord.ToolTip = "Записи";
@@ -1081,7 +1040,6 @@ namespace SimpleNeurotuner
                     TabNFT.Header = "gNeuro NFT";
                     TabSettings.Header = "Settings";
                     lbVersion.Content = "Version: 1.1";
-                    btnRecord.Content = "Audition";
                     cmbInput.ToolTip = "Microphone";
                     cmbOutput.ToolTip = "Speaker";
                     cmbRecord.ToolTip = "Record";
@@ -1189,29 +1147,48 @@ namespace SimpleNeurotuner
 
         private void btnPlayer_Click(object sender, RoutedEventArgs e)
         {
-            if ((filename != "Record\\Select a record") && (filename != "Record\\Выберите запись"))
+            if (ModeIndex == -1)
             {
-                if (PBNFT.Value == 100)
+                if ((filename != "Record\\Select a record") && (filename != "Record\\Выберите запись"))
                 {
-                    AuditionTurbo();
-                    btnStart_Open.IsEnabled = false;
-                    btnTurbo.IsEnabled = false;
-                    btnPlayer.IsEnabled = false;
+                    if (PBNFT.Value == 100)
+                    {
+
+                        AuditionTurbo();
+                        ImgBtnListenClick = 1;
+                        string uri = @"Neurotuners\button\button-listen-active.png";
+                        ImgListenBtn.ImageSource = new ImageSourceConverter().ConvertFromString(uri) as ImageSource;
+                        btnStart_Open.IsEnabled = false;
+                        btnTurbo.IsEnabled = false;
+                        btnPlayer.IsEnabled = false;
+                    }
+                    else
+                    {
+                        NFT_download();
+                    }
                 }
                 else
                 {
-                    NFT_download();
+                    select_an_entry();
                 }
-            }
-            else
+            } 
+            else if(ModeIndex == 0)
             {
-                select_an_entry();
+                Audition();
+                ImgBtnListenClick = 1;
+                string uri = @"Neurotuners\button\button-listen-active.png";
+                ImgListenBtn.ImageSource = new ImageSourceConverter().ConvertFromString(uri) as ImageSource;
+                btnPlayer.IsEnabled = false;
             }
         }
 
         private void btnTurbo_Click(object sender, RoutedEventArgs e)
         {
             StartFullDuplexTurbo();
+            ImgBtnTurboClick = 1;
+            string uri = @"Neurotuners\button\button-turbo-active.png";
+            ImgTurboBtn.ImageSource = new ImageSourceConverter().ConvertFromString(uri) as ImageSource;
+            //Thread.Sleep(2000);
             btnStart_Open.IsEnabled = false;
             btnPlayer.IsEnabled = false;
             btnTurbo.IsEnabled = false;
@@ -1230,7 +1207,6 @@ namespace SimpleNeurotuner
                     cmbRecord.IsEnabled = false;
                     btnPlayer.Visibility = Visibility.Hidden;
                     btnTurbo.Visibility = Visibility.Hidden;
-                    btnRecord.Visibility = Visibility.Visible;
                     pbRecord.Visibility = Visibility.Visible;
                     pbRecord.Value = 0;
                     if(langindex == "0")
@@ -1245,7 +1221,6 @@ namespace SimpleNeurotuner
                 else if (cmbModes.SelectedIndex != 0)
                 {
                     cmbRecord.IsEnabled = true;
-                    btnRecord.Visibility = Visibility.Hidden;
                     pbRecord.Visibility = Visibility.Hidden;
                     btnPlayer.Visibility = Visibility.Visible;
                     btnTurbo.Visibility = Visibility.Visible;
@@ -1286,16 +1261,92 @@ namespace SimpleNeurotuner
             }
         }
 
+        private void Modes()
+        {
+            try
+            {
+                if (ModeIndex == 0)
+                {
+                    CreateWindow window = new CreateWindow();
+                    window.Show();
+
+                    btnStart_Open.IsEnabled = false;
+                    //cmbRecord.IsEnabled = false;
+                    btnModeRecord.IsEnabled = false;
+                    btnModeAudio.IsEnabled = true;
+                    btnRecording.IsEnabled = true;
+                    btnPlayer.IsEnabled = false;
+                    btnTurbo.IsEnabled = false;
+                    pbRecord.Visibility = Visibility.Visible;
+                    pbRecord.Value = 0;
+                    if (langindex == "0")
+                    {
+                        LogClass.LogWrite("Включен режим записи.");
+                    }
+                    else
+                    {
+                        LogClass.LogWrite("Recording mode is on.");
+                    }
+                }
+                else if (ModeIndex != 0)
+                {
+                    cmbRecord.IsEnabled = true;
+                    string uri = @"Neurotuners\button\listen-mode-active.png";
+                    ImgBtnModeAudio.ImageSource = new ImageSourceConverter().ConvertFromString(uri) as ImageSource;
+                    btnModeAudio.IsEnabled = false;
+                    btnModeRecord.IsEnabled = true;
+                    btnRecording.IsEnabled = false;
+                    btnStart_Open.IsEnabled = true;
+                    btnPlayer.IsEnabled = true;
+                    btnTurbo.IsEnabled = true;
+                    //btnRecord.Visibility = Visibility.Hidden;
+                    pbRecord.Visibility = Visibility.Hidden;
+                    /*btnPlayer.Visibility = Visibility.Visible;
+                    btnTurbo.Visibility = Visibility.Visible;*/
+                    if (langindex == "0")
+                    {
+                        cmbRecord.Items.Clear();
+                        cmbRecord.Items.Add("Выберите запись");
+                        cmbRecord.SelectedIndex = cmbRecord.Items.Count - 1;
+                        Filling();
+                        LogClass.LogWrite("Включен режим прослушивания.");
+                    }
+                    else
+                    {
+                        cmbRecord.Items.Clear();
+                        cmbRecord.Items.Add("Select a record");
+                        cmbRecord.SelectedIndex = cmbRecord.Items.Count - 1;
+                        Filling();
+                        LogClass.LogWrite("Listening mode is on.");
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                if (langindex == "0")
+                {
+                    string msg = "Ошибка в Modes: \r\n" + ex.Message;
+                    LogClass.LogWrite(msg);
+                    MessageBox.Show(msg);
+                    Debug.WriteLine(msg);
+                }
+                else
+                {
+                    string msg = "Error in Modes: \r\n" + ex.Message;
+                    LogClass.LogWrite(msg);
+                    MessageBox.Show(msg);
+                    Debug.WriteLine(msg);
+                }
+            }
+        }
+
         private void btnDecVol_Click(object sender, RoutedEventArgs e)
         {
             var wih = new WindowInteropHelper(this);
             var hWnd = wih.Handle;
             SendMessageW(hWnd, WM_APPCOMMAND, hWnd, (IntPtr)APPCOMMAND_VOLUME_DOWN);
-            string uri = @"Button\button-sounddown-active.png";
+            string uri = @"Neurotuners\button\button-sounddown-active.png";
             imgBTNinacDown.ImageSource = new ImageSourceConverter().ConvertFromString(uri) as ImageSource;
-            /*Thread.Sleep(2000);
-            string uri1 = @"Button\button-sounddown-inactive.png";
-            imgBTNinacDown.ImageSource = new ImageSourceConverter().ConvertFromString(uri1) as ImageSource;*/
         }
 
         private void btnIncVol_Click(object sender, RoutedEventArgs e)
@@ -1303,31 +1354,134 @@ namespace SimpleNeurotuner
             var wih = new WindowInteropHelper(this);
             var hWnd = wih.Handle;
             SendMessageW(hWnd, WM_APPCOMMAND, hWnd, (IntPtr)APPCOMMAND_VOLUME_UP);
-            string uri = @"Button\button-soundup-active.png";
+            string uri = @"Neurotuners\button\button-soundup-active.png";
             imgBTNinaUp.ImageSource = new ImageSourceConverter().ConvertFromString(uri) as ImageSource;
+        }
+
+        private void btnRecording_MouseMove(object sender, MouseEventArgs e)
+        {
+            string uri = @"Neurotuners\button\button-record-hover.png";
+            ImgRecordingBtn.ImageSource = new ImageSourceConverter().ConvertFromString(uri) as ImageSource;
+        }
+
+        private void btnRecording_MouseLeave(object sender, MouseEventArgs e)
+        {
+            if (ImgBtnRecordClick == 1)
+            {
+                string uri = @"Neurotuners\button\button-record-active.png";
+                ImgRecordingBtn.ImageSource = new ImageSourceConverter().ConvertFromString(uri) as ImageSource;
+            }
+            else
+            {
+                string uri = @"Neurotuners\button\button-record-inactive.png";
+                ImgRecordingBtn.ImageSource = new ImageSourceConverter().ConvertFromString(uri) as ImageSource;
+            }
+        }
+
+        private void btnModeAudio_MouseMove(object sender, MouseEventArgs e)
+        {
+            if (ModeIndex != -1)
+            {
+                string uri = @"Neurotuners\button\listen-mode-hover.png";
+                ImgBtnModeAudio.ImageSource = new ImageSourceConverter().ConvertFromString(uri) as ImageSource;
+            }
+        }
+
+        private void btnModeAudio_MouseLeave(object sender, MouseEventArgs e)
+        {
+            if (ModeIndex != -1)
+            {
+                string uri = @"Neurotuners\button\listen-mode-inactive.png";
+                ImgBtnModeAudio.ImageSource = new ImageSourceConverter().ConvertFromString(uri) as ImageSource;
+            }
+            else
+            {
+                string uri = @"Neurotuners\button\listen-mode-active.png";
+                ImgBtnModeAudio.ImageSource = new ImageSourceConverter().ConvertFromString(uri) as ImageSource;
+            }
+        }
+
+        private void btnModeRecord_MouseMove(object sender, MouseEventArgs e)
+        {
+            if (ModeIndex != 0)
+            {
+                string uri = @"Neurotuners\button\record-mode-hover.png";
+                ImgBtnModeRecord.ImageSource = new ImageSourceConverter().ConvertFromString(uri) as ImageSource;
+            }
+        }
+
+        private void btnModeRecord_MouseLeave(object sender, MouseEventArgs e)
+        {
+            if (ModeIndex != 0)
+            {
+                string uri = @"Neurotuners\button\record-mode-inactive.png";
+                ImgBtnModeRecord.ImageSource = new ImageSourceConverter().ConvertFromString(uri) as ImageSource;
+            }
+            else
+            {
+                string uri = @"Neurotuners\button\record-mode-active.png";
+                ImgBtnModeRecord.ImageSource = new ImageSourceConverter().ConvertFromString(uri) as ImageSource;
+            }
+        }
+
+        private void btnModeRecord_Click(object sender, RoutedEventArgs e)
+        {
+            ModeIndex = 0;
+            string uri = @"Neurotuners\button\record-mode-active.png";
+            ImgBtnModeRecord.ImageSource = new ImageSourceConverter().ConvertFromString(uri) as ImageSource;
+            string uri1 = @"Neurotuners\button\listen-mode-inactive.png";
+            ImgBtnModeAudio.ImageSource = new ImageSourceConverter().ConvertFromString(uri1) as ImageSource;
+            Modes();
+        }
+
+        private void btnModeAudio_Click(object sender, RoutedEventArgs e)
+        {
+            ModeIndex = -1;
+            string uri = @"Neurotuners\button\listen-mode-active.png";
+            ImgBtnModeAudio.ImageSource = new ImageSourceConverter().ConvertFromString(uri) as ImageSource;
+            string uri1 = @"Neurotuners\button\record-mode-inactive.png";
+            ImgBtnModeRecord.ImageSource = new ImageSourceConverter().ConvertFromString(uri1) as ImageSource;
+            Modes();
+        }
+
+        private void btnRecording_Click(object sender, RoutedEventArgs e)
+        {
+            ImgBtnRecordClick = 1;
+            string uri = @"Neurotuners\button\button-record-active.png";
+            ImgRecordingBtn.ImageSource = new ImageSourceConverter().ConvertFromString(uri) as ImageSource;
+            Recording();
+            btnStart_Open.IsEnabled = false;
+            if (langindex == "0")
+            {
+                LogClass.LogWrite("Начало записи голоса.");
+            }
+            else
+            {
+                LogClass.LogWrite("Start voice recording.");
+            }
         }
 
         private void btnIncVol_MouseMove(object sender, MouseEventArgs e)
         {
-            string uri = @"Button\button-soundup-hover.png";
+            string uri = @"Neurotuners\button\button-soundup-hover.png";
             imgBTNinaUp.ImageSource = new ImageSourceConverter().ConvertFromString(uri) as ImageSource;
         }//hdchdhddhdhhd
 
         private void Border_MouseLeave(object sender, MouseEventArgs e)
         {
-            string uri = @"Button\button-sounddown-inactive.png";
+            string uri = @"Neurotuners\button\button-sounddown-inactive.png";
             imgBTNinacDown.ImageSource = new ImageSourceConverter().ConvertFromString(uri) as ImageSource;
         }
 
         private void btnIncVol_MouseLeave(object sender, MouseEventArgs e)
         {
-            string uri = @"Button\button-soundup-inactive.png";
+            string uri = @"Neurotuners\button\button-soundup-inactive.png";
             imgBTNinaUp.ImageSource = new ImageSourceConverter().ConvertFromString(uri) as ImageSource;
         }
 
         private void btnDecVol_MouseMove(object sender, MouseEventArgs e)
         {
-            string uri = @"Button\button-sounddown-hover.png";
+            string uri = @"Neurotuners\button\button-sounddown-hover.png";
             imgBTNinacDown.ImageSource = new ImageSourceConverter().ConvertFromString(uri) as ImageSource;
         }
 

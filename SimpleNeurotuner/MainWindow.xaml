@@ -10,7 +10,7 @@
     <Window.Background>
         <ImageBrush Stretch="UniformToFill" TileMode="Tile">
             <ImageBrush.ImageSource>
-                <ImageSource>/background-shadow.png</ImageSource>
+                <ImageSource>/background-no-pic.png</ImageSource>
             </ImageBrush.ImageSource>
         </ImageBrush>
     </Window.Background>
@@ -18,51 +18,37 @@
         <Grid.ColumnDefinitions>
             <ColumnDefinition/>
         </Grid.ColumnDefinitions>
-        <Button x:Name="btnStart_Open" Content="Start" HorizontalAlignment="Left" Margin="139,439,0,0" VerticalAlignment="Top" Height="30" Width="80" Click="btnStart_Open_Click" MouseMove="btnStart_Open_MouseMove" MouseLeave="btnStart_Open_MouseLeave" FontSize="14">
+        <Button x:Name="btnStart_Open" Content="Start" HorizontalAlignment="Left" Margin="139,439,0,0" VerticalAlignment="Top" Height="52" Width="52" Click="btnStart_Open_Click" MouseMove="btnStart_Open_MouseMove" MouseLeave="btnStart_Open_MouseLeave" FontSize="14">
             <Button.Background>
-                <ImageBrush/>
+                <ImageBrush x:Name="ImgStart" ImageSource = "/button-play-inactive.png"/>
             </Button.Background>
             <Button.Template>
                 <ControlTemplate>
-                    <Border BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="2" CornerRadius="25" Margin="0,5,0,-5">
-                        <FocusManager.FocusedElement>
-                            <Button Content="btnStart"/>
-                        </FocusManager.FocusedElement>
-                        <ContentPresenter Content="{TemplateBinding ContentControl.Content}" HorizontalAlignment="Center" VerticalAlignment="Center" />
-                    </Border>
+                    <Border Background="{TemplateBinding Background}" Width="52" Height="52"></Border>
                 </ControlTemplate>
             </Button.Template>
-            <Button.Style>
-                <Style>
-                    <Setter Property="Control.FontFamily" Value="Verdana"/>
-                    <Setter Property="Control.Background" Value="Aquamarine"/>
-                    <Setter Property="Control.Foreground" Value="Black"/>
-                    <Setter Property="Control.Margin" Value="10"/>
-                </Style>
-            </Button.Style>
         </Button>
-        <Button x:Name="btnStop" Content="Stop" HorizontalAlignment="Left" Margin="349,444,0,0" VerticalAlignment="Top" Height="30" Width="80" Click="btnStop_Click" MouseMove="btnStop_MouseMove" MouseLeave="btnStop_MouseLeave" FontSize="14" Background="{x:Null}">
+        <Button x:Name="btnStop" Content="Stop" HorizontalAlignment="Left" Margin="349,444,0,0" VerticalAlignment="Top" Height="52" Width="52" Click="btnStop_Click" MouseMove="btnStop_MouseMove" MouseLeave="btnStop_MouseLeave" FontSize="14">
+            <Button.Background>
+                <ImageBrush x:Name="ImgStopBtn" ImageSource="/button-stop-inactive.png"/>
+            </Button.Background>
             <Button.Template>
                 <ControlTemplate>
-                    <Border BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="2" CornerRadius="25" Background="{x:Null}">
-                        <ContentPresenter Content="{TemplateBinding ContentControl.Content}" HorizontalAlignment="Center" VerticalAlignment="Center" />
-                    </Border>
+                    <Border Background="{TemplateBinding Background}" Width="52" Height="52"/>
                 </ControlTemplate>
             </Button.Template>
-            <Button.Style>
-                <Style>
-                    <Setter Property="Control.FontFamily" Value="Verdana"/>
-                    <Setter Property="Control.Background" Value="Aquamarine"/>
-                    <Setter Property="Control.Foreground" Value="Black"/>
-                    <Setter Property="Control.Margin" Value="10"/>
-                </Style>
-            </Button.Style>
         </Button>
 
 
         <Label x:Name="lbSpeaker" Content="Speaker" HorizontalAlignment="Left" Margin="73,164,0,0" VerticalAlignment="Top" Visibility="Hidden" Height="26" Width="52"/>
         <Label x:Name="lbMicrophone" Content="Microphone" HorizontalAlignment="Left" Margin="53,129,0,0" VerticalAlignment="Top" Visibility="Hidden" Height="26" Width="74"/>
         <ComboBox x:Name="cmbRecord" HorizontalAlignment="Center" Margin="0,406,0,0" VerticalAlignment="Top" Width="190" SelectionChanged="cmbRecord_SelectionChanged" ToolTip="Record" SelectedIndex="0" Height="23">
+            <ComboBox.BorderBrush>
+                <ImageBrush/>
+            </ComboBox.BorderBrush>
+            <ComboBox.Background>
+                <ImageBrush/>
+            </ComboBox.Background>
             <ComboBox.Style>
                 <Style>
                     <Setter Property="Control.Background" Value="Gainsboro"/>
@@ -85,32 +71,22 @@
             </Label.Style>
         </Label>
         <Label x:Name="lbVolValue5" Content="0" HorizontalAlignment="Left" Margin="206,376,0,0" VerticalAlignment="Top" Height="32" Width="36" FontSize="18" Visibility="Hidden"/>
-        <Button x:Name="btnRecord" Content="Audition" HorizontalAlignment="Left" Margin="250,444,0,0" VerticalAlignment="Top" Height="30" Width="80" MouseMove="btnRecord_MouseMove" MouseLeave="btnRecord_MouseLeave" Click="btnRecord_Click" Visibility="Hidden" Background="{x:Null}" FontSize="10">
-            <Button.Template>
-                <ControlTemplate>
-                    <Border BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="2" CornerRadius="25" Background="{x:Null}">
-                        <ContentPresenter Content="{TemplateBinding ContentControl.Content}" HorizontalAlignment="Center" VerticalAlignment="Center" />
-                    </Border>
-                </ControlTemplate>
-            </Button.Template>
-            <Button.Style>
-                <Style>
-                    <Setter Property="Control.FontFamily" Value="Verdana"/>
-                    <Setter Property="Control.Background" Value="Gainsboro"/>
-                    <Setter Property="Control.Foreground" Value="Black"/>
-                    <Setter Property="Control.Margin" Value="10"/>
-                </Style>
-            </Button.Style>
-        </Button>
-        <ProgressBar x:Name="pbRecord" HorizontalAlignment="Center" Height="16" VerticalAlignment="Top" Width="200" Visibility="Hidden" Margin="0,103,0,0" BorderBrush="Black" Background="{x:Null}">
+        <ProgressBar x:Name="pbRecord" HorizontalAlignment="Center" Height="20" VerticalAlignment="Top" Width="200" Visibility="Hidden" Margin="0,81,0,0" BorderBrush="Black" Background="{x:Null}">
             <ProgressBar.Foreground>
                 <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
-                    <GradientStop Color="#FF00DCDC"/>
-                    <GradientStop Color="#FF00FF87" Offset="1"/>
+                    <GradientStop Color="#FFF100B7"/>
+                    <GradientStop Color="#FF8D00FF" Offset="1"/>
                 </LinearGradientBrush>
             </ProgressBar.Foreground>
         </ProgressBar>
-        <Label x:Name="lbRecordPB" Content="Recording in progress..." HorizontalAlignment="Center" Margin="0,97,0,0" VerticalAlignment="Top" Visibility="Hidden" Height="26" Width="134"/>
+        <Label x:Name="lbRecordPB" Content="Recording in progress..." HorizontalAlignment="Left" Margin="212,99,0,0" VerticalAlignment="Top" Visibility="Hidden" Height="26" Width="174" FontFamily="roboto" FontSize="14" FontWeight="Bold">
+            <Label.Foreground>
+                <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+                    <GradientStop Color="#FFF100B7"/>
+                    <GradientStop Color="#FF8D00FF" Offset="1"/>
+                </LinearGradientBrush>
+            </Label.Foreground>
+        </Label>
         <TabControl x:Name="tabControl" Margin="159,136,159,166" Visibility="Visible" Background="{x:Null}" BorderBrush="{x:Null}" TabStripPlacement="Top">
             <TabItem x:Name="TabNFT" Header="gNeuro NFT" Background="{x:Null}" BorderBrush="{x:Null}" Margin="46,-2,-50,0">
                 <Grid x:Name="GridName" Width="230" Margin="7,0,8,0" Height="230">
@@ -155,47 +131,32 @@
         <Label x:Name="lbPBNFT" Content="NFT loading in progress..." HorizontalAlignment="Left" Margin="221,30,0,0" VerticalAlignment="Top" Visibility="Hidden" Height="26" Width="144"/>
         <Slider x:Name="slPitch" HorizontalAlignment="Center" Margin="0,79,0,0" VerticalAlignment="Top" Width="250" Maximum="15" Minimum="-15" TickPlacement="BottomRight" ValueChanged="slPitch_ValueChanged" Visibility="Hidden" Height="24"/>
         <Label x:Name="lbPitchValue" Content="0" HorizontalAlignment="Left" Margin="410,70,0,0" VerticalAlignment="Top" FontSize="14" Visibility="Hidden" Height="29" Width="17"/>
-        <Button x:Name="btnTurbo" Content="Turbo" HorizontalAlignment="Left" Margin="250,475,0,0" VerticalAlignment="Top" Height="30" Width="80" Click="btnTurbo_Click" MouseMove="btnTurbo_MouseMove" MouseLeave="btnTurbo_MouseLeave" FontSize="14" Background="{x:Null}">
+        <Button x:Name="btnTurbo" Content="Turbo" HorizontalAlignment="Left" Margin="267,439,0,0" VerticalAlignment="Top" Height="52" Width="52" Click="btnTurbo_Click" MouseMove="btnTurbo_MouseMove" MouseLeave="btnTurbo_MouseLeave" FontSize="14">
+            <Button.Background>
+                <ImageBrush x:Name="ImgTurboBtn" ImageSource="/button-turbo-inactive.png"/>
+            </Button.Background>
             <Button.Template>
                 <ControlTemplate>
-                    <Border BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="2" CornerRadius="25" Margin="0,5,0,-5">
-                        <FocusManager.FocusedElement>
-                            <Button Content="btnStart"/>
-                        </FocusManager.FocusedElement>
-                        <ContentPresenter Content="{TemplateBinding ContentControl.Content}" HorizontalAlignment="Center" VerticalAlignment="Center" />
-                    </Border>
+                    <Border Background="{TemplateBinding Background}" Width="52" Height="52"/>
                 </ControlTemplate>
             </Button.Template>
-            <Button.Style>
-                <Style>
-                    <Setter Property="Control.FontFamily" Value="Verdana"/>
-                    <Setter Property="Control.Background" Value="Aquamarine"/>
-                    <Setter Property="Control.Foreground" Value="Black"/>
-                    <Setter Property="Control.Margin" Value="10"/>
-                </Style>
-            </Button.Style>
         </Button>
-        <Button x:Name="btnPlayer" Content="Player" HorizontalAlignment="Left" Margin="249,439,0,0" VerticalAlignment="Top" Height="30" Width="80" Click="btnPlayer_Click" MouseMove="btnPlayer_MouseMove" MouseLeave="btnPlayer_MouseLeave" FontSize="14" Background="{x:Null}" Visibility="Visible">
+        <Button x:Name="btnPlayer" Content="Player" HorizontalAlignment="Left" Margin="206,438,0,0" VerticalAlignment="Top" Height="52" Width="52" Click="btnPlayer_Click" MouseMove="btnPlayer_MouseMove" MouseLeave="btnPlayer_MouseLeave" FontSize="14" Visibility="Visible">
+            <Button.Background>
+                <ImageBrush x:Name="ImgListenBtn" ImageSource="/button-listen-inactive.png"/>
+            </Button.Background>
             <Button.Template>
                 <ControlTemplate>
-                    <Border BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="2" CornerRadius="25" Margin="0,5,0,-5">
-                        <FocusManager.FocusedElement>
-                            <Button Content="btnStart"/>
-                        </FocusManager.FocusedElement>
-                        <ContentPresenter Content="{TemplateBinding ContentControl.Content}" HorizontalAlignment="Center" VerticalAlignment="Center" />
-                    </Border>
+                    <Border Background="{TemplateBinding Background}" Width="52" Height="52"></Border>
                 </ControlTemplate>
             </Button.Template>
-            <Button.Style>
-                <Style>
-                    <Setter Property="Control.FontFamily" Value="Verdana"/>
-                    <Setter Property="Control.Background" Value="Aquamarine"/>
-                    <Setter Property="Control.Foreground" Value="Black"/>
-                    <Setter Property="Control.Margin" Value="10"/>
-                </Style>
-            </Button.Style>
         </Button>
-        <Button x:Name="btnDecVol" Content="-" HorizontalAlignment="Left" Margin="73,177,0,0" VerticalAlignment="Top" Height="52" Width="52" Click="btnDecVol_Click" RenderTransformOrigin="0.435,0.248" BorderBrush="{x:Null}" MouseMove="btnDecVol_MouseMove" Foreground="{x:Null}" Focusable="False">
+        <Image x:Name="imgBack" HorizontalAlignment="Left" Height="100" Margin="431,177,0,0" VerticalAlignment="Top" Width="50" Source="/button-back.png" StretchDirection="DownOnly">
+            <Image.OpacityMask>
+                <ImageBrush ImageSource="/button-back.png"/>
+            </Image.OpacityMask>
+        </Image>
+        <Button x:Name="btnDecVol" Content="-" HorizontalAlignment="Left" Margin="66,174,0,0" VerticalAlignment="Top" Height="52" Width="52" Click="btnDecVol_Click" RenderTransformOrigin="0.435,0.248" BorderBrush="{x:Null}" MouseMove="btnDecVol_MouseMove" Foreground="{x:Null}" Focusable="False">
             <Button.Background>
                 <ImageBrush x:Name="imgBTNinacDown" ImageSource="/button-sounddown-inactive.png"/>
             </Button.Background>
@@ -218,5 +179,36 @@
                 </ControlTemplate>
             </Button.Template>
         </Button>
+        <Button x:Name="btnRecording" Content="" HorizontalAlignment="Left" Margin="66,449,0,0" VerticalAlignment="Top" Height="52" Width="52" BorderBrush="{x:Null}" Foreground="{x:Null}" MouseMove="btnRecording_MouseMove" MouseLeave="btnRecording_MouseLeave" Click="btnRecording_Click">
+            <Button.Background>
+                <ImageBrush x:Name="ImgRecordingBtn" ImageSource="/button-record-inactive.png"/>
+            </Button.Background>
+            <Button.Template>
+                <ControlTemplate>
+                    <Border Background="{TemplateBinding Background}" Width="52" Height="52"/>
+                </ControlTemplate>
+            </Button.Template>
+        </Button>
+        <Button x:Name="btnModeAudio" Content="" HorizontalAlignment="Left" Margin="431,226,0,0" VerticalAlignment="Top" Width="50" Height="50" BorderBrush="{x:Null}" Foreground="{x:Null}" MouseMove="btnModeAudio_MouseMove" MouseLeave="btnModeAudio_MouseLeave" Click="btnModeAudio_Click">
+            <Button.Background>
+                <ImageBrush x:Name="ImgBtnModeAudio" ImageSource="/listen-mode-inactive.png"/>
+            </Button.Background>
+            <Button.Template>
+                <ControlTemplate>
+                    <Border Background="{TemplateBinding Background}" Width="50" Height="50"/>
+                </ControlTemplate>
+            </Button.Template>
+        </Button>
+        <Button x:Name="btnModeRecord" Content="" HorizontalAlignment="Left" Margin="431,177,0,0" VerticalAlignment="Top" Width="50" Height="50" BorderBrush="{x:Null}" Foreground="{x:Null}" MouseMove="btnModeRecord_MouseMove" MouseLeave="btnModeRecord_MouseLeave" Click="btnModeRecord_Click">
+            <Button.Background>
+                <ImageBrush x:Name="ImgBtnModeRecord" ImageSource="/record-mode-inactive.png"/>
+            </Button.Background>
+            <Button.Template>
+                <ControlTemplate>
+                    <Border Background="{TemplateBinding Background}" Width="50" Height="50"/>
+                </ControlTemplate>
+            </Button.Template>
+        </Button>
+
     </Grid>
 </Window>

@@ -55,6 +55,27 @@
   <PropertyGroup>
     <ApplicationIcon>Icon.ico</ApplicationIcon>
   </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>bin\x64\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <DebugType>full</DebugType>
+    <PlatformTarget>x64</PlatformTarget>
+    <LangVersion>7.3</LangVersion>
+    <ErrorReport>prompt</ErrorReport>
+    <Prefer32Bit>true</Prefer32Bit>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x64'">
+    <OutputPath>bin\x64\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <Optimize>true</Optimize>
+    <DebugType>pdbonly</DebugType>
+    <PlatformTarget>x64</PlatformTarget>
+    <LangVersion>7.3</LangVersion>
+    <ErrorReport>prompt</ErrorReport>
+    <Prefer32Bit>true</Prefer32Bit>
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="CSCore">
       <HintPath>.\CSCore.dll</HintPath>
@@ -133,10 +154,6 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="SaveDeleteWindow.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Thems\btnIncActiveVol.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -220,38 +237,61 @@
   <ItemGroup>
     <Resource Include="background-shadow.png" />
   </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
-    <Resource Include="Button\button-back.png" />
-    <Resource Include="Button\button-listen-active.png" />
-    <Resource Include="Button\button-listen-hover.png" />
-    <Resource Include="Button\button-listen-inactive.png" />
-    <Resource Include="Button\button-play-active.png" />
-    <Resource Include="Button\button-play-hover.png" />
-    <Resource Include="Button\button-play-inactive.png" />
-    <Resource Include="Button\button-record-active.png" />
-    <Resource Include="Button\button-record-hover.png" />
-    <Resource Include="Button\button-record-inactive.png" />
-    <Resource Include="Button\button-settings-active.png" />
-    <Resource Include="Button\button-settings-hover.png" />
-    <Resource Include="Button\button-settings-inactive.png" />
-    <Resource Include="Button\button-sounddown-active.png" />
-    <Resource Include="Button\button-sounddown-hover.png" />
-    <Resource Include="Button\button-sounddown-inactive.png" />
-    <Resource Include="Button\button-soundup-active.png" />
-    <Resource Include="Button\button-soundup-hover.png" />
-    <Resource Include="Button\button-soundup-inactive.png" />
-    <Resource Include="Button\button-stop-active.png" />
-    <Resource Include="Button\button-stop-hover.png" />
-    <Resource Include="Button\button-stop-inactive.png" />
-    <Resource Include="Button\button-turbo-active.png" />
-    <Resource Include="Button\button-turbo-hover.png" />
-    <Resource Include="Button\button-turbo-inactive.png" />
-    <Resource Include="Button\listen-mode-active.png" />
-    <Resource Include="Button\listen-mode-hover.png" />
-    <Resource Include="Button\listen-mode-inactive.png" />
-    <Resource Include="Button\record-mode-active.png" />
-    <Resource Include="Button\record-mode-hover.png" />
-    <Resource Include="Button\record-mode-inactive.png" />
+    <Resource Include="Neurotuners\background\background-no-pic.png" />
+    <Resource Include="Neurotuners\background\background-pic.png" />
+    <Resource Include="Neurotuners\background\background-shadow.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Neurotuners\button\button-back.png" />
+    <Resource Include="Neurotuners\button\button-listen-active.png" />
+    <Resource Include="Neurotuners\button\button-listen-hover.png" />
+    <Resource Include="Neurotuners\button\button-listen-inactive.png" />
+    <Resource Include="Neurotuners\button\button-play-active.png" />
+    <Resource Include="Neurotuners\button\button-play-hover.png" />
+    <Resource Include="Neurotuners\button\button-play-inactive.png" />
+    <Resource Include="Neurotuners\button\button-record-active.png" />
+    <Resource Include="Neurotuners\button\button-record-hover.png" />
+    <Resource Include="Neurotuners\button\button-record-inactive.png" />
+    <Resource Include="Neurotuners\button\button-settings-active.png" />
+    <Resource Include="Neurotuners\button\button-settings-hover.png" />
+    <Resource Include="Neurotuners\button\button-settings-inactive.png" />
+    <Resource Include="Neurotuners\button\button-sounddown-active.png" />
+    <Resource Include="Neurotuners\button\button-sounddown-hover.png" />
+    <Resource Include="Neurotuners\button\button-sounddown-inactive.png" />
+    <Resource Include="Neurotuners\button\button-soundup-active.png" />
+    <Resource Include="Neurotuners\button\button-soundup-hover.png" />
+    <Resource Include="Neurotuners\button\button-soundup-inactive.png" />
+    <Resource Include="Neurotuners\button\button-stop-active.png" />
+    <Resource Include="Neurotuners\button\button-stop-hover.png" />
+    <Resource Include="Neurotuners\button\button-stop-inactive.png" />
+    <Resource Include="Neurotuners\button\button-turbo-active.png" />
+    <Resource Include="Neurotuners\button\button-turbo-hover.png" />
+    <Resource Include="Neurotuners\button\button-turbo-inactive.png" />
+    <Resource Include="Neurotuners\button\listen-mode-active.png" />
+    <Resource Include="Neurotuners\button\listen-mode-hover.png" />
+    <Resource Include="Neurotuners\button\listen-mode-inactive.png" />
+    <Resource Include="Neurotuners\button\record-mode-active.png" />
+    <Resource Include="Neurotuners\button\record-mode-hover.png" />
+    <Resource Include="Neurotuners\button\record-mode-inactive.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="record-mode-inactive.png" />
+    <Resource Include="listen-mode-inactive.png" />
+    <Resource Include="listen-mode-active.png" />
+    <Content Include="Zvuk.dll" />
+    <Resource Include="button-back.png" />
+    <Resource Include="Neurotuners\button\button-backcmb.png" />
+    <Resource Include="button-backcmb.png" />
+    <Resource Include="button-record-inactive.png" />
+    <Resource Include="button-stop-inactive.png" />
+    <Resource Include="button-turbo-inactive.png" />
+    <Resource Include="button-listen-inactive.png" />
+    <Resource Include="button-play-inactive.png" />
+    <Resource Include="background-no-pic.png" />
+    <Content Include="Neurotuners\Logo svg\Logo dark.svg" />
+    <Content Include="Neurotuners\Logo svg\Logo light.svg" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
