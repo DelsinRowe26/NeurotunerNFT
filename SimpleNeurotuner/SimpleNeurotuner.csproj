@@ -280,6 +280,15 @@
     <Resource Include="record-mode-inactive.png" />
     <Resource Include="listen-mode-inactive.png" />
     <Resource Include="listen-mode-active.png" />
+    <Resource Include="button-settings-inactive.png" />
+    <Resource Include="Neurotuners\element\input-arrow-closed.png" />
+    <Resource Include="Neurotuners\element\input-arrow-open.png" />
+    <Resource Include="Neurotuners\element\input-biblio.png" />
+    <Resource Include="Neurotuners\element\pic-shadow.png" />
+    <Resource Include="Neurotuners\element\progressbar-backgrnd.png" />
+    <Resource Include="input-biblio.png" />
+    <Resource Include="pic-shadow.png" />
+    <Resource Include="progressbar-backgrnd.png" />
     <Content Include="Zvuk.dll" />
     <Resource Include="button-back.png" />
     <Resource Include="Neurotuners\button\button-backcmb.png" />

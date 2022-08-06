@@ -20,7 +20,7 @@ namespace SimpleNeurotuner
 
         public void Tembro(int sampleRate)
         {
-            for (int k = 0; k < 48000; k++)
+            for (int k = 0; k < 96000; k++)
             {
                 kt[k] = 1;
             }

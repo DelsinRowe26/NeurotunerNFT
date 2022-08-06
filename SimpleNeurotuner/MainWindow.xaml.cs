@@ -46,6 +46,9 @@ namespace SimpleNeurotuner
         [DllImport("winmm.dll")]
         public static extern int waveOutGetVolume(IntPtr hwo, out uint pdwVolume);
 
+        [DllImport("winmm.dll")]
+        public static extern int waveOutSetVolume(IntPtr hwo, uint dwVolume);
+
         [DllImport("BiblZvuk.dll", CallingConvention = CallingConvention.Cdecl)]
         //unsafe
         public static extern int vizualzvuk(string filename, string secfile, int[] Rdat,int ParV);
@@ -89,7 +92,7 @@ namespace SimpleNeurotuner
         private string[] allfile;
         private int click, audioclick = 0;
 
-        private int ImgBtnStartClick = 0, ImgBtnRecordClick = 0, ImgBtnListenClick = 0, ImgBtnTurboClick = 0, ModeIndex;
+        private int ImgBtnStartClick = 0, ImgBtnRecordClick = 0, ImgBtnListenClick = 0, ImgBtnTurboClick = 0, ModeIndex, BtnSetClick = 0, NFTShadow = 0;
 
         private const int APPCOMMAND_VOLUME_MUTE = 0x80000;
         private const int APPCOMMAND_VOLUME_UP = 0xA0000;
@@ -101,7 +104,7 @@ namespace SimpleNeurotuner
         public MainWindow()
         {
             InitializeComponent();
-            //ShowCurrentVolume();
+            ShowCurrentVolume();
             worker = new BackgroundWorker();
             worker.WorkerReportsProgress = true;
             worker.WorkerSupportsCancellation = true;
@@ -152,6 +155,7 @@ namespace SimpleNeurotuner
                 {
                     PBNFT.Visibility = Visibility.Hidden;
                     lbPBNFT.Visibility = Visibility.Hidden;
+                    imgPBNFTBack.Visibility = Visibility.Hidden;
                 }
             }
             catch (Exception ex)
@@ -305,15 +309,17 @@ namespace SimpleNeurotuner
                 tembro.Tembro(48000);
                 var wih = new WindowInteropHelper(this);
                 var hWnd = wih.Handle;
+                SendMessageW(hWnd, WM_APPCOMMAND, hWnd, (IntPtr)WM_APPCOMMAND);
+                //pbVolume.Value = (double)hWnd;
                 ModeIndex = -1;
                 Modes();
+                ShowCurrentVolume();
+                
                 //path = System.IO.Path.GetFullPath("Zvuk.dll");
                 /*uint volume;
                 waveOutGetVolume(IntPtr.Zero, out volume);
-                int vol = (int)((volume >> 16) & 0xffff);*/
-                //lbVolValue.Content = volume;
-                
-                //lbVolGain.Content = 0;
+                int vol = (int)((volume >> 16) & 0xFFFF);
+                pbVolume.Value = vol;*/
             }
             catch (Exception ex)
             {
@@ -335,13 +341,13 @@ namespace SimpleNeurotuner
            
         }
 
-        /*private void ShowCurrentVolume()
+        private void ShowCurrentVolume()
         {
             uint volume;
             waveOutGetVolume(IntPtr.Zero, out volume);
-            int left = (int)(volume & 0xFFFF);
             int right = (int)((volume >> 16) & 0xFFFF);
-        }*/
+            //pbVolume.Value = right;
+        }
 
         private void Filling()
         {
@@ -588,7 +594,7 @@ namespace SimpleNeurotuner
 
                 //Init DSP для смещения высоты тона
                 mDspTurbo = new SampleDSPTurbo(source.ToSampleSource()/*.AppendSource(Equalizer.Create10BandEqualizer, out mEqualizer)*/.ToMono());
-                SetPitchShiftValue();
+                //SetPitchShiftValue();
 
                 //SetPitchShiftValue();
                 mSoundIn.Start();
@@ -1272,6 +1278,7 @@ namespace SimpleNeurotuner
 
                     btnStart_Open.IsEnabled = false;
                     //cmbRecord.IsEnabled = false;
+                    //imgShadowNFT.Visibility = Visibility.Hidden;
                     btnModeRecord.IsEnabled = false;
                     btnModeAudio.IsEnabled = true;
                     btnRecording.IsEnabled = true;
@@ -1444,6 +1451,39 @@ namespace SimpleNeurotuner
             Modes();
         }
 
+        private void btnSettings_MouseMove(object sender, MouseEventArgs e)
+        {
+            string uri = @"Neurotuners\button\button-settings-hover.png";
+            ImgBtnSettings.ImageSource = new ImageSourceConverter().ConvertFromString(uri) as ImageSource;
+        }
+
+        private void btnSettings_MouseLeave(object sender, MouseEventArgs e)
+        {
+            string uri = @"Neurotuners\button\button-settings-inactive.png";
+            ImgBtnSettings.ImageSource = new ImageSourceConverter().ConvertFromString(uri) as ImageSource;
+        }
+
+        private void btnSettings_Click(object sender, RoutedEventArgs e)
+        {
+            BtnSetClick++;
+            string uri = @"Neurotuners\button\button-settings-active.png";
+            ImgBtnSettings.ImageSource = new ImageSourceConverter().ConvertFromString(uri) as ImageSource;
+            if (BtnSetClick == 1)
+            {
+                tabNFTSet.SelectedItem = TabSettings;
+                imgShadowNFT.Visibility = Visibility.Hidden;
+            }
+            else
+            {
+                if (NFTShadow == 1)
+                {
+                    imgShadowNFT.Visibility = Visibility.Visible;
+                }
+                tabNFTSet.SelectedItem = TabNFT;
+                BtnSetClick = 0;
+            }
+        }
+
         private void btnRecording_Click(object sender, RoutedEventArgs e)
         {
             ImgBtnRecordClick = 1;
@@ -1572,6 +1612,7 @@ namespace SimpleNeurotuner
                             }
                             PBNFT.Visibility = Visibility.Visible;
                             lbPBNFT.Visibility = Visibility.Visible;
+                            imgPBNFTBack.Visibility = Visibility.Visible;
                             int[] Rdat = new int[250000];
                             int Ndt;
                             int Ww, Hw, k, ik, dWw, dHw;
@@ -1684,6 +1725,8 @@ namespace SimpleNeurotuner
                             // Show the bitmap in an Image element.
                             Image1.Source = wb;
                             Image1.UpdateLayout();
+                            NFTShadow = 1;
+                            imgShadowNFT.Visibility = Visibility.Visible;
                             if (!File.Exists(@"Image\" + RecordName + ".bmp"))
                             {
                                 SaveToBmp(GridName, @"Image\" + RecordName + ".bmp");

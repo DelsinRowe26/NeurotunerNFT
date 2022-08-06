@@ -18,9 +18,6 @@ namespace SimpleNeurotuner
         public static int[] max = new int[10];
         public static int[] Vol = new int[10];
         public static int SampleRate2;
-        private static float MAX, MAXIN, MAX2, coeffVol;
-        private static long IndexMAX, IndexMAX1, IndexMAX2;
-        private static long IndexSTART, IndexEND;
         private static int MAX_FRAME_LENGTH = 48000;
         private static float[] gInFIFO = new float[MAX_FRAME_LENGTH];
         private static int[] kt = new int[MAX_FRAME_LENGTH * 2];
@@ -37,9 +34,6 @@ namespace SimpleNeurotuner
         private static float[] gAnaMagn = new float[MAX_FRAME_LENGTH];
         private static float[] gSynFreq = new float[MAX_FRAME_LENGTH];
         private static float[] gSynMagn = new float[MAX_FRAME_LENGTH];
-        private static StreamReader fileName = new StreamReader("Wide_voiceTurbo.txt", System.Text.Encoding.Default);
-        private static int Nlines = File.ReadAllLines("Wide_voiceTurbo.txt").Length;
-        private static string[] txt = fileName.ReadToEnd().Split(new char[] { ' ', '.' }, StringSplitOptions.None);
         private static float ToneStep = (float)Math.Pow(2, 1.0 / 12);//рассчет шага тоны
         private static long gRover, gInit;
         #endregion
