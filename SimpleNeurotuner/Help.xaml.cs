@@ -12,8 +12,7 @@ namespace SimpleNeurotuner
     public partial class Window1 : Window
     {
         //public string index;
-        static StreamReader FileLanguage = new StreamReader("Data_Language.tmp");
-        public string index = FileLanguage.ReadToEnd();
+        
 
         public Window1()
         {
@@ -22,9 +21,10 @@ namespace SimpleNeurotuner
 
         private void Help_Loaded(object sender, RoutedEventArgs e)
         {
+            StreamReader FileLanguage = new StreamReader("Data_Language.tmp");
+            string index = FileLanguage.ReadToEnd();
             try
             {
-                
                 if (index == "0")
                 {
                     Title = "Помощь";

@@ -6,7 +6,7 @@
         xmlns:wf="clr-namespace:System.Windows.Forms;assembly=System.Windows.Forms"
         xmlns:local="clr-namespace:SimpleNeurotuner"
         mc:Ignorable="d"
-        Title="Neurotuner NFT" Height="602" Width="569" Loaded="SimpleNeurotuner_Loaded" Closing="SimpleNeurotuner_Closing" ResizeMode="CanMinimize" Activated="SimpleNeurotuner_Activated">
+        Title="Neurotuner NFT" Height="602" Width="569" Loaded="SimpleNeurotuner_Loaded" Closing="SimpleNeurotuner_Closing" ResizeMode="CanMinimize" Activated="SimpleNeurotuner_Activated" HorizontalAlignment="Center" VerticalAlignment="Center">
     <Window.Background>
         <ImageBrush Stretch="UniformToFill" TileMode="Tile">
             <ImageBrush.ImageSource>
@@ -14,11 +14,11 @@
             </ImageBrush.ImageSource>
         </ImageBrush>
     </Window.Background>
-    <Grid x:Name="grid" Margin="0,0,-6,-19">
+    <Grid x:Name="grid" Margin="0,0,0,4">
         <Grid.ColumnDefinitions>
             <ColumnDefinition/>
         </Grid.ColumnDefinitions>
-        <Button x:Name="btnStart_Open" Content="Start" HorizontalAlignment="Left" Margin="202,463,0,0" VerticalAlignment="Top" Height="52" Width="52" Click="btnStart_Open_Click" MouseMove="btnStart_Open_MouseMove" MouseLeave="btnStart_Open_MouseLeave" FontSize="14">
+        <Button x:Name="btnStart_Open" Content="Start" HorizontalAlignment="Left" Margin="202,451,0,0" VerticalAlignment="Top" Height="52" Width="52" Click="btnStart_Open_Click" MouseMove="btnStart_Open_MouseMove" MouseLeave="btnStart_Open_MouseLeave" FontSize="14" ToolTip="Start">
             <Button.Background>
                 <ImageBrush x:Name="ImgStart" ImageSource = "/button-play-inactive.png"/>
             </Button.Background>
@@ -28,7 +28,7 @@
                 </ControlTemplate>
             </Button.Template>
         </Button>
-        <Button x:Name="btnStop" Content="Stop" HorizontalAlignment="Left" Margin="412,468,0,0" VerticalAlignment="Top" Height="52" Width="52" Click="btnStop_Click" MouseMove="btnStop_MouseMove" MouseLeave="btnStop_MouseLeave" FontSize="14">
+        <Button x:Name="btnStop" Content="Stop" HorizontalAlignment="Left" Margin="301,451,0,0" VerticalAlignment="Top" Height="52" Width="52" Click="btnStop_Click" MouseMove="btnStop_MouseMove" MouseLeave="btnStop_MouseLeave" FontSize="14">
             <Button.Background>
                 <ImageBrush x:Name="ImgStopBtn" ImageSource="/button-stop-inactive.png"/>
             </Button.Background>
@@ -38,7 +38,36 @@
                 </ControlTemplate>
             </Button.Template>
         </Button>
-
+        <Button x:Name="btnRecording" Content="" HorizontalAlignment="Left" Margin="153,451,0,0" VerticalAlignment="Top" Height="52" Width="52" BorderBrush="{x:Null}" Foreground="{x:Null}" MouseMove="btnRecording_MouseMove" MouseLeave="btnRecording_MouseLeave" Click="btnRecording_Click">
+            <Button.Background>
+                <ImageBrush x:Name="ImgRecordingBtn" ImageSource="/button-record-inactive.png"/>
+            </Button.Background>
+            <Button.Template>
+                <ControlTemplate>
+                    <Border Background="{TemplateBinding Background}" Width="52" Height="52"/>
+                </ControlTemplate>
+            </Button.Template>
+        </Button>
+        <Button x:Name="btnTurbo" Content="Turbo" HorizontalAlignment="Left" Margin="350,451,0,0" VerticalAlignment="Top" Height="52" Width="52" Click="btnTurbo_Click" MouseMove="btnTurbo_MouseMove" MouseLeave="btnTurbo_MouseLeave" FontSize="14">
+            <Button.Background>
+                <ImageBrush x:Name="ImgTurboBtn" ImageSource="/button-turbo-inactive.png"/>
+            </Button.Background>
+            <Button.Template>
+                <ControlTemplate>
+                    <Border Background="{TemplateBinding Background}" Width="52" Height="52"/>
+                </ControlTemplate>
+            </Button.Template>
+        </Button>
+        <Button x:Name="btnPlayer" Content="Player" HorizontalAlignment="Center" Margin="0,451,0,0" VerticalAlignment="Top" Height="52" Width="52" Click="btnPlayer_Click" MouseMove="btnPlayer_MouseMove" MouseLeave="btnPlayer_MouseLeave" FontSize="14" Visibility="Visible">
+            <Button.Background>
+                <ImageBrush x:Name="ImgListenBtn" ImageSource="/button-listen-inactive.png"/>
+            </Button.Background>
+            <Button.Template>
+                <ControlTemplate>
+                    <Border Background="{TemplateBinding Background}" Width="52" Height="52"></Border>
+                </ControlTemplate>
+            </Button.Template>
+        </Button>
 
         <Label x:Name="lbSpeaker" Content="Speaker" HorizontalAlignment="Left" Margin="73,164,0,0" VerticalAlignment="Top" Visibility="Hidden" Height="26" Width="52"/>
         <Label x:Name="lbMicrophone" Content="Microphone" HorizontalAlignment="Left" Margin="53,129,0,0" VerticalAlignment="Top" Visibility="Hidden" Height="26" Width="74"/>
@@ -68,7 +97,15 @@
             </Label.Style>
         </Label>
         <Label x:Name="lbVolValue5" Content="0" HorizontalAlignment="Left" Margin="206,376,0,0" VerticalAlignment="Top" Height="32" Width="36" FontSize="18" Visibility="Hidden"/>
-        <ProgressBar x:Name="pbRecord" HorizontalAlignment="Center" Height="20" VerticalAlignment="Top" Width="200" Visibility="Hidden" Margin="0,81,0,0" BorderBrush="Black" Background="{x:Null}">
+        <ProgressBar x:Name="pbRecord" HorizontalAlignment="Center" Height="16" VerticalAlignment="Top" Width="200" Visibility="Hidden" Margin="0,81,0,0" BorderBrush="Black">
+            <ProgressBar.Background>
+                <ImageBrush x:Name="ImgPBRecordBack" ImageSource="/progressbar-backgrnd1.png"/>
+            </ProgressBar.Background>
+            <ProgressBar.Template>
+                <ControlTemplate>
+                    <Border Background="{TemplateBinding Background}"/>
+                </ControlTemplate>
+            </ProgressBar.Template>
             <ProgressBar.Foreground>
                 <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
                     <GradientStop Color="#FFF100B7"/>
@@ -127,10 +164,15 @@
                 <ImageBrush ImageSource="/progressbar-backgrnd.png" Stretch="UniformToFill"/>
             </Image.OpacityMask>
         </Image>
-        <ProgressBar x:Name="PBNFT" HorizontalAlignment="Center" Height="16" Margin="0,37,0,0" VerticalAlignment="Top" Width="200" BorderBrush="{x:Null}" Visibility="Visible">
+        <ProgressBar x:Name="PBNFT" HorizontalAlignment="Center" Height="16" Margin="0,37,0,0" VerticalAlignment="Top" Width="200" BorderBrush="{x:Null}" Visibility="Hidden">
             <ProgressBar.Background>
-                <ImageBrush/>
+                <ImageBrush x:Name="ImgPBNFTback" ImageSource="/progressbar-backgrnd.png"/>
             </ProgressBar.Background>
+            <ProgressBar.Template>
+                <ControlTemplate>
+                    <Border Background="{TemplateBinding Background}"/>
+                </ControlTemplate>
+            </ProgressBar.Template>
             <ProgressBar.Foreground>
                 <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
                     <GradientStop Color="#FFF100B7"/>
@@ -148,64 +190,41 @@
         </Label>
         <Slider x:Name="slPitch" HorizontalAlignment="Center" Margin="0,79,0,0" VerticalAlignment="Top" Width="250" Maximum="15" Minimum="-15" TickPlacement="BottomRight" ValueChanged="slPitch_ValueChanged" Visibility="Hidden" Height="24"/>
         <Label x:Name="lbPitchValue" Content="0" HorizontalAlignment="Left" Margin="410,70,0,0" VerticalAlignment="Top" FontSize="14" Visibility="Hidden" Height="29" Width="17"/>
-        <Button x:Name="btnTurbo" Content="Turbo" HorizontalAlignment="Left" Margin="330,463,0,0" VerticalAlignment="Top" Height="52" Width="52" Click="btnTurbo_Click" MouseMove="btnTurbo_MouseMove" MouseLeave="btnTurbo_MouseLeave" FontSize="14">
-            <Button.Background>
-                <ImageBrush x:Name="ImgTurboBtn" ImageSource="/button-turbo-inactive.png"/>
-            </Button.Background>
-            <Button.Template>
-                <ControlTemplate>
-                    <Border Background="{TemplateBinding Background}" Width="52" Height="52"/>
-                </ControlTemplate>
-            </Button.Template>
-        </Button>
-        <Button x:Name="btnPlayer" Content="Player" HorizontalAlignment="Center" Margin="0,462,0,0" VerticalAlignment="Top" Height="52" Width="52" Click="btnPlayer_Click" MouseMove="btnPlayer_MouseMove" MouseLeave="btnPlayer_MouseLeave" FontSize="14" Visibility="Visible">
-            <Button.Background>
-                <ImageBrush x:Name="ImgListenBtn" ImageSource="/button-listen-inactive.png"/>
-            </Button.Background>
-            <Button.Template>
-                <ControlTemplate>
-                    <Border Background="{TemplateBinding Background}" Width="52" Height="52"></Border>
-                </ControlTemplate>
-            </Button.Template>
-        </Button>
+
         <Image x:Name="imgBack" HorizontalAlignment="Left" Height="100" Margin="428,213,0,0" VerticalAlignment="Top" Width="50" Source="/button-back.png" StretchDirection="DownOnly">
             <Image.OpacityMask>
                 <ImageBrush ImageSource="/button-back.png"/>
             </Image.OpacityMask>
         </Image>
-        <Button x:Name="btnDecVol" Content="-" HorizontalAlignment="Left" Margin="90,261,0,0" VerticalAlignment="Top" Height="52" Width="52" Click="btnDecVol_Click" RenderTransformOrigin="0.435,0.248" BorderBrush="{x:Null}" MouseMove="btnDecVol_MouseMove" Foreground="{x:Null}" Focusable="False">
+        <Image x:Name="imgBackVolume" HorizontalAlignment="Left" Height="100" Margin="90,212,0,0" VerticalAlignment="Top" Width="50" Source="/button-back-volume.png">
+            <Image.OpacityMask>
+                <ImageBrush ImageSource="/button-back-volume.png"/>
+            </Image.OpacityMask>
+        </Image>
+        <Button x:Name="btnDecVol" Content="-" HorizontalAlignment="Left" Margin="90,261,0,0" VerticalAlignment="Top" Height="50" Width="50" Click="btnDecVol_Click" RenderTransformOrigin="0.435,0.248" BorderBrush="{x:Null}" MouseMove="btnDecVol_MouseMove" Foreground="{x:Null}" Focusable="False">
             <Button.Background>
                 <ImageBrush x:Name="imgBTNinacDown" ImageSource="/button-sounddown-inactive.png"/>
             </Button.Background>
             <Button.Template>
                 <ControlTemplate>
-                    <Border Background="{TemplateBinding Background}" MouseLeave="Border_MouseLeave" Width="52" Height="52">
+                    <Border Background="{TemplateBinding Background}" MouseLeave="Border_MouseLeave" Width="50" Height="50">
 
                     </Border>
                 </ControlTemplate>
             </Button.Template>
         </Button>
-        <Button x:Name="btnIncVol" Content="+" HorizontalAlignment="Left" Margin="90,211,0,0" VerticalAlignment="Top" Height="52" Width="52" Click="btnIncVol_Click" MouseMove="btnIncVol_MouseMove" MouseLeave="btnIncVol_MouseLeave">
+        <Button x:Name="btnIncVol" Content="+" HorizontalAlignment="Left" Margin="90,211,0,0" VerticalAlignment="Top" Height="50" Width="50" Click="btnIncVol_Click" MouseMove="btnIncVol_MouseMove" MouseLeave="btnIncVol_MouseLeave">
             <Button.Background>
                 <ImageBrush x:Name="imgBTNinaUp" ImageSource="/button-soundup-inactive.png"/>
             </Button.Background>
 
             <Button.Template>
                 <ControlTemplate>
-                    <Border Background="{TemplateBinding Background}" Width="52" Height="52"/>
+                    <Border Background="{TemplateBinding Background}" Width="50" Height="50"/>
                 </ControlTemplate>
             </Button.Template>
         </Button>
-        <Button x:Name="btnRecording" Content="" HorizontalAlignment="Left" Margin="129,473,0,0" VerticalAlignment="Top" Height="52" Width="52" BorderBrush="{x:Null}" Foreground="{x:Null}" MouseMove="btnRecording_MouseMove" MouseLeave="btnRecording_MouseLeave" Click="btnRecording_Click">
-            <Button.Background>
-                <ImageBrush x:Name="ImgRecordingBtn" ImageSource="/button-record-inactive.png"/>
-            </Button.Background>
-            <Button.Template>
-                <ControlTemplate>
-                    <Border Background="{TemplateBinding Background}" Width="52" Height="52"/>
-                </ControlTemplate>
-            </Button.Template>
-        </Button>
+
         <Button x:Name="btnModeAudio" Content="" HorizontalAlignment="Left" Margin="428,262,0,0" VerticalAlignment="Top" Width="50" Height="50" BorderBrush="{x:Null}" Foreground="{x:Null}" MouseMove="btnModeAudio_MouseMove" MouseLeave="btnModeAudio_MouseLeave" Click="btnModeAudio_Click">
             <Button.Background>
                 <ImageBrush x:Name="ImgBtnModeAudio" ImageSource="/listen-mode-inactive.png"/>
@@ -243,6 +262,10 @@
                 </ControlTemplate>
             </Button.Template>
         </Button>
+        <ProgressBar x:Name="pbVolumeLeft" HorizontalAlignment="Left" Height="155" Margin="52,312,0,0" VerticalAlignment="Top" Width="17" Maximum="65535" Orientation="Vertical" Visibility="Hidden"/>
+        <ProgressBar x:Name="pbVolumeRight" HorizontalAlignment="Left" Height="155" Margin="90,312,0,0" VerticalAlignment="Top" Width="18" Maximum="65535" Orientation="Vertical" Visibility="Hidden"/>
+
+
 
 
 

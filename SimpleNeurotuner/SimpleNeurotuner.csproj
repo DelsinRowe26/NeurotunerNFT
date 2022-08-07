@@ -86,6 +86,7 @@
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.Drawing" />
+    <Reference Include="System.Management" />
     <Reference Include="System.Windows" />
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Windows.Forms.DataVisualization" />
@@ -109,12 +110,18 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="ActivationForm.xaml.cs">
+      <DependentUpon>ActivationForm.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="check.cs" />
     <Compile Include="CreateWindow.xaml.cs">
       <DependentUpon>CreateWindow.xaml</DependentUpon>
     </Compile>
+    <Compile Include="FormUpload.cs" />
     <Compile Include="FrequencyUtils.cs" />
     <Compile Include="FrequencyUtilsRec.cs" />
     <Compile Include="LogClass.cs" />
+    <Compile Include="mac.cs" />
     <Compile Include="MyFrequencyUtils.cs" />
     <Compile Include="PitchShifter.cs" />
     <Compile Include="PitchShifter1.cs" />
@@ -133,6 +140,10 @@
     <Compile Include="WelcomeWindow.xaml.cs">
       <DependentUpon>WelcomeWindow.xaml</DependentUpon>
     </Compile>
+    <Page Include="ActivationForm.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="CreateWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -289,6 +300,15 @@
     <Resource Include="input-biblio.png" />
     <Resource Include="pic-shadow.png" />
     <Resource Include="progressbar-backgrnd.png" />
+    <Resource Include="Neurotuners\button\button-back-volume.png" />
+    <Resource Include="button-back-volume.png" />
+    <Resource Include="Neurotuners\progressbar\Group 10.png" />
+    <Resource Include="Neurotuners\progressbar\Group 11.png" />
+    <Resource Include="Neurotuners\progressbar\Group 12.png" />
+    <Resource Include="Neurotuners\progressbar\Group 13.png" />
+    <Resource Include="Neurotuners\progressbar\Group 14.png" />
+    <Resource Include="progressbar-backgrnd1.png" />
+    <Resource Include="input-biblio1.png" />
     <Content Include="Zvuk.dll" />
     <Resource Include="button-back.png" />
     <Resource Include="Neurotuners\button\button-backcmb.png" />

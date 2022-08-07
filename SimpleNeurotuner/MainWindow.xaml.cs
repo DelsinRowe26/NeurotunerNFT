@@ -31,6 +31,7 @@ using System.Windows.Shapes;
 using System.Globalization;
 using Intersoft.Crosslight;
 using CSCore.Streams.Effects;
+using TEST_API;
 
 namespace SimpleNeurotuner
 {
@@ -86,12 +87,14 @@ namespace SimpleNeurotuner
         //private PitchShifter _pitchShifter;
 
         private ISampleSource mMp3;
-        private string path;
+        private static string path = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
+        private static string path2;
         private string file, filename, RecordName;
         private string record;
         private string[] allfile;
         private int click, audioclick = 0;
 
+        private static int limit = 20;
         private int ImgBtnStartClick = 0, ImgBtnRecordClick = 0, ImgBtnListenClick = 0, ImgBtnTurboClick = 0, ModeIndex, BtnSetClick = 0, NFTShadow = 0;
 
         private const int APPCOMMAND_VOLUME_MUTE = 0x80000;
@@ -104,7 +107,7 @@ namespace SimpleNeurotuner
         public MainWindow()
         {
             InitializeComponent();
-            ShowCurrentVolume();
+            //ShowCurrentVolume();
             worker = new BackgroundWorker();
             worker.WorkerReportsProgress = true;
             worker.WorkerSupportsCancellation = true;
@@ -151,11 +154,28 @@ namespace SimpleNeurotuner
             try
             {
                 PBNFT.Value = e.ProgressPercentage;
-                if(PBNFT.Value == 100)
+                if(PBNFT.Value == 25)
+                {
+                    string uri = @"Neurotuners\progressbar\Group 13.png";
+                    ImgPBNFTback.ImageSource = new ImageSourceConverter().ConvertFromString(uri) as ImageSource;
+                }
+                else if(PBNFT.Value == 50)
+                {
+                    string uri = @"Neurotuners\progressbar\Group 12.png";
+                    ImgPBNFTback.ImageSource = new ImageSourceConverter().ConvertFromString(uri) as ImageSource;
+                }
+                else if (PBNFT.Value == 75)
+                {
+                    string uri = @"Neurotuners\progressbar\Group 11.png";
+                    ImgPBNFTback.ImageSource = new ImageSourceConverter().ConvertFromString(uri) as ImageSource;
+                }
+                else if (PBNFT.Value == 100)
                 {
                     PBNFT.Visibility = Visibility.Hidden;
                     lbPBNFT.Visibility = Visibility.Hidden;
-                    imgPBNFTBack.Visibility = Visibility.Hidden;
+                    string uri = @"Neurotuners\element\progressbar-backgrnd.png";
+                    ImgPBNFTback.ImageSource = new ImageSourceConverter().ConvertFromString(uri) as ImageSource;
+                    //imgPBNFTBack.Visibility = Visibility.Hidden;
                 }
             }
             catch (Exception ex)
@@ -304,16 +324,34 @@ namespace SimpleNeurotuner
                 {
                     Directory.CreateDirectory("Image");
                 }
+                if (!Directory.Exists("Record"))
+                {
+                    Directory.CreateDirectory("Record");
+                }
+                if (!Directory.Exists(path + "NeurotunerNFT"))
+                {
+                    Directory.CreateDirectory(path + @"\NeurotunerNFT");
+                    path2 = path + @"\NeurotunerNFT\Data";
+
+                }
                 //SampleRate = mSoundIn.WaveFormat.SampleRate;
                 TembroClass tembro = new TembroClass();
                 tembro.Tembro(48000);
                 var wih = new WindowInteropHelper(this);
                 var hWnd = wih.Handle;
-                SendMessageW(hWnd, WM_APPCOMMAND, hWnd, (IntPtr)WM_APPCOMMAND);
-                //pbVolume.Value = (double)hWnd;
+                if (check.strt(path2) > limit)
+                {
+                    this.IsEnabled = false;
+                    ActivationForm activation = new ActivationForm();
+                    activation.Show();
+                }
+                //SendMessageW(hWnd, WM_APPCOMMAND, hWnd, (IntPtr)APPCOMMAND_VOLUME_UP);
+                //pbVolumeLeft.Value = (double)hWnd;
                 ModeIndex = -1;
                 Modes();
-                ShowCurrentVolume();
+                //System.Media.SystemSound sound;
+                //sound.GetPropertyValue;
+                //ShowCurrentVolume();
                 
                 //path = System.IO.Path.GetFullPath("Zvuk.dll");
                 /*uint volume;
@@ -343,10 +381,28 @@ namespace SimpleNeurotuner
 
         private void ShowCurrentVolume()
         {
+            
             uint volume;
             waveOutGetVolume(IntPtr.Zero, out volume);
             int right = (int)((volume >> 16) & 0xFFFF);
-            //pbVolume.Value = right;
+            int left = (int)(volume & 0xFFFF);
+            pbVolumeLeft.Value = left;
+            pbVolumeRight.Value = right;
+            Autobalance();
+        }
+
+        private void SetVolume()
+        {
+            uint volume = (uint)(pbVolumeLeft.Value + ((int)pbVolumeRight.Value << 16));
+            waveOutSetVolume(IntPtr.Zero, volume);
+        }
+        
+        private void Autobalance()
+        {
+            int volume = (int)(pbVolumeLeft.Value + pbVolumeRight.Value) / 2;
+            pbVolumeLeft.Value = volume;
+            pbVolumeRight.Value = volume;
+            SetVolume();
         }
 
         private void Filling()
@@ -912,13 +968,37 @@ namespace SimpleNeurotuner
                         {
                             pbRecord.Value++;
                             await Task.Delay(50);
+                            if(pbRecord.Value == 25)
+                            {
+                                string uri1 = @"Neurotuners\progressbar\Group 13.png";
+                                ImgPBRecordBack.ImageSource = new ImageSourceConverter().ConvertFromString(uri1) as ImageSource;
+                            }
+                            else if (pbRecord.Value == 50)
+                            {
+                                string uri2 = @"Neurotuners\progressbar\Group 12.png";
+                                ImgPBRecordBack.ImageSource = new ImageSourceConverter().ConvertFromString(uri2) as ImageSource;
+                            }
+                            else if (pbRecord.Value == 75)
+                            {
+                                string uri3 = @"Neurotuners\progressbar\Group 11.png";
+                                ImgPBRecordBack.ImageSource = new ImageSourceConverter().ConvertFromString(uri3) as ImageSource;
+                            }
+                            else if (pbRecord.Value == 95)
+                            {
+                                string uri4 = @"Neurotuners\progressbar\Group 10.png";
+                                ImgPBRecordBack.ImageSource = new ImageSourceConverter().ConvertFromString(uri4) as ImageSource;
+                            }
                         }
                         //Thread.Sleep(5000);
+                        
                         mSoundIn.Stop();
                         lbRecordPB.Visibility = Visibility.Hidden;
                         pbRecord.Value = 0;
+                        
                     }
                     Thread.Sleep(100);
+                    string uri = @"Neurotuners\element\progressbar-backgrnd1.png";
+                    ImgPBRecordBack.ImageSource = new ImageSourceConverter().ConvertFromString(uri) as ImageSource;
                     int[] Rdat = new int[150000];
                     int Ndt;
                     Ndt = vizualzvuk(cutmyfile, myfile, Rdat, 1);
@@ -1006,15 +1086,25 @@ namespace SimpleNeurotuner
                     cmbRecord.Items.Add("Выберите запись");
                     cmbRecord.SelectedIndex = cmbRecord.Items.Count - 1;
                     Filling();
+                    btnRecording.ToolTip = "Запись";
                     cmbModes.Items.Clear();
                     cmbModes.Items.Add("Записи");
                     cmbModes.Items.Add("Прослушивание");
                     cmbModes.SelectedIndex = cmbModes.Items.Count - 1;
                     Title = "Нейротюнер NFT";
                     btnStart_Open.Content = "Старт";
+                    btnStart_Open.ToolTip = "Старт";
                     btnTurbo.Content = "Турбо";
+                    btnTurbo.ToolTip = "Турбо";
                     btnPlayer.Content = "Плеер";
+                    btnPlayer.ToolTip = "Плеер";
                     btnStop.Content = "Стоп";
+                    btnStop.ToolTip = "Стоп";
+                    btnSettings.ToolTip = "Настройки";
+                    btnModeAudio.ToolTip = "Режим прослушивания";
+                    btnModeRecord.ToolTip = "Режим записи";
+                    btnIncVol.ToolTip = "Громкость +";
+                    btnDecVol.ToolTip = "Громкость -";
                     Help.Header = "Помощь";
                     TabNFT.Header = "gNeuro NFT";
                     TabSettings.Header = "Настройки";
@@ -1040,9 +1130,19 @@ namespace SimpleNeurotuner
                     Title = "Neurotuner NFT";
                     btnStart_Open.Content = "Start";
                     btnTurbo.Content = "Turbo";
+                    btnTurbo.ToolTip = "Turbo";
+                    btnSettings.ToolTip = "Settings";
+                    btnModeAudio.ToolTip = "Mode Audition";
+                    btnModeRecord.ToolTip = "Mode Record";
+                    btnIncVol.ToolTip = "Volume +";
+                    btnDecVol.ToolTip = "Volume -";
                     btnPlayer.Content = "Player";
+                    btnPlayer.ToolTip = "Player";
                     btnStop.Content = "Stop";
+                    btnStop.ToolTip = "Stop";
                     Help.Header = "Help";
+                    btnRecording.ToolTip = "Record";
+                    btnStart_Open.ToolTip = "Start";
                     TabNFT.Header = "gNeuro NFT";
                     TabSettings.Header = "Settings";
                     lbVersion.Content = "Version: 1.1";
@@ -1352,6 +1452,9 @@ namespace SimpleNeurotuner
             var wih = new WindowInteropHelper(this);
             var hWnd = wih.Handle;
             SendMessageW(hWnd, WM_APPCOMMAND, hWnd, (IntPtr)APPCOMMAND_VOLUME_DOWN);
+            /*pbVolumeRight.Value -= 1310;
+            pbVolumeLeft.Value -= 1310;
+            SetVolume();*/
             string uri = @"Neurotuners\button\button-sounddown-active.png";
             imgBTNinacDown.ImageSource = new ImageSourceConverter().ConvertFromString(uri) as ImageSource;
         }
@@ -1361,6 +1464,9 @@ namespace SimpleNeurotuner
             var wih = new WindowInteropHelper(this);
             var hWnd = wih.Handle;
             SendMessageW(hWnd, WM_APPCOMMAND, hWnd, (IntPtr)APPCOMMAND_VOLUME_UP);
+            /*pbVolumeRight.Value += 1310;
+            pbVolumeLeft.Value += 1310;
+            SetVolume();*/
             string uri = @"Neurotuners\button\button-soundup-active.png";
             imgBTNinaUp.ImageSource = new ImageSourceConverter().ConvertFromString(uri) as ImageSource;
         }
@@ -1612,7 +1718,7 @@ namespace SimpleNeurotuner
                             }
                             PBNFT.Visibility = Visibility.Visible;
                             lbPBNFT.Visibility = Visibility.Visible;
-                            imgPBNFTBack.Visibility = Visibility.Visible;
+                            //imgPBNFTBack.Visibility = Visibility.Visible;
                             int[] Rdat = new int[250000];
                             int Ndt;
                             int Ww, Hw, k, ik, dWw, dHw;

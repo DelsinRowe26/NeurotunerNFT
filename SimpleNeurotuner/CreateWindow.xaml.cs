@@ -16,8 +16,6 @@ namespace SimpleNeurotuner
         public string cutFileName;
         private FileInfo fileCreate = new FileInfo("Data_Create.tmp");
         private FileInfo fileCutCreate = new FileInfo("Data_cutCreate.tmp");
-        static StreamReader FileLanguage = new StreamReader("Data_Language.tmp");
-        string langindex = FileLanguage.ReadToEnd();
 
         public CreateWindow()
         {
@@ -28,6 +26,9 @@ namespace SimpleNeurotuner
         {
             try
             {
+                StreamReader FileLanguage = new StreamReader("Data_Language.tmp");
+                string langindex = FileLanguage.ReadToEnd();
+                FileLanguage.Close();
                 //string index = FileLanguage.ReadToEnd();
                 //langindex = FileLanguage.ReadLine();
                 if (langindex == "0")
@@ -45,6 +46,9 @@ namespace SimpleNeurotuner
             }
             catch (Exception ex)
             {
+                StreamReader FileLanguage = new StreamReader("Data_Language.tmp");
+                string langindex = FileLanguage.ReadToEnd();
+                FileLanguage.Close();
                 if (langindex == "0")
                 {
                     string msg = "Ошибка в CreateWindow_Loaded: \r\n" + ex.Message;
@@ -66,6 +70,9 @@ namespace SimpleNeurotuner
         {
             try
             {
+                StreamReader FileLanguage = new StreamReader("Data_Language.tmp");
+                string langindex = FileLanguage.ReadToEnd();
+                FileLanguage.Close();
                 FileName = tbRecordTitle.Text + ".wav";
                 cutFileName = "cut" + tbRecordTitle.Text + ".wav";
                 
@@ -102,6 +109,9 @@ namespace SimpleNeurotuner
             }
             catch (Exception ex)
             {
+                StreamReader FileLanguage = new StreamReader("Data_Language.tmp");
+                string langindex = FileLanguage.ReadToEnd();
+                FileLanguage.Close();
                 if (langindex == "0")
                 {
                     string msg = "Ошибка в CreateWindow_btnCreate_Click: \r\n" + ex.Message;
