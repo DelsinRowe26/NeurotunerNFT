@@ -7,17 +7,15 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SimpleNeurotuner", "SimpleN
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SoundAnalysis", "SoundAnalysis\SoundAnalysis.csproj", "{ABA54DC3-324B-49DE-B79E-C4F573306E4F}"
 EndProject
-Project("{54435603-DBB4-11D2-8724-00A0C9A8B90C}") = "Neurotuner NFT Setup", "Neurotuner NFT Setup\Neurotuner NFT Setup.vdproj", "{1A6CC5D8-8838-42AF-B74B-0B857EDA0E5E}"
-EndProject
-Project("{54435603-DBB4-11D2-8724-00A0C9A8B90C}") = "Neurotuner NFT Setup 1.1", "Neurotuner NFT Setup 1.1\Neurotuner NFT Setup 1.1.vdproj", "{DED27563-A92A-41D5-8614-9EB10874F465}"
-EndProject
-Project("{54435603-DBB4-11D2-8724-00A0C9A8B90C}") = "Neurotuner NFT 1.2.1 Setup", "Neurotuner NFT 1.2.1 Setup\Neurotuner NFT 1.2.1 Setup.vdproj", "{83421AE4-D50A-42BD-802B-9BBD09923BB9}"
-EndProject
-Project("{54435603-DBB4-11D2-8724-00A0C9A8B90C}") = "Neurotuner NFT 1.2.2 Setup", "Neurotuner NFT 1.2.2 Setup\Neurotuner NFT 1.2.2 Setup.vdproj", "{B9BD8198-1BBA-42CB-8472-ECECDB8252C4}"
-EndProject
-Project("{54435603-DBB4-11D2-8724-00A0C9A8B90C}") = "Neurotuner NFT 1.2.3 Setup", "Neurotuner NFT 1.2.3 Setup\Neurotuner NFT 1.2.3 Setup.vdproj", "{9DE3FED1-8C8A-4A51-8AE0-AEDE7DE10DA8}"
-EndProject
 Project("{54435603-DBB4-11D2-8724-00A0C9A8B90C}") = "Neurotuner NFT New Disain Setup", "Neurotuner NFT New Disain Setup\Neurotuner NFT New Disain Setup.vdproj", "{E00EA7EE-BB42-42B9-907E-1770D8201456}"
+EndProject
+Project("{54435603-DBB4-11D2-8724-00A0C9A8B90C}") = "Neurotuner NFT 1.1.1 Setup", "Neurotuner NFT 1.1.1 Setup\Neurotuner NFT 1.1.1 Setup.vdproj", "{F8AFDEF4-F259-400E-96FF-10318AD7D2FB}"
+EndProject
+Project("{54435603-DBB4-11D2-8724-00A0C9A8B90C}") = "Neurotuner NFT 1.1.2 Setup", "Neurotuner NFT 1.1.2 Setup\Neurotuner NFT 1.1.2 Setup.vdproj", "{3181764E-38EC-46FE-8603-08C150F62127}"
+EndProject
+Project("{54435603-DBB4-11D2-8724-00A0C9A8B90C}") = "Neurotuner NFT Version Ru 1.1.1 Setup", "Neurotuner NFT Version Ru 1.1.1 Setup\Neurotuner NFT Version Ru 1.1.1 Setup.vdproj", "{649035E3-8D3F-4C6E-8183-D580ED36B29C}"
+EndProject
+Project("{54435603-DBB4-11D2-8724-00A0C9A8B90C}") = "Neurotuner NFT Version En 1.1.1 Setup", "Neurotuner NFT Version En 1.1.1 Setup\Neurotuner NFT Version En 1.1.1 Setup.vdproj", "{FAB5F5AB-7EB5-4C90-80FF-879AC7EC3015}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -43,42 +41,28 @@ Global
 		{ABA54DC3-324B-49DE-B79E-C4F573306E4F}.Release|Any CPU.Build.0 = Release|Any CPU
 		{ABA54DC3-324B-49DE-B79E-C4F573306E4F}.Release|x64.ActiveCfg = Release|x64
 		{ABA54DC3-324B-49DE-B79E-C4F573306E4F}.Release|x64.Build.0 = Release|x64
-		{1A6CC5D8-8838-42AF-B74B-0B857EDA0E5E}.Debug|Any CPU.ActiveCfg = Debug
-		{1A6CC5D8-8838-42AF-B74B-0B857EDA0E5E}.Debug|x64.ActiveCfg = Debug
-		{1A6CC5D8-8838-42AF-B74B-0B857EDA0E5E}.Debug|x64.Build.0 = Debug
-		{1A6CC5D8-8838-42AF-B74B-0B857EDA0E5E}.Release|Any CPU.ActiveCfg = Release
-		{1A6CC5D8-8838-42AF-B74B-0B857EDA0E5E}.Release|x64.ActiveCfg = Release
-		{1A6CC5D8-8838-42AF-B74B-0B857EDA0E5E}.Release|x64.Build.0 = Release
-		{DED27563-A92A-41D5-8614-9EB10874F465}.Debug|Any CPU.ActiveCfg = Debug
-		{DED27563-A92A-41D5-8614-9EB10874F465}.Debug|x64.ActiveCfg = Debug
-		{DED27563-A92A-41D5-8614-9EB10874F465}.Debug|x64.Build.0 = Debug
-		{DED27563-A92A-41D5-8614-9EB10874F465}.Release|Any CPU.ActiveCfg = Release
-		{DED27563-A92A-41D5-8614-9EB10874F465}.Release|x64.ActiveCfg = Release
-		{DED27563-A92A-41D5-8614-9EB10874F465}.Release|x64.Build.0 = Release
-		{83421AE4-D50A-42BD-802B-9BBD09923BB9}.Debug|Any CPU.ActiveCfg = Debug
-		{83421AE4-D50A-42BD-802B-9BBD09923BB9}.Debug|x64.ActiveCfg = Debug
-		{83421AE4-D50A-42BD-802B-9BBD09923BB9}.Debug|x64.Build.0 = Debug
-		{83421AE4-D50A-42BD-802B-9BBD09923BB9}.Release|Any CPU.ActiveCfg = Release
-		{83421AE4-D50A-42BD-802B-9BBD09923BB9}.Release|x64.ActiveCfg = Release
-		{83421AE4-D50A-42BD-802B-9BBD09923BB9}.Release|x64.Build.0 = Release
-		{B9BD8198-1BBA-42CB-8472-ECECDB8252C4}.Debug|Any CPU.ActiveCfg = Debug
-		{B9BD8198-1BBA-42CB-8472-ECECDB8252C4}.Debug|x64.ActiveCfg = Debug
-		{B9BD8198-1BBA-42CB-8472-ECECDB8252C4}.Debug|x64.Build.0 = Debug
-		{B9BD8198-1BBA-42CB-8472-ECECDB8252C4}.Release|Any CPU.ActiveCfg = Release
-		{B9BD8198-1BBA-42CB-8472-ECECDB8252C4}.Release|x64.ActiveCfg = Release
-		{B9BD8198-1BBA-42CB-8472-ECECDB8252C4}.Release|x64.Build.0 = Release
-		{9DE3FED1-8C8A-4A51-8AE0-AEDE7DE10DA8}.Debug|Any CPU.ActiveCfg = Debug
-		{9DE3FED1-8C8A-4A51-8AE0-AEDE7DE10DA8}.Debug|x64.ActiveCfg = Debug
-		{9DE3FED1-8C8A-4A51-8AE0-AEDE7DE10DA8}.Debug|x64.Build.0 = Debug
-		{9DE3FED1-8C8A-4A51-8AE0-AEDE7DE10DA8}.Release|Any CPU.ActiveCfg = Release
-		{9DE3FED1-8C8A-4A51-8AE0-AEDE7DE10DA8}.Release|x64.ActiveCfg = Release
-		{9DE3FED1-8C8A-4A51-8AE0-AEDE7DE10DA8}.Release|x64.Build.0 = Release
 		{E00EA7EE-BB42-42B9-907E-1770D8201456}.Debug|Any CPU.ActiveCfg = Debug
 		{E00EA7EE-BB42-42B9-907E-1770D8201456}.Debug|x64.ActiveCfg = Debug
 		{E00EA7EE-BB42-42B9-907E-1770D8201456}.Debug|x64.Build.0 = Debug
 		{E00EA7EE-BB42-42B9-907E-1770D8201456}.Release|Any CPU.ActiveCfg = Release
 		{E00EA7EE-BB42-42B9-907E-1770D8201456}.Release|x64.ActiveCfg = Release
 		{E00EA7EE-BB42-42B9-907E-1770D8201456}.Release|x64.Build.0 = Release
+		{F8AFDEF4-F259-400E-96FF-10318AD7D2FB}.Debug|Any CPU.ActiveCfg = Debug
+		{F8AFDEF4-F259-400E-96FF-10318AD7D2FB}.Debug|x64.ActiveCfg = Debug
+		{F8AFDEF4-F259-400E-96FF-10318AD7D2FB}.Release|Any CPU.ActiveCfg = Release
+		{F8AFDEF4-F259-400E-96FF-10318AD7D2FB}.Release|x64.ActiveCfg = Release
+		{3181764E-38EC-46FE-8603-08C150F62127}.Debug|Any CPU.ActiveCfg = Debug
+		{3181764E-38EC-46FE-8603-08C150F62127}.Debug|x64.ActiveCfg = Debug
+		{3181764E-38EC-46FE-8603-08C150F62127}.Release|Any CPU.ActiveCfg = Release
+		{3181764E-38EC-46FE-8603-08C150F62127}.Release|x64.ActiveCfg = Release
+		{649035E3-8D3F-4C6E-8183-D580ED36B29C}.Debug|Any CPU.ActiveCfg = Debug
+		{649035E3-8D3F-4C6E-8183-D580ED36B29C}.Debug|x64.ActiveCfg = Debug
+		{649035E3-8D3F-4C6E-8183-D580ED36B29C}.Release|Any CPU.ActiveCfg = Release
+		{649035E3-8D3F-4C6E-8183-D580ED36B29C}.Release|x64.ActiveCfg = Release
+		{FAB5F5AB-7EB5-4C90-80FF-879AC7EC3015}.Debug|Any CPU.ActiveCfg = Debug
+		{FAB5F5AB-7EB5-4C90-80FF-879AC7EC3015}.Debug|x64.ActiveCfg = Debug
+		{FAB5F5AB-7EB5-4C90-80FF-879AC7EC3015}.Release|Any CPU.ActiveCfg = Release
+		{FAB5F5AB-7EB5-4C90-80FF-879AC7EC3015}.Release|x64.ActiveCfg = Release
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

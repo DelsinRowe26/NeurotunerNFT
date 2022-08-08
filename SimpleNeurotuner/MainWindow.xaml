@@ -121,7 +121,7 @@
                 </LinearGradientBrush>
             </Label.Foreground>
         </Label>
-        <Image x:Name="imgShadowNFT" HorizontalAlignment="Center" Height="272" Margin="164,130,160,187" VerticalAlignment="Top" Width="266" Source="/pic-shadow.png" Visibility="Hidden">
+        <Image x:Name="imgShadowNFT" HorizontalAlignment="Left" Height="271" Margin="150,122,0,0" VerticalAlignment="Top" Width="258" Source="/pic-shadow.png" Visibility="Hidden">
             <Image.OpacityMask>
                 <ImageBrush ImageSource="/pic-shadow.png" Stretch="UniformToFill"/>
             </Image.OpacityMask>

@@ -1013,6 +1013,7 @@ namespace SimpleNeurotuner
                     string uri = @"Neurotuners\button\button-record-inactive.png";
                     ImgRecordingBtn.ImageSource = new ImageSourceConverter().ConvertFromString(uri) as ImageSource;
                     btnPlayer.IsEnabled = true;
+                    btnStop.IsEnabled = true;
                     btnRecording.IsEnabled = false;
                     string msg = "Запись и обработка завершена.";
                     LogClass.LogWrite(msg);
@@ -1024,6 +1025,7 @@ namespace SimpleNeurotuner
                     string uri = @"Neurotuners\button\button-record-inactive.png";
                     ImgRecordingBtn.ImageSource = new ImageSourceConverter().ConvertFromString(uri) as ImageSource;
                     btnPlayer.IsEnabled = true;
+                    btnStop.IsEnabled = true;
                     btnRecording.IsEnabled = false;
                     string msg = "Recording and processing completed.";
                     LogClass.LogWrite(msg);
@@ -1380,6 +1382,7 @@ namespace SimpleNeurotuner
                     //cmbRecord.IsEnabled = false;
                     //imgShadowNFT.Visibility = Visibility.Hidden;
                     btnModeRecord.IsEnabled = false;
+                    btnStop.IsEnabled = false;
                     btnModeAudio.IsEnabled = true;
                     btnRecording.IsEnabled = true;
                     btnPlayer.IsEnabled = false;
@@ -1403,6 +1406,7 @@ namespace SimpleNeurotuner
                     btnModeAudio.IsEnabled = false;
                     btnModeRecord.IsEnabled = true;
                     btnRecording.IsEnabled = false;
+                    btnStop.IsEnabled = true;
                     btnStart_Open.IsEnabled = true;
                     btnPlayer.IsEnabled = true;
                     btnTurbo.IsEnabled = true;

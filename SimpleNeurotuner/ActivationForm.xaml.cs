@@ -45,7 +45,8 @@ namespace SimpleNeurotuner
                         {
                             MessageBox.Show("activation successful!\nRestart the program");
                         }
-                        File.WriteAllText(path, tbKey.Text + "\n" + tbMail.Text);
+                        File.WriteAllText(path2, tbKey.Text + "\n" + tbMail.Text);
+                        Close();
                         //Application.Exit();
                         break;
                     case '2':

@@ -24,7 +24,7 @@ namespace TEST_API
                     string json;
                     try
                     {
-                        json = FormUpload.MultipartFormDataPost("https://reself.store/api/keys/check/", requestParameters);
+                        json = FormUpload.MultipartFormDataPost("https://Neurotuners.ru/api/keys/check/", requestParameters);
                     }
                     catch (Exception ex) { MessageBox.Show(ex.Message); return 404; } //интернет ошибка
 
@@ -70,7 +70,7 @@ namespace TEST_API
 
             try
             {
-                json = FormUpload.MultipartFormDataPost("https://reself.store/api/keys/check/", requestParameters);
+                json = FormUpload.MultipartFormDataPost("https://Neurotuners.ru/api/keys/check/", requestParameters);
             }
             catch (Exception ex) { MessageBox.Show(ex.Message); return 'e'; }
 
