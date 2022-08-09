@@ -1839,7 +1839,7 @@ namespace SimpleNeurotuner
                             imgShadowNFT.Visibility = Visibility.Visible;
                             if (!File.Exists(@"Image\" + RecordName + ".bmp"))
                             {
-                                SaveToBmp(GridName, @"Image\" + RecordName + ".bmp");
+                                SaveToBmp(Image1, @"Image\" + RecordName + ".bmp");
                                 if (langindex == "0")
                                 {
                                     string msg = "NFT картинка сохранена.";

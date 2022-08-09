@@ -126,14 +126,14 @@
                 <ImageBrush ImageSource="/pic-shadow.png" Stretch="UniformToFill"/>
             </Image.OpacityMask>
         </Image>
-        <TabControl x:Name="tabNFTSet" Margin="159,115,159,187" Visibility="Visible" Background="{x:Null}" BorderBrush="{x:Null}" TabStripPlacement="Top">
+        <TabControl x:Name="tabNFTSet" Margin="153,115,151,192" Visibility="Visible" Background="{x:Null}" BorderBrush="{x:Null}" TabStripPlacement="Top">
             <TabItem x:Name="TabNFT" Header="gNeuro NFT" Background="{x:Null}" BorderBrush="{x:Null}" Margin="46,-2,-50,0" Visibility="Hidden">
                 <Grid x:Name="GridName" Width="230" Margin="7,0,8,0" Height="230">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="82*"/>
                         <ColumnDefinition Width="33*"/>
                     </Grid.ColumnDefinitions>
-                    <Image x:Name="Image1" HorizontalAlignment="Left" Height="230" VerticalAlignment="Top" Width="230" Grid.ColumnSpan="2" Margin="-2,-3,0,3"/>
+                    <Image x:Name="Image1" HorizontalAlignment="Left" Height="228" VerticalAlignment="Top" Width="231" Grid.ColumnSpan="2" Margin="-2,-3,0,3"/>
                 </Grid>
             </TabItem>
             <TabItem x:Name="TabSettings" Header="Settings" Background="{x:Null}" BorderBrush="{x:Null}" Margin="50,-2,-57,0" Visibility="Hidden">
