@@ -64,7 +64,7 @@ namespace SimpleNeurotuner
             try
             {
                 clickSD = 1;
-                CreateWindow.RecIndex = 1;
+                //CreateWindow.RecIndex = 1;
                 /*FileStream fileStream = new FileStream("DataRec.tmp", FileMode.Truncate);
                 StreamWriter streamWriter = new StreamWriter(fileStream);
                 streamWriter.WriteLineAsync("1");
@@ -135,6 +135,9 @@ namespace SimpleNeurotuner
             {
                 if (clickSD == 1)
                 {
+                    //CreateWindow.RecIndex = 1;
+                    PlusRecord record = new PlusRecord();
+                    record.Show();
                     StreamReader FileLanguage = new StreamReader("Data_Language.tmp");
                     index = FileLanguage.ReadToEnd();
                     StreamReader FileCutRecord = new StreamReader("Data_cutCreate.tmp");

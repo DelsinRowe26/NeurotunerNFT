@@ -4,8 +4,11 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:SimpleNeurotuner"
-        mc:Ignorable="d" Height="159" Width="324">
+        mc:Ignorable="d" Height="159" Width="324" Loaded="WinRec_Loaded" Closing="WinRec_Closing" Icon="/Logo-light.png">
     <Grid>
-        
+        <TextBlock x:Name="tbMakeRec" HorizontalAlignment="Center" Margin="0,31,0,0" TextWrapping="Wrap" Text="Want to make another record?" VerticalAlignment="Top" Height="51" Width="250" FontSize="14"/>
+        <Button x:Name="btnYes" Content="Yes" HorizontalAlignment="Left" Margin="23,82,0,0" VerticalAlignment="Top" Width="54" Height="20" Click="btnYes_Click"/>
+        <Button x:Name="btnNo" Content="No" HorizontalAlignment="Left" Margin="232,82,0,0" VerticalAlignment="Top" Width="54" Height="20" Click="btnNo_Click"/>
+
     </Grid>
 </Window>
