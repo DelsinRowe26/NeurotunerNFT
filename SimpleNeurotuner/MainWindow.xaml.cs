@@ -89,6 +89,7 @@ namespace SimpleNeurotuner
         private ISampleSource mMp3;
         private static string path = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
         private static string path2;
+
         private string file, filename, RecordName;
         private string record;
         private string[] allfile;
@@ -272,7 +273,6 @@ namespace SimpleNeurotuner
         {
             try
             {
-                
                 if (file1.Length == 0)
                 {
                     //File.Create("DataTemp.dat");
@@ -335,6 +335,7 @@ namespace SimpleNeurotuner
 
                 }
                 //SampleRate = mSoundIn.WaveFormat.SampleRate;
+                CreateWindow.RecIndex = 0;
                 TembroClass tembro = new TembroClass();
                 tembro.Tembro(48000);
                 var wih = new WindowInteropHelper(this);
@@ -345,19 +346,9 @@ namespace SimpleNeurotuner
                     ActivationForm activation = new ActivationForm();
                     activation.Show();
                 }
-                //SendMessageW(hWnd, WM_APPCOMMAND, hWnd, (IntPtr)APPCOMMAND_VOLUME_UP);
-                //pbVolumeLeft.Value = (double)hWnd;
+
                 ModeIndex = -1;
                 Modes();
-                //System.Media.SystemSound sound;
-                //sound.GetPropertyValue;
-                //ShowCurrentVolume();
-                
-                //path = System.IO.Path.GetFullPath("Zvuk.dll");
-                /*uint volume;
-                waveOutGetVolume(IntPtr.Zero, out volume);
-                int vol = (int)((volume >> 16) & 0xFFFF);
-                pbVolume.Value = vol;*/
             }
             catch (Exception ex)
             {
@@ -377,6 +368,15 @@ namespace SimpleNeurotuner
                 }
             }
            
+        }
+
+        public static void Rec()
+        {
+            FileStream fileStream = new FileStream("DataRec.tmp", FileMode.Append);
+            StreamWriter streamWriter = new StreamWriter(fileStream);
+            streamWriter.WriteLineAsync("0");
+            streamWriter.Close();
+            fileStream.Close();
         }
 
         private void ShowCurrentVolume()
@@ -409,7 +409,7 @@ namespace SimpleNeurotuner
         {
             try
             {
-                allfile = Directory.GetFiles(folder);
+                allfile = Directory.GetFiles(folder, "*.wav");
                 foreach (string filename in allfile)
                 {
                     //record = filename.Replace(@"Record\", "");
@@ -955,6 +955,8 @@ namespace SimpleNeurotuner
                 StreamReader FileCutRecord = new StreamReader("Data_cutCreate.tmp");
                 myfile = FileRecord.ReadToEnd();
                 cutmyfile = FileCutRecord.ReadToEnd();
+                FileRecord.Close();
+                FileCutRecord.Close();
                 using (mSoundIn = new WasapiCapture())
                 {
                     mSoundIn.Device = mInputDevices[cmbInput.SelectedIndex];
@@ -1204,6 +1206,8 @@ namespace SimpleNeurotuner
             {
                 string[] text = File.ReadAllLines("Data_Load.tmp");
                 string[] text1 = File.ReadAllLines(fileinfo.FullName);
+                /*StreamReader reader = new StreamReader("DataRec.tmp");
+                string readIndex = reader.ReadToEnd();*/
                 //string[] filename = File.ReadAllLines(fileInfo1.FullName);
                 if (file1.Length != 1)
                 {
@@ -1225,6 +1229,15 @@ namespace SimpleNeurotuner
                         cmbRecord.SelectedIndex = cmbRecord.Items.Count - 1;
                         Filling();
                     }
+                }
+                if (CreateWindow.RecIndex == 1)
+                {
+                    string uri = @"Neurotuners\button\record-mode-inactive.png";
+                    ImgBtnModeRecord.ImageSource = new ImageSourceConverter().ConvertFromString(uri) as ImageSource;
+                    //reader.Close();
+                    CreateWindow.RecIndex = 0;
+                    ModeIndex = -1;
+                    Modes();
                 }
             }
             catch (Exception ex)
@@ -1385,6 +1398,7 @@ namespace SimpleNeurotuner
                     btnStop.IsEnabled = false;
                     btnModeAudio.IsEnabled = true;
                     btnRecording.IsEnabled = true;
+                    cmbRecord.IsEnabled = false;
                     btnPlayer.IsEnabled = false;
                     btnTurbo.IsEnabled = false;
                     pbRecord.Visibility = Visibility.Visible;
@@ -1400,6 +1414,9 @@ namespace SimpleNeurotuner
                 }
                 else if (ModeIndex != 0)
                 {
+                    StreamReader sr = new StreamReader("DataRec.tmp");
+                    string read = sr.ReadToEnd();
+                    sr.Close();
                     cmbRecord.IsEnabled = true;
                     string uri = @"Neurotuners\button\listen-mode-active.png";
                     ImgBtnModeAudio.ImageSource = new ImageSourceConverter().ConvertFromString(uri) as ImageSource;
@@ -1407,6 +1424,7 @@ namespace SimpleNeurotuner
                     btnModeRecord.IsEnabled = true;
                     btnRecording.IsEnabled = false;
                     btnStop.IsEnabled = true;
+                    cmbRecord.IsEnabled = true;
                     btnStart_Open.IsEnabled = true;
                     btnPlayer.IsEnabled = true;
                     btnTurbo.IsEnabled = true;
@@ -1414,22 +1432,22 @@ namespace SimpleNeurotuner
                     pbRecord.Visibility = Visibility.Hidden;
                     /*btnPlayer.Visibility = Visibility.Visible;
                     btnTurbo.Visibility = Visibility.Visible;*/
-                    if (langindex == "0")
-                    {
-                        cmbRecord.Items.Clear();
-                        cmbRecord.Items.Add("Выберите запись");
-                        cmbRecord.SelectedIndex = cmbRecord.Items.Count - 1;
-                        Filling();
-                        LogClass.LogWrite("Включен режим прослушивания.");
-                    }
-                    else
-                    {
-                        cmbRecord.Items.Clear();
-                        cmbRecord.Items.Add("Select a record");
-                        cmbRecord.SelectedIndex = cmbRecord.Items.Count - 1;
-                        Filling();
-                        LogClass.LogWrite("Listening mode is on.");
-                    }
+                        if (langindex == "0")
+                        {
+                            cmbRecord.Items.Clear();
+                            cmbRecord.Items.Add("Выберите запись");
+                            cmbRecord.SelectedIndex = cmbRecord.Items.Count - 1;
+                            Filling();
+                            LogClass.LogWrite("Включен режим прослушивания.");
+                        }
+                        else
+                        {
+                            cmbRecord.Items.Clear();
+                            cmbRecord.Items.Add("Select a record");
+                            cmbRecord.SelectedIndex = cmbRecord.Items.Count - 1;
+                            Filling();
+                            LogClass.LogWrite("Listening mode is on.");
+                        }
                 }
             }
             catch (Exception ex)

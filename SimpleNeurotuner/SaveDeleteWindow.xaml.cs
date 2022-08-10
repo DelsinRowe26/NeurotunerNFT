@@ -64,6 +64,12 @@ namespace SimpleNeurotuner
             try
             {
                 clickSD = 1;
+                CreateWindow.RecIndex = 1;
+                /*FileStream fileStream = new FileStream("DataRec.tmp", FileMode.Truncate);
+                StreamWriter streamWriter = new StreamWriter(fileStream);
+                streamWriter.WriteLineAsync("1");
+                streamWriter.Close();
+                fileStream.Close();*/
                 /*StreamReader FileCutRecord = new StreamReader("Data_cutCreate.tmp");
                 StreamReader FileRecord = new StreamReader("Data_Create.tmp");
                 string FileCut = FileCutRecord.ReadToEnd();

@@ -6,7 +6,7 @@
         xmlns:wf="clr-namespace:System.Windows.Forms;assembly=System.Windows.Forms"
         xmlns:local="clr-namespace:SimpleNeurotuner"
         mc:Ignorable="d"
-        Title="Neurotuner NFT" Height="602" Width="569" Loaded="SimpleNeurotuner_Loaded" Closing="SimpleNeurotuner_Closing" ResizeMode="CanMinimize" Activated="SimpleNeurotuner_Activated" HorizontalAlignment="Center" VerticalAlignment="Center">
+        Title="Neurotuner NFT" Height="602" Width="569" Loaded="SimpleNeurotuner_Loaded" Closing="SimpleNeurotuner_Closing" ResizeMode="CanMinimize" Activated="SimpleNeurotuner_Activated" HorizontalAlignment="Center" VerticalAlignment="Center" Icon="/Logo-light.png">
     <Window.Background>
         <ImageBrush Stretch="UniformToFill" TileMode="Tile">
             <ImageBrush.ImageSource>

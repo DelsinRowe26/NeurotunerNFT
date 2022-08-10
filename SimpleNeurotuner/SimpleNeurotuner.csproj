@@ -126,6 +126,9 @@
     <Compile Include="PitchShifter.cs" />
     <Compile Include="PitchShifter1.cs" />
     <Compile Include="PitchShifterTurbo.cs" />
+    <Compile Include="PlusRecord.xaml.cs">
+      <DependentUpon>PlusRecord.xaml</DependentUpon>
+    </Compile>
     <Compile Include="SampleDSP.cs" />
     <Compile Include="SampleDSPRecord.cs" />
     <Compile Include="SampleDSPTurbo.cs" />
@@ -161,6 +164,10 @@
       <SubType>Code</SubType>
     </Compile>
     <Page Include="Help.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="PlusRecord.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -309,6 +316,7 @@
     <Resource Include="Neurotuners\progressbar\Group 14.png" />
     <Resource Include="progressbar-backgrnd1.png" />
     <Resource Include="input-biblio1.png" />
+    <Resource Include="Logo-light.png" />
     <Content Include="Zvuk.dll" />
     <Resource Include="button-back.png" />
     <Resource Include="Neurotuners\button\button-backcmb.png" />

@@ -16,6 +16,7 @@ namespace SimpleNeurotuner
         public string cutFileName;
         private FileInfo fileCreate = new FileInfo("Data_Create.tmp");
         private FileInfo fileCutCreate = new FileInfo("Data_cutCreate.tmp");
+        public static int RecIndex = 0;
 
         public CreateWindow()
         {
@@ -26,6 +27,15 @@ namespace SimpleNeurotuner
         {
             try
             {
+                /*FileInfo file = new FileInfo("DataRec.tmp");
+                File.WriteAllText(file.FullName, "0");
+                file.Refresh();*/
+                /*FileStream fileStream = new FileStream("DataRec.tmp", FileMode.Truncate);
+                StreamWriter streamWriter = new StreamWriter(fileStream);
+                streamWriter.WriteLineAsync("0");
+                streamWriter.Close();
+                fileStream.Close();*/
+                RecIndex = 0;
                 StreamReader FileLanguage = new StreamReader("Data_Language.tmp");
                 string langindex = FileLanguage.ReadToEnd();
                 FileLanguage.Close();
@@ -78,6 +88,8 @@ namespace SimpleNeurotuner
                 
                 File.WriteAllText(fileCreate.FullName, FileName);
                 File.WriteAllText(fileCutCreate.FullName, cutFileName);
+                fileCreate.Refresh();
+                fileCutCreate.Refresh();
                 if (langindex == "0")
                 {
                     if (File.Exists(@"Record\" + FileName))
