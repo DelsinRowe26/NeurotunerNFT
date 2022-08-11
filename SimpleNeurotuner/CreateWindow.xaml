@@ -7,7 +7,7 @@
         mc:Ignorable="d"
         Title="CreateWindow" Height="83" Width="452" Loaded="Window_Loaded">
     <Grid>
-        <TextBox x:Name="tbRecordTitle" HorizontalAlignment="Left" TextWrapping="Wrap" Text="MyRecord" VerticalAlignment="Top" Width="223" Height="21" FontSize="14" Margin="113,10,0,0"/>
+        <TextBox x:Name="tbRecordTitle" HorizontalAlignment="Left" TextWrapping="Wrap" Text="MyRecord" VerticalAlignment="Top" Width="223" Height="21" FontSize="14" Margin="113,10,0,0" KeyDown="tbRecordTitle_KeyDown"/>
         <Label x:Name="lbRecordTitle" Content="Record title" HorizontalAlignment="Left" Margin="10,8,0,0" VerticalAlignment="Top"/>
         <Button x:Name="btnCreate" Content="Create" HorizontalAlignment="Left" Margin="360,11,0,0" VerticalAlignment="Top" Width="56" Click="btnCreate_Click"/>
 

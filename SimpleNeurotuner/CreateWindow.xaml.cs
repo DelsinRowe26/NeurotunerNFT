@@ -141,5 +141,13 @@ namespace SimpleNeurotuner
             }
             //await File.WriteAllTextAsync(fileCreate.FullName, FileName);
         }
+
+        private void tbRecordTitle_KeyDown(object sender, System.Windows.Input.KeyEventArgs e)
+        {
+            if(e.Key == System.Windows.Input.Key.Enter)
+            {
+                btnCreate_Click(sender, e);
+            }
+        }
     }
 }

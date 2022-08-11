@@ -32,6 +32,10 @@
             <Button.Background>
                 <ImageBrush x:Name="ImgStopBtn" ImageSource="/button-stop-inactive.png"/>
             </Button.Background>
+            <Button.Effect>
+                <DropShadowEffect x:Name="btnStopEffect" ShadowDepth="0" Color="DarkViolet" Opacity="0" BlurRadius="20">
+                </DropShadowEffect>
+            </Button.Effect>
             <Button.Template>
                 <ControlTemplate>
                     <Border Background="{TemplateBinding Background}" Width="52" Height="52"/>
@@ -62,6 +66,11 @@
             <Button.Background>
                 <ImageBrush x:Name="ImgListenBtn" ImageSource="/button-listen-inactive.png"/>
             </Button.Background>
+            <Button.Effect>
+                <DropShadowEffect x:Name="btnPlayerEffect" ShadowDepth="0" Color="DarkViolet" Opacity="0" BlurRadius="20">
+
+                </DropShadowEffect>
+            </Button.Effect>
             <Button.Template>
                 <ControlTemplate>
                     <Border Background="{TemplateBinding Background}" Width="52" Height="52"></Border>

@@ -24,6 +24,7 @@ using System.IO;
 //using Buffer = Microsoft.DirectX.DirectSound.Buffer;
 using System.Runtime.InteropServices;
 using System.Windows.Media.Imaging;
+using System.Windows.Media.Animation;
 
 using System.Windows.Threading;
 using CSCore.DSP;
@@ -93,7 +94,7 @@ namespace SimpleNeurotuner
         private string file, filename, RecordName;
         private string record;
         private string[] allfile;
-        private int click, audioclick = 0;
+        private int click, audioclick = 0, clickRec = 0;
 
         private static int limit = 20;
         private int ImgBtnStartClick = 0, ImgBtnRecordClick = 0, ImgBtnListenClick = 0, ImgBtnTurboClick = 0, ModeIndex, BtnSetClick = 0, NFTShadow = 0;
@@ -440,40 +441,42 @@ namespace SimpleNeurotuner
         {
             try
             {
-                    if ((filename != "Record\\Select a record") && (filename != "Record\\Выберите запись"))
+                if ((filename != "Record\\Select a record") && (filename != "Record\\Выберите запись"))
+                {
+                    if (PBNFT.Value == 100)
                     {
-                        if (PBNFT.Value == 100)
+                        click = 1;
+                        PitchShifter.Kamp = -1;
+                        ImgBtnStartClick = 1;
+                        string uri = @"Neurotuners\button\button-play-active.png";
+                        ImgStart.ImageSource = new ImageSourceConverter().ConvertFromString(uri) as ImageSource;
+                        await Task.Run(() => Sound(file));
+                        StartFullDuplex();
+                        if (langindex == "0")
                         {
-                            click = 1;
-                            PitchShifter.Kamp = -1;
-                            ImgBtnStartClick = 1;
-                            string uri = @"Neurotuners\button\button-play-active.png";
-                            ImgStart.ImageSource = new ImageSourceConverter().ConvertFromString(uri) as ImageSource;
-                            await Task.Run(() => Sound(file));
-                            StartFullDuplex();
-                            if (langindex == "0")
-                            {
-                                LogClass.LogWrite("Начало прослушивания записи.");
-                            }
-                            else
-                            {
-                                LogClass.LogWrite("Start listening to the recording.");
-                            }
-
-                            btnStart_Open.IsEnabled = false;
-                            cmbRecord.IsEnabled = false;
-                            btnPlayer.IsEnabled = false;
-                            btnTurbo.IsEnabled = false;
+                            LogClass.LogWrite("Начало прослушивания записи.");
                         }
                         else
                         {
-                            NFT_download();
+                            LogClass.LogWrite("Start listening to the recording.");
                         }
+
+                        btnStart_Open.IsEnabled = false;
+                        cmbRecord.IsEnabled = false;
+                        btnPlayer.IsEnabled = false;
+                        btnTurbo.IsEnabled = false;
+                        btnStop.IsEnabled = true;
+                        btnModeRecord.IsEnabled = false;
                     }
                     else
                     {
-                        select_an_entry();
+                        NFT_download();
                     }
+                }
+                else
+                {
+                    select_an_entry();
+                }
             }
             catch (Exception ex)
             {
@@ -776,7 +779,9 @@ namespace SimpleNeurotuner
                     btnPlayer.IsEnabled = true;
                     btnTurbo.IsEnabled = true;
                     cmbRecord.IsEnabled = true;
+                    btnStop.IsEnabled = false;
                     //btnRecord.IsEnabled = true;
+                    btnModeRecord.IsEnabled = true;
                     btnRecording.IsEnabled = false;
                 }
                 click = 0;
@@ -799,6 +804,9 @@ namespace SimpleNeurotuner
                         Stop();
                         StopImg();
                         btnRecording.IsEnabled = true;
+                        btnStop.IsEnabled = false;
+                        btnModeAudio.IsEnabled = true;
+                        btnStopEffect.Opacity = 0;
                         SaveDeleteWindow saveDelete = new SaveDeleteWindow();
                         saveDelete.Show();
                     }
@@ -1015,11 +1023,11 @@ namespace SimpleNeurotuner
                     string uri = @"Neurotuners\button\button-record-inactive.png";
                     ImgRecordingBtn.ImageSource = new ImageSourceConverter().ConvertFromString(uri) as ImageSource;
                     btnPlayer.IsEnabled = true;
-                    btnStop.IsEnabled = true;
                     btnRecording.IsEnabled = false;
                     string msg = "Запись и обработка завершена.";
                     LogClass.LogWrite(msg);
                     MessageBox.Show(msg);
+                    btnPlayerEffect.Opacity = 1;
                 }
                 else
                 {
@@ -1027,11 +1035,11 @@ namespace SimpleNeurotuner
                     string uri = @"Neurotuners\button\button-record-inactive.png";
                     ImgRecordingBtn.ImageSource = new ImageSourceConverter().ConvertFromString(uri) as ImageSource;
                     btnPlayer.IsEnabled = true;
-                    btnStop.IsEnabled = true;
                     btnRecording.IsEnabled = false;
                     string msg = "Recording and processing completed.";
                     LogClass.LogWrite(msg);
                     MessageBox.Show(msg);
+                    btnPlayerEffect.Opacity = 1;
                 }
             }
             catch (Exception ex)
@@ -1282,6 +1290,9 @@ namespace SimpleNeurotuner
                         btnStart_Open.IsEnabled = false;
                         btnTurbo.IsEnabled = false;
                         btnPlayer.IsEnabled = false;
+                        btnStop.IsEnabled = true;
+                        cmbRecord.IsEnabled = false;
+                        btnModeRecord.IsEnabled = false;
                     }
                     else
                     {
@@ -1300,6 +1311,9 @@ namespace SimpleNeurotuner
                 string uri = @"Neurotuners\button\button-listen-active.png";
                 ImgListenBtn.ImageSource = new ImageSourceConverter().ConvertFromString(uri) as ImageSource;
                 btnPlayer.IsEnabled = false;
+                btnStop.IsEnabled = true;
+                btnPlayerEffect.Opacity = 0;
+                btnStopEffect.Opacity = 1;
             }
         }
 
@@ -1313,6 +1327,9 @@ namespace SimpleNeurotuner
             btnStart_Open.IsEnabled = false;
             btnPlayer.IsEnabled = false;
             btnTurbo.IsEnabled = false;
+            btnStop.IsEnabled = true;
+            btnModeRecord.IsEnabled = false;
+            cmbRecord.IsEnabled = false;
         }
 
         private void cmbModes_SelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -1423,7 +1440,7 @@ namespace SimpleNeurotuner
                     btnModeAudio.IsEnabled = false;
                     btnModeRecord.IsEnabled = true;
                     btnRecording.IsEnabled = false;
-                    btnStop.IsEnabled = true;
+                    btnStop.IsEnabled = false;
                     cmbRecord.IsEnabled = true;
                     btnStart_Open.IsEnabled = true;
                     btnPlayer.IsEnabled = true;
@@ -1618,7 +1635,9 @@ namespace SimpleNeurotuner
             string uri = @"Neurotuners\button\button-record-active.png";
             ImgRecordingBtn.ImageSource = new ImageSourceConverter().ConvertFromString(uri) as ImageSource;
             Recording();
+            btnRecording.IsEnabled = false;
             btnStart_Open.IsEnabled = false;
+            btnModeAudio.IsEnabled = false;
             if (langindex == "0")
             {
                 LogClass.LogWrite("Начало записи голоса.");
