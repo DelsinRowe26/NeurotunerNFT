@@ -115,7 +115,7 @@ namespace SimpleNeurotuner
             worker.WorkerSupportsCancellation = true;
             worker.DoWork += worker_DoWork;
             worker.ProgressChanged += worker_ProgressChanged;
-        }//hbvjhg
+        }//hbvjhgvdv
 
         void worker_DoWork(object sender, DoWorkEventArgs e)
         {
