@@ -18,7 +18,7 @@
         <Grid.ColumnDefinitions>
             <ColumnDefinition/>
         </Grid.ColumnDefinitions>
-        <Button x:Name="btnStart_Open" Content="Start" HorizontalAlignment="Left" Margin="202,451,0,0" VerticalAlignment="Top" Height="52" Width="52" Click="btnStart_Open_Click" MouseMove="btnStart_Open_MouseMove" MouseLeave="btnStart_Open_MouseLeave" FontSize="14" ToolTip="Start">
+        <Button x:Name="btnStart_Open" Content="Start" HorizontalAlignment="Left" Margin="194,461,0,0" VerticalAlignment="Top" Height="52" Width="52" Click="btnStart_Open_Click" MouseMove="btnStart_Open_MouseMove" MouseLeave="btnStart_Open_MouseLeave" FontSize="14" ToolTip="Start">
             <Button.Background>
                 <ImageBrush x:Name="ImgStart" ImageSource = "/button-play-inactive.png"/>
             </Button.Background>
@@ -28,7 +28,7 @@
                 </ControlTemplate>
             </Button.Template>
         </Button>
-        <Button x:Name="btnStop" Content="Stop" HorizontalAlignment="Left" Margin="301,451,0,0" VerticalAlignment="Top" Height="52" Width="52" Click="btnStop_Click" MouseMove="btnStop_MouseMove" MouseLeave="btnStop_MouseLeave" FontSize="14">
+        <Button x:Name="btnStop" Content="Stop" HorizontalAlignment="Left" Margin="309,461,0,0" VerticalAlignment="Top" Height="52" Width="52" Click="btnStop_Click" MouseMove="btnStop_MouseMove" MouseLeave="btnStop_MouseLeave" FontSize="14">
             <Button.Background>
                 <ImageBrush x:Name="ImgStopBtn" ImageSource="/button-stop-inactive.png"/>
             </Button.Background>
@@ -42,7 +42,7 @@
                 </ControlTemplate>
             </Button.Template>
         </Button>
-        <Button x:Name="btnRecording" Content="" HorizontalAlignment="Left" Margin="153,451,0,0" VerticalAlignment="Top" Height="52" Width="52" BorderBrush="{x:Null}" Foreground="{x:Null}" MouseMove="btnRecording_MouseMove" MouseLeave="btnRecording_MouseLeave" Click="btnRecording_Click">
+        <Button x:Name="btnRecording" Content="" HorizontalAlignment="Left" Margin="137,461,0,0" VerticalAlignment="Top" Height="52" Width="52" BorderBrush="{x:Null}" Foreground="{x:Null}" MouseMove="btnRecording_MouseMove" MouseLeave="btnRecording_MouseLeave" Click="btnRecording_Click">
             <Button.Background>
                 <ImageBrush x:Name="ImgRecordingBtn" ImageSource="/button-record-inactive.png"/>
             </Button.Background>
@@ -52,7 +52,7 @@
                 </ControlTemplate>
             </Button.Template>
         </Button>
-        <Button x:Name="btnTurbo" Content="Turbo" HorizontalAlignment="Left" Margin="350,451,0,0" VerticalAlignment="Top" Height="52" Width="52" Click="btnTurbo_Click" MouseMove="btnTurbo_MouseMove" MouseLeave="btnTurbo_MouseLeave" FontSize="14">
+        <Button x:Name="btnTurbo" Content="Turbo" HorizontalAlignment="Left" Margin="366,461,0,0" VerticalAlignment="Top" Height="52" Width="52" Click="btnTurbo_Click" MouseMove="btnTurbo_MouseMove" MouseLeave="btnTurbo_MouseLeave" FontSize="14">
             <Button.Background>
                 <ImageBrush x:Name="ImgTurboBtn" ImageSource="/button-turbo-inactive.png"/>
             </Button.Background>
@@ -62,7 +62,7 @@
                 </ControlTemplate>
             </Button.Template>
         </Button>
-        <Button x:Name="btnPlayer" Content="Player" HorizontalAlignment="Center" Margin="0,451,0,0" VerticalAlignment="Top" Height="52" Width="52" Click="btnPlayer_Click" MouseMove="btnPlayer_MouseMove" MouseLeave="btnPlayer_MouseLeave" FontSize="14" Visibility="Visible">
+        <Button x:Name="btnPlayer" Content="Player" HorizontalAlignment="Center" Margin="0,461,0,0" VerticalAlignment="Top" Height="52" Width="52" Click="btnPlayer_Click" MouseMove="btnPlayer_MouseMove" MouseLeave="btnPlayer_MouseLeave" FontSize="14" Visibility="Visible">
             <Button.Background>
                 <ImageBrush x:Name="ImgListenBtn" ImageSource="/button-listen-inactive.png"/>
             </Button.Background>

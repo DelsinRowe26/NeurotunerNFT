@@ -737,7 +737,8 @@ namespace SimpleNeurotuner
                     Mixer();
                     mMp3 = CodecFactory.Instance.GetCodec(filename).ToMono().ToSampleSource()/*.AppendSource(Equalizer.Create10BandEqualizer, out mEqualizer)*/;
                     mDspRec = new SampleDSPRecord(mMp3.ToWaveSource(32).ToSampleSource());
-                    mMixer.AddSource(mDspRec.ChangeSampleRate(mMixer.WaveFormat.SampleRate).ToWaveSource(32).Loop().ToSampleSource());
+                    //SampleRate = mDspRec.WaveFormat.SampleRate;
+                    mMixer.AddSource(mDspRec.ChangeSampleRate(mDspRec.WaveFormat.SampleRate).ToWaveSource(32).Loop().ToSampleSource());
                     await Task.Run(() => SoundOut());
                     
                 }
@@ -1712,7 +1713,7 @@ namespace SimpleNeurotuner
                 //Stop();
                 Mixer();
                 mMp3 = CodecFactory.Instance.GetCodec(filename).ToMono().ToSampleSource();
-                mMixer.AddSource(mMp3.ChangeSampleRate(mMixer.WaveFormat.SampleRate).ToWaveSource(32).Loop().ToSampleSource());
+                mMixer.AddSource(mMp3.ChangeSampleRate(mMp3.WaveFormat.SampleRate).ToWaveSource(32).Loop().ToSampleSource());
                 await Task.Run(() => SoundOut());
             }
             catch (Exception ex)
