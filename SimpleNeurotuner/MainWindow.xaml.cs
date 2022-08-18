@@ -63,16 +63,17 @@ namespace SimpleNeurotuner
         private int SampleRate;//44100;
         //private Equalizer equalizer;
         private WasapiOut mSoundOut;
-        private WasapiCapture mSoundIn;
+        private WasapiCapture mSoundIn, mSoundIn1;
         private SampleDSP mDsp;
         private SampleDSPRecord mDspRec;
-        private SampleDSPTurbo mDspTurbo;
+        private SampleDSPTurbo mDspTurbo, mDspTurbo1;
+        private SampleDSPPitch mDspPitch, mDspDef;
         string[] file1 = File.ReadAllLines("window.tmp");
 
         string folder = "Record";
         private IWaveSource mSource;
         private MMDeviceCollection mOutputDevices;
-        private MMDeviceCollection mInputDevices;
+        private MMDeviceCollection mInputDevices, mInputDevices1;
         public double Magn;
         string myfile;
         string cutmyfile;
@@ -177,6 +178,22 @@ namespace SimpleNeurotuner
                     lbPBNFT.Visibility = Visibility.Hidden;
                     string uri = @"Neurotuners\element\progressbar-backgrnd.png";
                     ImgPBNFTback.ImageSource = new ImageSourceConverter().ConvertFromString(uri) as ImageSource;
+                    if (!File.Exists(@"Image\" + RecordName + ".bmp"))
+                    {
+                        SaveToBmp(Image1, @"Image\" + RecordName + ".bmp");
+                        if (langindex == "0")
+                        {
+                            string msg = "NFT картинка сохранена.";
+                            LogClass.LogWrite(msg);
+                            MessageBox.Show(msg);
+                        }
+                        else
+                        {
+                            string msg = "NFT picture saved.";
+                            LogClass.LogWrite(msg);
+                            MessageBox.Show(msg);
+                        }
+                    }
                     //imgPBNFTBack.Visibility = Visibility.Hidden;
                 }
             }
@@ -247,7 +264,7 @@ namespace SimpleNeurotuner
         {
             try
             {
-                mMixer = new SimpleMixer(1, SampleRate) //стерео, 44,1 КГц
+                mMixer = new SimpleMixer(2, SampleRate) //стерео, 44,1 КГц
                 {
                     FillWithZeros = true,
                     DivideResult = true, //Для этого установлено значение true, чтобы избежать звуков тиков из-за превышения -1 и 1.
@@ -292,6 +309,15 @@ namespace SimpleNeurotuner
                     cmbInput.Items.Add(device.FriendlyName);
                     if (device.DeviceID == activeDevice.DeviceID) cmbInput.SelectedIndex = cmbInput.Items.Count - 1;
                 }
+
+                mInputDevices1 = deviceEnum.EnumAudioEndpoints(DataFlow.Capture, DeviceState.Active);
+                activeDevice = deviceEnum.GetDefaultAudioEndpoint(DataFlow.Capture, Role.Multimedia);
+                foreach (MMDevice device in mInputDevices1)
+                {
+                    cmbInput1.Items.Add(device.FriendlyName);
+                    if (device.DeviceID == activeDevice.DeviceID) cmbInput1.SelectedIndex = cmbInput1.Items.Count - 1;
+                }
+
 
                 //Находит устройства для вывода звука и заполняет комбобокс
                 activeDevice = deviceEnum.GetDefaultAudioEndpoint(DataFlow.Render, Role.Multimedia);
@@ -652,8 +678,8 @@ namespace SimpleNeurotuner
                 var source = new SoundInSource(mSoundIn) { FillWithZeros = true };
 
                 //Init DSP для смещения высоты тона
-                mDspTurbo = new SampleDSPTurbo(source.ToSampleSource()/*.AppendSource(Equalizer.Create10BandEqualizer, out mEqualizer)*/.ToMono());
-                //SetPitchShiftValue();
+                mDspTurbo = new SampleDSPTurbo(source.ToSampleSource().ToMono());
+                SetPitchShiftValue();
 
                 //SetPitchShiftValue();
                 mSoundIn.Start();
@@ -697,7 +723,7 @@ namespace SimpleNeurotuner
                 
                 //mSoundOut.Device = mOutputDevices[cmbOutput.SelectedIndex];
                 mSoundOut.Initialize(mMixer.ToWaveSource(32));
-
+                
                 //mSoundOut.Initialize(mSource);
                 mSoundOut.Play();
                 mSoundOut.Volume = 10;
@@ -724,7 +750,7 @@ namespace SimpleNeurotuner
 
         private void SetPitchShiftValue()
         {
-            mDspTurbo.PitchShift = (float)Math.Pow(2.0F, 0 / 13.0F);
+            mDspTurbo.PitchShift = (float)Math.Pow(2.0F, slPitchShift.Value / 13.0F);
         }
 
         private async void Sound(string file)
@@ -735,7 +761,7 @@ namespace SimpleNeurotuner
                 if (click != 0)
                 {
                     Mixer();
-                    mMp3 = CodecFactory.Instance.GetCodec(filename).ToMono().ToSampleSource()/*.AppendSource(Equalizer.Create10BandEqualizer, out mEqualizer)*/;
+                    mMp3 = CodecFactory.Instance.GetCodec(filename).ToMono().ToSampleSource();
                     mDspRec = new SampleDSPRecord(mMp3.ToWaveSource(32).ToSampleSource());
                     //SampleRate = mDspRec.WaveFormat.SampleRate;
                     mMixer.AddSource(mDspRec.ChangeSampleRate(mDspRec.WaveFormat.SampleRate).ToWaveSource(32).Loop().ToSampleSource());
@@ -782,6 +808,9 @@ namespace SimpleNeurotuner
                     cmbRecord.IsEnabled = true;
                     btnStop.IsEnabled = false;
                     //btnRecord.IsEnabled = true;
+                    slPitchShift.Value = 0;
+                    lbValuePitch.Content = 0;
+                    slPitchShift.IsEnabled = false;
                     btnModeRecord.IsEnabled = true;
                     btnRecording.IsEnabled = false;
                 }
@@ -1271,8 +1300,8 @@ namespace SimpleNeurotuner
         private void slPitch_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
         {
 
-            SetPitchShiftValue();
-            lbPitchValue.Content = slPitch.Value.ToString("f1");
+            //SetPitchShiftValue();
+            //lbPitchValue.Content = slPitch.Value.ToString("f1");
         }
 
         private void btnPlayer_Click(object sender, RoutedEventArgs e)
@@ -1328,6 +1357,7 @@ namespace SimpleNeurotuner
             btnStart_Open.IsEnabled = false;
             btnPlayer.IsEnabled = false;
             btnTurbo.IsEnabled = false;
+            slPitchShift.IsEnabled = true;
             btnStop.IsEnabled = true;
             btnModeRecord.IsEnabled = false;
             cmbRecord.IsEnabled = false;
@@ -1412,6 +1442,8 @@ namespace SimpleNeurotuner
                     btnStart_Open.IsEnabled = false;
                     //cmbRecord.IsEnabled = false;
                     //imgShadowNFT.Visibility = Visibility.Hidden;
+                    slPitchShift.Visibility = Visibility.Hidden;
+                    lbValuePitch.Visibility = Visibility.Hidden;
                     btnModeRecord.IsEnabled = false;
                     btnStop.IsEnabled = false;
                     btnModeAudio.IsEnabled = true;
@@ -1441,6 +1473,8 @@ namespace SimpleNeurotuner
                     btnModeAudio.IsEnabled = false;
                     btnModeRecord.IsEnabled = true;
                     btnRecording.IsEnabled = false;
+                    slPitchShift.Visibility = Visibility.Visible;
+                    lbValuePitch.Visibility = Visibility.Visible;
                     btnStop.IsEnabled = false;
                     cmbRecord.IsEnabled = true;
                     btnStart_Open.IsEnabled = true;
@@ -1552,6 +1586,12 @@ namespace SimpleNeurotuner
                 string uri = @"Neurotuners\button\listen-mode-active.png";
                 ImgBtnModeAudio.ImageSource = new ImageSourceConverter().ConvertFromString(uri) as ImageSource;
             }
+        }
+
+        private void slPitchShift_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
+        {
+            SetPitchShiftValue();
+            lbValuePitch.Content = slPitchShift.Value.ToString("f1");
         }
 
         private void btnModeRecord_MouseMove(object sender, MouseEventArgs e)
@@ -1713,7 +1753,11 @@ namespace SimpleNeurotuner
                 //Stop();
                 Mixer();
                 mMp3 = CodecFactory.Instance.GetCodec(filename).ToMono().ToSampleSource();
-                mMixer.AddSource(mMp3.ChangeSampleRate(mMp3.WaveFormat.SampleRate).ToWaveSource(32).Loop().ToSampleSource());
+                //mDspPitch = new SampleDSPPitch(mMp3.ToWaveSource(32).ToSampleSource());
+                mDspDef = new SampleDSPPitch(mMp3.ToWaveSource(32).ToSampleSource());
+                //mDspPitch.PitchShift = (float)Math.Pow(2.0F, 3 / 13.0F);
+                //mMixer.AddSource(mDspPitch.ChangeSampleRate(mDspPitch.WaveFormat.SampleRate).ToWaveSource(32).Loop().ToSampleSource());
+                mMixer.AddSource(mDspDef.ChangeSampleRate(mDspDef.WaveFormat.SampleRate).ToWaveSource(32).Loop().ToSampleSource());
                 await Task.Run(() => SoundOut());
             }
             catch (Exception ex)
@@ -1875,22 +1919,7 @@ namespace SimpleNeurotuner
                             Image1.UpdateLayout();
                             NFTShadow = 1;
                             imgShadowNFT.Visibility = Visibility.Visible;
-                            if (!File.Exists(@"Image\" + RecordName + ".bmp"))
-                            {
-                                SaveToBmp(Image1, @"Image\" + RecordName + ".bmp");
-                                if (langindex == "0")
-                                {
-                                    string msg = "NFT картинка сохранена.";
-                                    LogClass.LogWrite(msg);
-                                    MessageBox.Show(msg);
-                                }
-                                else
-                                {
-                                    string msg = "NFT picture saved.";
-                                    LogClass.LogWrite(msg);
-                                    MessageBox.Show(msg);
-                                }
-                            }
+                            
                             worker.CancelAsync();
                             
                         }

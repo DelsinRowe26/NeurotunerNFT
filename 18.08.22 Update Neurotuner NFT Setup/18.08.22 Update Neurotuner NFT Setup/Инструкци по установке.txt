@@ -1,0 +1,20 @@
+Инструкция по установке.
+
+1. Сначала запустите файл установки дополнительный пакетов под названием VC_redist.x86.
+
+2. После завершения установки пакетов. Запускаете файл устанвоки программы под названием 18.08.22 Update Neurotuner NFT Setup.
+
+3. Следуйте инструкции инсталлятора.
+
+4. После завершения установки пользуйтесь программой.
+
+
+Installation instructions.
+
+1. First, run the additional packages installation file called VC_redist.x86.
+
+2. After the package installation is complete. Run the setup file of the program called 18.08.22 Update Neurotuner NFT Setup.
+
+3. Follow the instructions of the installer.
+
+4. After the installation is completed, use the program.

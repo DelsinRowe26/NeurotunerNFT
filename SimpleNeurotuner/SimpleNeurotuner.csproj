@@ -125,11 +125,13 @@
     <Compile Include="MyFrequencyUtils.cs" />
     <Compile Include="PitchShifter.cs" />
     <Compile Include="PitchShifter1.cs" />
+    <Compile Include="PitchShifterPitch.cs" />
     <Compile Include="PitchShifterTurbo.cs" />
     <Compile Include="PlusRecord.xaml.cs">
       <DependentUpon>PlusRecord.xaml</DependentUpon>
     </Compile>
     <Compile Include="SampleDSP.cs" />
+    <Compile Include="SampleDSPPitch.cs" />
     <Compile Include="SampleDSPRecord.cs" />
     <Compile Include="SampleDSPTurbo.cs" />
     <Compile Include="SaveDeleteWindow.xaml.cs">

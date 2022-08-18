@@ -11,6 +11,10 @@ Project("{54435603-DBB4-11D2-8724-00A0C9A8B90C}") = "11.08.22 Update Neurotuner 
 EndProject
 Project("{54435603-DBB4-11D2-8724-00A0C9A8B90C}") = "17.08.22 update Neurotuner NFT Setup", "17.08.22 update Neurotuner NFT Setup\17.08.22 update Neurotuner NFT Setup.vdproj", "{BB2621ED-4102-44D4-BD32-53D2B027DBB3}"
 EndProject
+Project("{54435603-DBB4-11D2-8724-00A0C9A8B90C}") = "18.08.22 Update Neurotuner NFT Setup", "18.08.22 Update Neurotuner NFT Setup\18.08.22 Update Neurotuner NFT Setup.vdproj", "{CA9CB6D4-3B15-42FA-8F58-16F5FBC30A3A}"
+EndProject
+Project("{54435603-DBB4-11D2-8724-00A0C9A8B90C}") = "18.08.22 18.03 Update Neurotuner NFT Setup", "18.08.22 18.03 Update Neurotuner NFT Setup\18.08.22 18.03 Update Neurotuner NFT Setup.vdproj", "{31FE4A2B-1E95-4C88-B363-3B0100693FB0}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -43,6 +47,14 @@ Global
 		{BB2621ED-4102-44D4-BD32-53D2B027DBB3}.Debug|x64.ActiveCfg = Debug
 		{BB2621ED-4102-44D4-BD32-53D2B027DBB3}.Release|Any CPU.ActiveCfg = Release
 		{BB2621ED-4102-44D4-BD32-53D2B027DBB3}.Release|x64.ActiveCfg = Release
+		{CA9CB6D4-3B15-42FA-8F58-16F5FBC30A3A}.Debug|Any CPU.ActiveCfg = Debug
+		{CA9CB6D4-3B15-42FA-8F58-16F5FBC30A3A}.Debug|x64.ActiveCfg = Debug
+		{CA9CB6D4-3B15-42FA-8F58-16F5FBC30A3A}.Release|Any CPU.ActiveCfg = Release
+		{CA9CB6D4-3B15-42FA-8F58-16F5FBC30A3A}.Release|x64.ActiveCfg = Release
+		{31FE4A2B-1E95-4C88-B363-3B0100693FB0}.Debug|Any CPU.ActiveCfg = Debug
+		{31FE4A2B-1E95-4C88-B363-3B0100693FB0}.Debug|x64.ActiveCfg = Debug
+		{31FE4A2B-1E95-4C88-B363-3B0100693FB0}.Release|Any CPU.ActiveCfg = Release
+		{31FE4A2B-1E95-4C88-B363-3B0100693FB0}.Release|x64.ActiveCfg = Release
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

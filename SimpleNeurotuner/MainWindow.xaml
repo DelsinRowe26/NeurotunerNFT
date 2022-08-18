@@ -158,7 +158,14 @@
                             </Style>
                         </ComboBox.Style>
                     </ComboBox>
-                    <ComboBox x:Name="cmbOutput" HorizontalAlignment="Center" Margin="14,47,15,0" VerticalAlignment="Top" Width="200" ToolTip="Speaker" Grid.ColumnSpan="2">
+                    <ComboBox x:Name="cmbOutput" HorizontalAlignment="Center" Margin="14,84,15,0" VerticalAlignment="Top" Width="200" ToolTip="Speaker" Grid.ColumnSpan="2">
+                        <ComboBox.Style>
+                            <Style>
+                                <Setter Property="Control.Background" Value="Gainsboro"/>
+                            </Style>
+                        </ComboBox.Style>
+                    </ComboBox>
+                    <ComboBox x:Name="cmbInput1" HorizontalAlignment="Center" Margin="14,47,15,0" VerticalAlignment="Top" Width="200" Visibility="Visible" ToolTip="Microphone" Grid.ColumnSpan="2">
                         <ComboBox.Style>
                             <Style>
                                 <Setter Property="Control.Background" Value="Gainsboro"/>
@@ -200,7 +207,7 @@
         <Slider x:Name="slPitch" HorizontalAlignment="Center" Margin="0,79,0,0" VerticalAlignment="Top" Width="250" Maximum="15" Minimum="-15" TickPlacement="BottomRight" ValueChanged="slPitch_ValueChanged" Visibility="Hidden" Height="24"/>
         <Label x:Name="lbPitchValue" Content="0" HorizontalAlignment="Left" Margin="410,70,0,0" VerticalAlignment="Top" FontSize="14" Visibility="Hidden" Height="29" Width="17"/>
 
-        <Image x:Name="imgBack" HorizontalAlignment="Left" Height="100" Margin="428,213,0,0" VerticalAlignment="Top" Width="50" Source="/button-back.png" StretchDirection="DownOnly">
+        <Image x:Name="imgBack" HorizontalAlignment="Left" Height="100" Margin="410,213,0,0" VerticalAlignment="Top" Width="50" Source="/button-back.png" StretchDirection="DownOnly">
             <Image.OpacityMask>
                 <ImageBrush ImageSource="/button-back.png"/>
             </Image.OpacityMask>
@@ -234,7 +241,7 @@
             </Button.Template>
         </Button>
 
-        <Button x:Name="btnModeAudio" Content="" HorizontalAlignment="Left" Margin="428,262,0,0" VerticalAlignment="Top" Width="50" Height="50" BorderBrush="{x:Null}" Foreground="{x:Null}" MouseMove="btnModeAudio_MouseMove" MouseLeave="btnModeAudio_MouseLeave" Click="btnModeAudio_Click">
+        <Button x:Name="btnModeAudio" Content="" HorizontalAlignment="Left" Margin="410,262,0,0" VerticalAlignment="Top" Width="50" Height="50" BorderBrush="{x:Null}" Foreground="{x:Null}" MouseMove="btnModeAudio_MouseMove" MouseLeave="btnModeAudio_MouseLeave" Click="btnModeAudio_Click">
             <Button.Background>
                 <ImageBrush x:Name="ImgBtnModeAudio" ImageSource="/listen-mode-inactive.png"/>
             </Button.Background>
@@ -244,7 +251,7 @@
                 </ControlTemplate>
             </Button.Template>
         </Button>
-        <Button x:Name="btnModeRecord" Content="" HorizontalAlignment="Left" Margin="428,212,0,0" VerticalAlignment="Top" Width="50" Height="50" BorderBrush="{x:Null}" Foreground="{x:Null}" MouseMove="btnModeRecord_MouseMove" MouseLeave="btnModeRecord_MouseLeave" Click="btnModeRecord_Click">
+        <Button x:Name="btnModeRecord" Content="" HorizontalAlignment="Left" Margin="410,212,0,0" VerticalAlignment="Top" Width="50" Height="50" BorderBrush="{x:Null}" Foreground="{x:Null}" MouseMove="btnModeRecord_MouseMove" MouseLeave="btnModeRecord_MouseLeave" Click="btnModeRecord_Click">
             <Button.Background>
                 <ImageBrush x:Name="ImgBtnModeRecord" ImageSource="/record-mode-inactive.png"/>
             </Button.Background>
@@ -254,7 +261,7 @@
                 </ControlTemplate>
             </Button.Template>
         </Button>
-        <Button x:Name="btnHelp" Content="Button" HorizontalAlignment="Left" Margin="12,0,0,0" VerticalAlignment="Top" Width="80" Height="80" Background="White" BorderBrush="{x:Null}" Foreground="{x:Null}" Click="MenuItem_Click" Opacity="0">
+        <Button x:Name="btnHelp" Content="Button" HorizontalAlignment="Left" Margin="12,0,0,0" VerticalAlignment="Top" Width="80" Height="80" Background="White" BorderBrush="{x:Null}" Foreground="{x:Null}" Click="MenuItem_Click" Opacity="0" IsEnabled="False" Visibility="Hidden">
             <Button.Template>
                 <ControlTemplate>
                     <Border Background="{TemplateBinding Background}" Width="80" Height="80"/>
@@ -273,6 +280,8 @@
         </Button>
         <ProgressBar x:Name="pbVolumeLeft" HorizontalAlignment="Left" Height="155" Margin="52,312,0,0" VerticalAlignment="Top" Width="17" Maximum="65535" Orientation="Vertical" Visibility="Hidden"/>
         <ProgressBar x:Name="pbVolumeRight" HorizontalAlignment="Left" Height="155" Margin="90,312,0,0" VerticalAlignment="Top" Width="18" Maximum="65535" Orientation="Vertical" Visibility="Hidden"/>
+        <Slider x:Name="slPitchShift" HorizontalAlignment="Center" Margin="0,95,0,0" VerticalAlignment="Top" Width="248" Height="30" Maximum="15" Minimum="-15" TickPlacement="BottomRight" ValueChanged="slPitchShift_ValueChanged" IsEnabled="False"/>
+        <Label x:Name="lbValuePitch" Content="0" HorizontalAlignment="Left" Margin="410,85,0,0" VerticalAlignment="Top" Width="57" Height="40" FontSize="14"/>
 
 
 
