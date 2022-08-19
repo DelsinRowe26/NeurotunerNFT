@@ -62,7 +62,7 @@ namespace SimpleNeurotuner
         private SimpleMixer mMixer;
         private int SampleRate;//44100;
         //private Equalizer equalizer;
-        private WasapiOut mSoundOut;
+        private WasapiOut mSoundOut, mSoundOut1;
         private WasapiCapture mSoundIn, mSoundIn1;
         private SampleDSP mDsp;
         private SampleDSPRecord mDspRec;
@@ -264,7 +264,7 @@ namespace SimpleNeurotuner
         {
             try
             {
-                mMixer = new SimpleMixer(2, SampleRate) //стерео, 44,1 КГц
+                mMixer = new SimpleMixer(1, SampleRate) //стерео, 44,1 КГц
                 {
                     FillWithZeros = true,
                     DivideResult = true, //Для этого установлено значение true, чтобы избежать звуков тиков из-за превышения -1 и 1.
@@ -715,6 +715,39 @@ namespace SimpleNeurotuner
             //return false;
         }
 
+        private void SoundOut1()
+        {
+            try
+            {
+                mSoundOut1 = new WasapiOut(/*false, AudioClientShareMode.Exclusive, 1*/);
+
+                //mSoundOut.Device = mOutputDevices[cmbOutput.SelectedIndex];
+                mSoundOut1.Initialize(mMixer.ToWaveSource(32));
+
+                //mSoundOut.Initialize(mSource);
+                mSoundOut1.Play();
+                mSoundOut1.Volume = 5;
+
+            }
+            catch (Exception ex)
+            {
+                if (langindex == "0")
+                {
+                    string msg = "Ошибка в SoundOut1: \r\n" + ex.Message;
+                    LogClass.LogWrite(msg);
+                    MessageBox.Show(msg);
+                    Debug.WriteLine(msg);
+                }
+                else
+                {
+                    string msg = "Error in SoundOut1: \r\n" + ex.Message;
+                    LogClass.LogWrite(msg);
+                    MessageBox.Show(msg);
+                    Debug.WriteLine(msg);
+                }
+            }
+        }
+
         private void SoundOut()
         {
             try
@@ -726,7 +759,7 @@ namespace SimpleNeurotuner
                 
                 //mSoundOut.Initialize(mSource);
                 mSoundOut.Play();
-                mSoundOut.Volume = 10;
+                mSoundOut.Volume = 5;
 
             }
             catch (Exception ex)
