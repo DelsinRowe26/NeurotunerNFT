@@ -158,20 +158,20 @@
                             </Style>
                         </ComboBox.Style>
                     </ComboBox>
-                    <ComboBox x:Name="cmbOutput" HorizontalAlignment="Center" Margin="14,84,15,0" VerticalAlignment="Top" Width="200" ToolTip="Speaker" Grid.ColumnSpan="2">
+                    <ComboBox x:Name="cmbOutput" HorizontalAlignment="Center" Margin="14,47,15,0" VerticalAlignment="Top" Width="200" ToolTip="Speaker" Grid.ColumnSpan="2">
                         <ComboBox.Style>
                             <Style>
                                 <Setter Property="Control.Background" Value="Gainsboro"/>
                             </Style>
                         </ComboBox.Style>
                     </ComboBox>
-                    <ComboBox x:Name="cmbInput1" HorizontalAlignment="Center" Margin="14,47,15,0" VerticalAlignment="Top" Width="200" Visibility="Visible" ToolTip="Microphone" Grid.ColumnSpan="2">
+                    <!--<ComboBox x:Name="cmbInput1" HorizontalAlignment="Center" Margin="14,47,15,0" VerticalAlignment="Top" Width="200" Visibility="Visible" ToolTip="Microphone" Grid.ColumnSpan="2">
                         <ComboBox.Style>
                             <Style>
                                 <Setter Property="Control.Background" Value="Gainsboro"/>
                             </Style>
                         </ComboBox.Style>
-                    </ComboBox>
+                    </ComboBox>-->
                 </Grid>
             </TabItem>
         </TabControl>
@@ -282,6 +282,9 @@
         <ProgressBar x:Name="pbVolumeRight" HorizontalAlignment="Left" Height="155" Margin="90,312,0,0" VerticalAlignment="Top" Width="18" Maximum="65535" Orientation="Vertical" Visibility="Hidden"/>
         <Slider x:Name="slPitchShift" HorizontalAlignment="Center" Margin="0,95,0,0" VerticalAlignment="Top" Width="248" Height="30" Maximum="15" Minimum="-15" TickPlacement="BottomRight" ValueChanged="slPitchShift_ValueChanged" IsEnabled="False"/>
         <Label x:Name="lbValuePitch" Content="0" HorizontalAlignment="Left" Margin="410,85,0,0" VerticalAlignment="Top" Width="57" Height="40" FontSize="14"/>
+        <Slider x:Name="slLeft" HorizontalAlignment="Left" Margin="41,140,0,0" VerticalAlignment="Top" Width="32" Orientation="Vertical" Height="222" TickPlacement="Both" ValueChanged="slLeft_ValueChanged" Maximum="65535" SmallChange="256" LargeChange="2048" TickFrequency="2048"/>
+        <Slider x:Name="slRight" HorizontalAlignment="Left" Margin="490,140,0,0" VerticalAlignment="Top" Width="32" Orientation="Vertical" Height="222" TickPlacement="Both" ValueChanged="slRight_ValueChanged" Maximum="65535" SmallChange="256" LargeChange="2048" TickFrequency="2048"/>
+        <CheckBox x:Name="chBAuto" Content="Autobalance" HorizontalAlignment="Left" Margin="25,479,0,0" VerticalAlignment="Top" Checked="chBAuto_Checked"/>
 
 
 

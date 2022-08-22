@@ -48,6 +48,9 @@ namespace SimpleNeurotuner
         [DllImport("winmm.dll")]
         public static extern int waveOutGetVolume(IntPtr hwo, out uint pdwVolume);
 
+        [DllImport("winmm.dll", EntryPoint = "waveOutGetVolume")]
+        public static extern void GetWaveVolume(IntPtr deviceHandle, out int Volume);
+
         [DllImport("winmm.dll")]
         public static extern int waveOutSetVolume(IntPtr hwo, uint dwVolume);
 
@@ -59,7 +62,7 @@ namespace SimpleNeurotuner
         private FileInfo fileInfo1 = new FileInfo("Data_Load.tmp");
         private FileInfo FileLanguage = new FileInfo("Data_Language.tmp");
         private FileInfo fileinfo = new FileInfo("DataTemp.tmp");
-        private SimpleMixer mMixer;
+        private SimpleMixer mMixer, mMixerRight;
         private int SampleRate;//44100;
         //private Equalizer equalizer;
         private WasapiOut mSoundOut, mSoundOut1;
@@ -264,7 +267,35 @@ namespace SimpleNeurotuner
         {
             try
             {
+                
                 mMixer = new SimpleMixer(1, SampleRate) //стерео, 44,1 КГц
+                {
+                    FillWithZeros = true,
+                    DivideResult = true, //Для этого установлено значение true, чтобы избежать звуков тиков из-за превышения -1 и 1.
+                };
+            }
+            catch (Exception ex)
+            {
+                if (langindex == "0")
+                {
+                    string msg = "Ошибка в Mixer: \r\n" + ex.Message;
+                    MessageBox.Show(msg);
+                    Debug.WriteLine(msg);
+                }
+                else
+                {
+                    string msg = "Error in Mixer: \r\n" + ex.Message;
+                    MessageBox.Show(msg);
+                    Debug.WriteLine(msg);
+                }
+            }
+        }
+
+        private void MixerRight()
+        {
+            try
+            {
+                mMixerRight = new SimpleMixer(1, SampleRate) //стерео, 44,1 КГц
                 {
                     FillWithZeros = true,
                     DivideResult = true, //Для этого установлено значение true, чтобы избежать звуков тиков из-за превышения -1 и 1.
@@ -302,6 +333,7 @@ namespace SimpleNeurotuner
                 MMDeviceEnumerator deviceEnum = new MMDeviceEnumerator();
                 mInputDevices = deviceEnum.EnumAudioEndpoints(DataFlow.Capture, DeviceState.Active);
                 MMDevice activeDevice = deviceEnum.GetDefaultAudioEndpoint(DataFlow.Capture, Role.Multimedia);
+                
                 SampleRate = activeDevice.DeviceFormat.SampleRate;
                 
                 foreach (MMDevice device in mInputDevices)
@@ -310,13 +342,13 @@ namespace SimpleNeurotuner
                     if (device.DeviceID == activeDevice.DeviceID) cmbInput.SelectedIndex = cmbInput.Items.Count - 1;
                 }
 
-                mInputDevices1 = deviceEnum.EnumAudioEndpoints(DataFlow.Capture, DeviceState.Active);
+                /*mInputDevices1 = deviceEnum.EnumAudioEndpoints(DataFlow.Capture, DeviceState.Active);
                 activeDevice = deviceEnum.GetDefaultAudioEndpoint(DataFlow.Capture, Role.Multimedia);
                 foreach (MMDevice device in mInputDevices1)
                 {
                     cmbInput1.Items.Add(device.FriendlyName);
                     if (device.DeviceID == activeDevice.DeviceID) cmbInput1.SelectedIndex = cmbInput1.Items.Count - 1;
-                }
+                }*/
 
 
                 //Находит устройства для вывода звука и заполняет комбобокс
@@ -364,7 +396,8 @@ namespace SimpleNeurotuner
                 //SampleRate = mSoundIn.WaveFormat.SampleRate;
                 CreateWindow.RecIndex = 0;
                 TembroClass tembro = new TembroClass();
-                tembro.Tembro(48000);
+                tembro.Tembro(SampleRate);
+                //int volume, vol;
                 var wih = new WindowInteropHelper(this);
                 var hWnd = wih.Handle;
                 if (check.strt(path2) > limit)
@@ -373,7 +406,9 @@ namespace SimpleNeurotuner
                     ActivationForm activation = new ActivationForm();
                     activation.Show();
                 }
-
+                //GetWaveVolume(hWnd,out volume);
+                //vol = volume;
+                ShowCurrentVolume();
                 ModeIndex = -1;
                 Modes();
             }
@@ -413,22 +448,22 @@ namespace SimpleNeurotuner
             waveOutGetVolume(IntPtr.Zero, out volume);
             int right = (int)((volume >> 16) & 0xFFFF);
             int left = (int)(volume & 0xFFFF);
-            pbVolumeLeft.Value = left;
-            pbVolumeRight.Value = right;
-            Autobalance();
+            slLeft.Value = left;
+            slRight.Value = right;
+            
         }
 
         private void SetVolume()
         {
-            uint volume = (uint)(pbVolumeLeft.Value + ((int)pbVolumeRight.Value << 16));
+            uint volume = (uint)(slLeft.Value + ((int)slRight.Value << 16));
             waveOutSetVolume(IntPtr.Zero, volume);
         }
         
         private void Autobalance()
         {
-            int volume = (int)(pbVolumeLeft.Value + pbVolumeRight.Value) / 2;
-            pbVolumeLeft.Value = volume;
-            pbVolumeRight.Value = volume;
+            int volume = (int)(slLeft.Value + slRight.Value) / 2;
+            slLeft.Value = volume;
+            slRight.Value = volume;
             SetVolume();
         }
 
@@ -752,11 +787,12 @@ namespace SimpleNeurotuner
         {
             try
             {
+
                 mSoundOut = new WasapiOut(/*false, AudioClientShareMode.Exclusive, 1*/);
-                
+                Dispatcher.Invoke(() => mSoundOut.Device = mOutputDevices[cmbOutput.SelectedIndex]);
                 //mSoundOut.Device = mOutputDevices[cmbOutput.SelectedIndex];
-                mSoundOut.Initialize(mMixer.ToWaveSource(32));
                 
+                mSoundOut.Initialize(mMixer.ToWaveSource(32).ToMono());
                 //mSoundOut.Initialize(mSource);
                 mSoundOut.Play();
                 mSoundOut.Volume = 5;
@@ -1605,6 +1641,30 @@ namespace SimpleNeurotuner
                 string uri = @"Neurotuners\button\listen-mode-hover.png";
                 ImgBtnModeAudio.ImageSource = new ImageSourceConverter().ConvertFromString(uri) as ImageSource;
             }
+        }
+
+        private void chBAuto_Checked(object sender, RoutedEventArgs e)
+        {
+            Autobalance();
+        }
+
+        private void slLeft_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
+        {
+            if(chBAuto.IsChecked == true)
+            {
+                slRight.Value = slLeft.Value;
+
+            }
+            SetVolume();
+        }
+
+        private void slRight_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
+        {
+            if(chBAuto.IsChecked == true)
+            {
+                slLeft.Value = slRight.Value;
+            }
+            SetVolume();
         }
 
         private void btnModeAudio_MouseLeave(object sender, MouseEventArgs e)
