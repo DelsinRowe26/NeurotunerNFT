@@ -15,6 +15,10 @@ namespace SimpleNeurotuner
 
         public bool DivideResult { get; set; }
 
+        public bool Right { get; set; }
+
+        public bool Left { get; set; }
+
         public SimpleMixer(int channelCount, int sampleRate)
         {
             if(channelCount < 1)
@@ -79,6 +83,10 @@ namespace SimpleNeurotuner
                                 buffer[i] = mMixerBuffer[n];
                             else
                                 buffer[i] += mMixerBuffer[n];
+                            if (Right)
+                            {
+
+                            }
                         }
                         if (read > numberOfStoredSamples)
                             numberOfStoredSamples = read;

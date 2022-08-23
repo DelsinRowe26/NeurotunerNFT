@@ -354,12 +354,13 @@ namespace SimpleNeurotuner
                 //Находит устройства для вывода звука и заполняет комбобокс
                 activeDevice = deviceEnum.GetDefaultAudioEndpoint(DataFlow.Render, Role.Multimedia);
                 mOutputDevices = deviceEnum.EnumAudioEndpoints(DataFlow.Render, DeviceState.Active);
+                
                 foreach (MMDevice device in mOutputDevices)
                 {
                     cmbOutput.Items.Add(device.FriendlyName);
                     if (device.DeviceID == activeDevice.DeviceID) cmbOutput.SelectedIndex = cmbOutput.Items.Count - 1;
                 }
-
+                
                 cmbRecord.Items.Add("Select a record");
                 cmbRecord.SelectedIndex = cmbRecord.Items.Count - 1;
                 Filling();
@@ -400,6 +401,13 @@ namespace SimpleNeurotuner
                 //int volume, vol;
                 var wih = new WindowInteropHelper(this);
                 var hWnd = wih.Handle;
+                
+
+                //SimpleAudioVolume audioVolume = new SimpleAudioVolume(hWnd);
+                //float volume;
+                //audioVolume.GetMasterVolumeNative(out volume);
+                //int vol = (int)volume;
+
                 if (check.strt(path2) > limit)
                 {
                     this.IsEnabled = false;
@@ -783,7 +791,7 @@ namespace SimpleNeurotuner
             }
         }
 
-        private void SoundOut()
+        private ChannelMask SoundOut()
         {
             try
             {
@@ -791,12 +799,15 @@ namespace SimpleNeurotuner
                 mSoundOut = new WasapiOut(/*false, AudioClientShareMode.Exclusive, 1*/);
                 Dispatcher.Invoke(() => mSoundOut.Device = mOutputDevices[cmbOutput.SelectedIndex]);
                 //mSoundOut.Device = mOutputDevices[cmbOutput.SelectedIndex];
+
                 
+
                 mSoundOut.Initialize(mMixer.ToWaveSource(32).ToMono());
                 //mSoundOut.Initialize(mSource);
+                //mSoundOut = ChannelMask.SpeakerFrontLeft;
                 mSoundOut.Play();
                 mSoundOut.Volume = 5;
-
+                return ChannelMask.SpeakerFrontLeft;
             }
             catch (Exception ex)
             {
@@ -806,6 +817,7 @@ namespace SimpleNeurotuner
                     LogClass.LogWrite(msg);
                     MessageBox.Show(msg);
                     Debug.WriteLine(msg);
+                    return ChannelMask.SpeakerFrontLeft;
                 }
                 else
                 {
@@ -813,6 +825,7 @@ namespace SimpleNeurotuner
                     LogClass.LogWrite(msg);
                     MessageBox.Show(msg);
                     Debug.WriteLine(msg);
+                    return ChannelMask.SpeakerFrontLeft;
                 }
             }
         }
