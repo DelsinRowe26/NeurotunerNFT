@@ -1,11 +1,21 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Runtime.InteropServices;
 using CSCore;
 
 namespace SimpleNeurotuner
 {
     public class SimpleMixer : ISampleSource
     {
+        [DllImport("winmm.dll")]
+        public static extern int waveOutGetVolume(IntPtr hwo, out uint pdwVolume);
+
+        [DllImport("winmm.dll")]
+        public static extern int waveOutSetVolume(IntPtr hwo, uint dwVolume);
+
+        const int WM_APPCOMMAND = 0x319;
+        const int APPCOMMAND_VOLUME_MUTE = 0x80000;
+
         private readonly WaveFormat mWaveFormat;
         private readonly List<ISampleSource> mSampleSources = new List<ISampleSource>();
         private readonly object mLockObj = new object();
@@ -83,10 +93,7 @@ namespace SimpleNeurotuner
                                 buffer[i] = mMixerBuffer[n];
                             else
                                 buffer[i] += mMixerBuffer[n];
-                            if (Right)
-                            {
-
-                            }
+                            
                         }
                         if (read > numberOfStoredSamples)
                             numberOfStoredSamples = read;
@@ -98,6 +105,24 @@ namespace SimpleNeurotuner
                             //raise event here/поднять событие здесь
                             RemoveSource(sampleSource); //remove the input to make sure that the event gets only raised once./удалите ввод, чтобы убедиться, что событие возникает только один раз.
                         }
+                    }
+                    if (Right)
+                    {
+                        uint volume;
+                        waveOutGetVolume(IntPtr.Zero, out volume);
+                        int rightt = (int)((volume >> 16) & 0xFFFF);
+                        rightt = 65535;
+                        uint vol = (uint)(rightt << 16);
+                        waveOutSetVolume(IntPtr.Zero, vol);
+                    }
+                    if (Left)
+                    {
+                        uint volume;
+                        waveOutGetVolume(IntPtr.Zero, out volume);
+                        int left = (int)(volume & 0xFFFF);
+                        left = 65535;
+                        uint vol = (uint)(left);
+                        waveOutSetVolume(IntPtr.Zero, vol);
                     }
 
                     if (DivideResult)

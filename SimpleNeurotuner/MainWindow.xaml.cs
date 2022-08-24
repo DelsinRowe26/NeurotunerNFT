@@ -48,9 +48,6 @@ namespace SimpleNeurotuner
         [DllImport("winmm.dll")]
         public static extern int waveOutGetVolume(IntPtr hwo, out uint pdwVolume);
 
-        [DllImport("winmm.dll", EntryPoint = "waveOutGetVolume")]
-        public static extern void GetWaveVolume(IntPtr deviceHandle, out int Volume);
-
         [DllImport("winmm.dll")]
         public static extern int waveOutSetVolume(IntPtr hwo, uint dwVolume);
 
@@ -267,9 +264,11 @@ namespace SimpleNeurotuner
         {
             try
             {
-                
+
                 mMixer = new SimpleMixer(1, SampleRate) //стерео, 44,1 КГц
                 {
+                    //Right = true,
+                    //Left = true,
                     FillWithZeros = true,
                     DivideResult = true, //Для этого установлено значение true, чтобы избежать звуков тиков из-за превышения -1 и 1.
                 };
@@ -803,8 +802,8 @@ namespace SimpleNeurotuner
                 
 
                 mSoundOut.Initialize(mMixer.ToWaveSource(32).ToMono());
-                //mSoundOut.Initialize(mSource);
-                //mSoundOut = ChannelMask.SpeakerFrontLeft;
+                
+
                 mSoundOut.Play();
                 mSoundOut.Volume = 5;
                 return ChannelMask.SpeakerFrontLeft;
@@ -1089,7 +1088,7 @@ namespace SimpleNeurotuner
                         for(int i = 0; i < 100; i++)
                         {
                             pbRecord.Value++;
-                            await Task.Delay(50);
+                            await Task.Delay(40);
                             if(pbRecord.Value == 25)
                             {
                                 string uri1 = @"Neurotuners\progressbar\Group 13.png";
