@@ -415,7 +415,7 @@ namespace SimpleNeurotuner
                 }
                 //GetWaveVolume(hWnd,out volume);
                 //vol = volume;
-                ShowCurrentVolume();
+                //ShowCurrentVolume();
                 ModeIndex = -1;
                 Modes();
             }
@@ -520,6 +520,7 @@ namespace SimpleNeurotuner
                         ImgStart.ImageSource = new ImageSourceConverter().ConvertFromString(uri) as ImageSource;
                         await Task.Run(() => Sound(file));
                         StartFullDuplex();
+                        //SFD();
                         if (langindex == "0")
                         {
                             LogClass.LogWrite("Начало прослушивания записи.");
@@ -533,6 +534,7 @@ namespace SimpleNeurotuner
                         cmbRecord.IsEnabled = false;
                         btnPlayer.IsEnabled = false;
                         btnTurbo.IsEnabled = false;
+                        slReverb.IsEnabled = false;
                         btnStop.IsEnabled = true;
                         btnModeRecord.IsEnabled = false;
                     }
@@ -661,14 +663,36 @@ namespace SimpleNeurotuner
             }
         }
 
+        private void SoundIn()
+        {
+            mSoundIn = new WasapiCapture(/*false, AudioClientShareMode.Exclusive, 1*/);
+            Dispatcher.Invoke(() => mSoundIn.Device = mInputDevices[cmbInput.SelectedIndex]);
+            mSoundIn.Initialize();
+            mSoundIn.Start();
+        }
+
+        private async void SFD()
+        {
+            await Task.Run(() => SoundIn());
+            var source = new SoundInSource(mSoundIn) { FillWithZeros = true };
+            mDspTurbo = new SampleDSPTurbo(source.ToSampleSource().ToMono());
+            //SetPitchShiftValue();
+            Mixer();
+
+            //Добавляем наш источник звука в микшер
+            mMixer.AddSource(mDspTurbo.ChangeSampleRate(mMixer.WaveFormat.SampleRate));
+
+            //Запускает устройство воспроизведения звука с задержкой 1 мс.
+
+            await Task.Run(() => SoundOut());
+        }
+
         private async void StartFullDuplex()//запуск пича и громкости
         {
             try
             {
                 //Запускает устройство захвата звука с задержкой 1 мс.
-                mSoundIn = new WasapiCapture(/*false, AudioClientShareMode.Exclusive, 1*/);
-                mSoundIn.Device = mInputDevices[cmbInput.SelectedIndex];
-                mSoundIn.Initialize();
+                await Task.Run(() => SoundIn());
 
                 var source = new SoundInSource(mSoundIn) { FillWithZeros = true };               
 
@@ -676,7 +700,6 @@ namespace SimpleNeurotuner
                 mDsp = new SampleDSP(source.ToSampleSource()/*.AppendSource(Equalizer.Create10BandEqualizer, out mEqualizer)*/.ToMono());
 
                 //SetPitchShiftValue();
-                mSoundIn.Start();
 
                 //Инициальный микшер
                 //Mixer();
@@ -713,18 +736,31 @@ namespace SimpleNeurotuner
             try
             {
                 //Запускает устройство захвата звука с задержкой 1 мс.
-                mSoundIn = new WasapiCapture(/*false, AudioClientShareMode.Exclusive, 1*/);
-                mSoundIn.Device = mInputDevices[cmbInput.SelectedIndex];
-                mSoundIn.Initialize();
+                await Task.Run(() => SoundIn());
 
-                var source = new SoundInSource(mSoundIn) { FillWithZeros = true };
+                if (slReverb.Value != 0)
+                {
+                    var source = new SoundInSource(mSoundIn) { FillWithZeros = true };
+                    var xsource = source.ToSampleSource();
 
-                //Init DSP для смещения высоты тона
-                mDspTurbo = new SampleDSPTurbo(source.ToSampleSource().ToMono());
-                SetPitchShiftValue();
+                    var reverb = new DmoWavesReverbEffect(xsource.ToWaveSource());
+                    reverb.ReverbTime = (float)slReverb.Value;
+                    reverb.HighFrequencyRTRatio = ((float)1) / 1000;
+                    xsource = reverb.ToSampleSource();
+
+                    //Init DSP для смещения высоты тона
+                    mDspTurbo = new SampleDSPTurbo(xsource.ToMono());
+                    SetPitchShiftValue();
+                }
+                else
+                {
+                    var source = new SoundInSource(mSoundIn) { FillWithZeros = true };
+                    mDspTurbo = new SampleDSPTurbo(source.ToSampleSource().ToMono());
+                    SetPitchShiftValue();
+                }
 
                 //SetPitchShiftValue();
-                mSoundIn.Start();
+                
 
                 //Инициальный микшер
                 Mixer();
@@ -891,6 +927,7 @@ namespace SimpleNeurotuner
                     //btnRecord.IsEnabled = true;
                     slPitchShift.Value = 0;
                     lbValuePitch.Content = 0;
+                    slReverb.IsEnabled = true;
                     slPitchShift.IsEnabled = false;
                     btnModeRecord.IsEnabled = true;
                     btnRecording.IsEnabled = false;
@@ -1402,6 +1439,7 @@ namespace SimpleNeurotuner
                         btnTurbo.IsEnabled = false;
                         btnPlayer.IsEnabled = false;
                         btnStop.IsEnabled = true;
+                        slReverb.IsEnabled = false;
                         cmbRecord.IsEnabled = false;
                         btnModeRecord.IsEnabled = false;
                     }
@@ -1439,6 +1477,7 @@ namespace SimpleNeurotuner
             btnPlayer.IsEnabled = false;
             btnTurbo.IsEnabled = false;
             slPitchShift.IsEnabled = true;
+            slReverb.IsEnabled = false;
             btnStop.IsEnabled = true;
             btnModeRecord.IsEnabled = false;
             cmbRecord.IsEnabled = false;
@@ -1529,6 +1568,8 @@ namespace SimpleNeurotuner
                     btnStop.IsEnabled = false;
                     btnModeAudio.IsEnabled = true;
                     btnRecording.IsEnabled = true;
+                    slReverb.Visibility = Visibility.Hidden;
+                    lbReverb.Visibility = Visibility.Hidden;
                     cmbRecord.IsEnabled = false;
                     btnPlayer.IsEnabled = false;
                     btnTurbo.IsEnabled = false;
@@ -1556,6 +1597,8 @@ namespace SimpleNeurotuner
                     btnRecording.IsEnabled = false;
                     slPitchShift.Visibility = Visibility.Visible;
                     lbValuePitch.Visibility = Visibility.Visible;
+                    slReverb.Visibility = Visibility.Visible;
+                    lbReverb.Visibility = Visibility.Visible;
                     btnStop.IsEnabled = false;
                     cmbRecord.IsEnabled = true;
                     btnStart_Open.IsEnabled = true;
@@ -1664,19 +1707,24 @@ namespace SimpleNeurotuner
         {
             if(chBAuto.IsChecked == true)
             {
-                slRight.Value = slLeft.Value;
+                //slRight.Value = slLeft.Value;
 
             }
-            SetVolume();
+            //SetVolume();
         }
 
         private void slRight_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
         {
-            if(chBAuto.IsChecked == true)
-            {
-                slLeft.Value = slRight.Value;
-            }
-            SetVolume();
+            //if(chBAuto.IsChecked == true)
+            //{
+                //slLeft.Value = slRight.Value;
+            //}
+            //SetVolume();
+        }
+
+        private void slReverb_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
+        {
+            lbReverb.Content = slReverb.Value.ToString("f1");
         }
 
         private void btnModeAudio_MouseLeave(object sender, MouseEventArgs e)

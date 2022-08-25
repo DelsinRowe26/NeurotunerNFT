@@ -126,6 +126,7 @@
     <Compile Include="PitchShifter.cs" />
     <Compile Include="PitchShifter1.cs" />
     <Compile Include="PitchShifterPitch.cs" />
+    <Compile Include="PitchShifterStereo.cs" />
     <Compile Include="PitchShifterTurbo.cs" />
     <Compile Include="PlusRecord.xaml.cs">
       <DependentUpon>PlusRecord.xaml</DependentUpon>
