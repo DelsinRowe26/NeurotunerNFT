@@ -692,7 +692,8 @@ namespace SimpleNeurotuner
             try
             {
                 //Запускает устройство захвата звука с задержкой 1 мс.
-                await Task.Run(() => SoundIn());
+                //await Task.Run(() => SoundIn());
+                SoundIn();
 
                 var source = new SoundInSource(mSoundIn) { FillWithZeros = true };               
 
@@ -736,7 +737,8 @@ namespace SimpleNeurotuner
             try
             {
                 //Запускает устройство захвата звука с задержкой 1 мс.
-                await Task.Run(() => SoundIn());
+                //await Task.Run(() => SoundIn());
+                SoundIn();
 
                 if (slReverb.Value != 0)
                 {
@@ -771,6 +773,7 @@ namespace SimpleNeurotuner
                 //Запускает устройство воспроизведения звука с задержкой 1 мс.
 
                 await Task.Run(() => SoundOut());
+                //SoundOut();
 
             }
             catch (Exception ex)

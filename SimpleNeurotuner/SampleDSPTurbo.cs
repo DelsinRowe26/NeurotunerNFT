@@ -30,7 +30,7 @@ namespace SimpleNeurotuner
                     buffer[i] = Math.Max(Math.Min(buffer[i] * gainAmplification, 1), -1);
                 }
 
-                PitchShifterTurbo.PitchShift(PitchShift, offset, count, 2048, 4, mSource.WaveFormat.SampleRate, buffer);
+                PitchShifterTurbo.PitchShift(PitchShift, offset, count, 4096, 4, mSource.WaveFormat.SampleRate, buffer);
 
                 return samples;
         }
