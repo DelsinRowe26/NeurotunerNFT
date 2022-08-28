@@ -209,8 +209,8 @@ namespace SimpleNeurotuner
 
                     for(k = 0; k <= fftFrameSize; k++)
                     {
-                        gFFTworksp[2 * k] *= TembroClass.kt[k];
-                        gFFTworksp[2 * k + 1] *= TembroClass.kt[k];
+                        //gFFTworksp[2 * k] *= TembroClass.kt[k];
+                        //gFFTworksp[2 * k + 1] *= TembroClass.kt[k];
                     }
 
                     /* ***************** PROCESSING ******************* */

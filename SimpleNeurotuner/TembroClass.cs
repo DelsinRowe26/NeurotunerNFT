@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -11,11 +12,11 @@ namespace SimpleNeurotuner
     {
         private static int[] minfreq = new int[96000];
         private static int[] maxfreq = new int[96000];
-        private static int[] coef = new int[96000];
-        public static int[] kt = new int[96000]; 
+        private static float[] coef = new float[96000];
+        public static float[] kt = new float[96000]; 
         private static StreamReader fileName = new StreamReader("Wide_voiceTurbo.txt", System.Text.Encoding.Default);
         private static int Nlines = File.ReadAllLines("Wide_voiceTurbo.txt").Length;
-        private static string[] txt = fileName.ReadToEnd().Split(new char[] { ' ', '.' }, StringSplitOptions.None);
+        private static string[] txt = fileName.ReadToEnd().Split(new char[] { ' ', ',' }, StringSplitOptions.None);
         private static int Nvalues = txt.Length;
 
         public void Tembro(int sampleRate)
@@ -29,7 +30,7 @@ namespace SimpleNeurotuner
             {
                 minfreq[p] = int.Parse(txt[q]);
                 maxfreq[p] = int.Parse(txt[r]);
-                coef[p] = int.Parse(txt[e]);
+                coef[p] = float.Parse(txt[e], System.Globalization.NumberStyles.Any, CultureInfo.InvariantCulture);
             }
 
             for (int t = 0; t < Nlines; t++)

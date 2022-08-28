@@ -418,7 +418,7 @@ namespace SimpleNeurotuner
                 //ShowCurrentVolume();
                 ModeIndex = -1;
                 Modes();
-            }
+        }
             catch (Exception ex)
             {
                 if (langindex == "0")
@@ -436,7 +436,7 @@ namespace SimpleNeurotuner
                     Debug.WriteLine(msg);
                 }
             }
-           
+
         }
 
         public static void Rec()
