@@ -131,6 +131,7 @@
     <Compile Include="PlusRecord.xaml.cs">
       <DependentUpon>PlusRecord.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Reverb.cs" />
     <Compile Include="SampleDSP.cs" />
     <Compile Include="SampleDSPPitch.cs" />
     <Compile Include="SampleDSPRecord.cs" />
@@ -321,6 +322,8 @@
     <Resource Include="input-biblio1.png" />
     <Resource Include="Logo-light.png" />
     <Resource Include="Logo-light.ico" />
+    <Resource Include="32547346-f758-4436-9811-3a4aca09ae1d.png" />
+    <Resource Include="button-back-volhoriz.png" />
     <Content Include="Zvuk.dll" />
     <Resource Include="button-back.png" />
     <Resource Include="Neurotuners\button\button-backcmb.png" />

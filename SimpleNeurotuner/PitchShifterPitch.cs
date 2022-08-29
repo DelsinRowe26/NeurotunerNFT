@@ -96,8 +96,8 @@ namespace SimpleNeurotuner
                     for (k = 0; k < fftFrameSize2; k++)
                     {
                         /* de-interlace FFT buffer/деинтерлейсный буфер FFT  */
-                        real = gFFTworksp[2 * k] * 2/* * TembroClass.kt[k] */;
-                        imag = gFFTworksp[2 * k + 1] * 2/* * TembroClass.kt[k]*/;
+                        real = gFFTworksp[2 * k] * TembroClass.kt[k];
+                        imag = gFFTworksp[2 * k + 1] * TembroClass.kt[k];
 
                         /* compute magnitude and phase/вычислить амплитуду и фазу  */
                         magn = Math.Sqrt(real * real + imag * imag);//амплитуда

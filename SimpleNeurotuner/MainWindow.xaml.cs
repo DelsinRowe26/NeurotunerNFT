@@ -92,6 +92,8 @@ namespace SimpleNeurotuner
         private static string path = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
         private static string path2;
 
+        private float reverbVal;
+        private float pitchVal;
         private string file, filename, RecordName;
         private string record;
         private string[] allfile;
@@ -395,8 +397,7 @@ namespace SimpleNeurotuner
                 }
                 //SampleRate = mSoundIn.WaveFormat.SampleRate;
                 CreateWindow.RecIndex = 0;
-                TembroClass tembro = new TembroClass();
-                tembro.Tembro(SampleRate);
+                
                 //int volume, vol;
                 var wih = new WindowInteropHelper(this);
                 var hWnd = wih.Handle;
@@ -416,7 +417,7 @@ namespace SimpleNeurotuner
                 //GetWaveVolume(hWnd,out volume);
                 //vol = volume;
                 //ShowCurrentVolume();
-                ModeIndex = -1;
+                ModeIndex = 1;
                 Modes();
         }
             catch (Exception ex)
@@ -746,7 +747,7 @@ namespace SimpleNeurotuner
                     var xsource = source.ToSampleSource();
 
                     var reverb = new DmoWavesReverbEffect(xsource.ToWaveSource());
-                    reverb.ReverbTime = (float)slReverb.Value;
+                    reverb.ReverbTime = reverbVal;
                     reverb.HighFrequencyRTRatio = ((float)1) / 1000;
                     xsource = reverb.ToSampleSource();
 
@@ -870,7 +871,7 @@ namespace SimpleNeurotuner
 
         private void SetPitchShiftValue()
         {
-            mDspTurbo.PitchShift = (float)Math.Pow(2.0F, slPitchShift.Value / 13.0F);
+            mDspTurbo.PitchShift = (float)Math.Pow(2.0F, pitchVal / 13.0F);
         }
 
         private async void Sound(string file)
@@ -960,6 +961,24 @@ namespace SimpleNeurotuner
                         btnStopEffect.Opacity = 0;
                         SaveDeleteWindow saveDelete = new SaveDeleteWindow();
                         saveDelete.Show();
+                    }
+                }
+                if (ModeIndex == 1)
+                {
+                    if (audioclick == 0)
+                    {
+                        /*int[] Rdat = new int[5000];
+                        int Ndt;
+                        Ndt = vizualzvuk(cutmyfile, myfile, Rdat, 2);*/
+                        Stop();
+                        StopImg();
+                        btnRecording.IsEnabled = true;
+                        btnStop.IsEnabled = false;
+                        btnTurbo.IsEnabled = true;
+                        //btnModeAudio.IsEnabled = true;
+                        //btnStopEffect.Opacity = 0;
+                        //SaveDeleteWindow saveDelete = new SaveDeleteWindow();
+                        //saveDelete.Show();
                     }
                 }
             }
@@ -1253,6 +1272,8 @@ namespace SimpleNeurotuner
                     cmbModes.Items.Clear();
                     cmbModes.Items.Add("Записи");
                     cmbModes.Items.Add("Прослушивание");
+                    rbMan.Content = "Мужчина";
+                    rbWoman.Content = "Женщина";
                     cmbModes.SelectedIndex = cmbModes.Items.Count - 1;
                     Title = "Нейротюнер NFT";
                     btnStart_Open.Content = "Старт";
@@ -1290,6 +1311,8 @@ namespace SimpleNeurotuner
                     cmbModes.Items.Add("Record");
                     cmbModes.Items.Add("Audition");
                     cmbModes.SelectedIndex = cmbModes.Items.Count - 1;
+                    rbMan.Content = "Man";
+                    rbWoman.Content = "Woman";
                     Title = "Neurotuner NFT";
                     btnStart_Open.Content = "Start";
                     btnTurbo.Content = "Turbo";
@@ -1471,19 +1494,56 @@ namespace SimpleNeurotuner
 
         private void btnTurbo_Click(object sender, RoutedEventArgs e)
         {
-            StartFullDuplexTurbo();
-            ImgBtnTurboClick = 1;
-            string uri = @"Neurotuners\button\button-turbo-active.png";
-            ImgTurboBtn.ImageSource = new ImageSourceConverter().ConvertFromString(uri) as ImageSource;
-            //Thread.Sleep(2000);
-            btnStart_Open.IsEnabled = false;
-            btnPlayer.IsEnabled = false;
-            btnTurbo.IsEnabled = false;
-            slPitchShift.IsEnabled = true;
-            slReverb.IsEnabled = false;
-            btnStop.IsEnabled = true;
-            btnModeRecord.IsEnabled = false;
-            cmbRecord.IsEnabled = false;
+            if (ModeIndex == -1)
+            {
+                StartFullDuplexTurbo();
+                ImgBtnTurboClick = 1;
+                string uri = @"Neurotuners\button\button-turbo-active.png";
+                ImgTurboBtn.ImageSource = new ImageSourceConverter().ConvertFromString(uri) as ImageSource;
+                //Thread.Sleep(2000);
+                btnStart_Open.IsEnabled = false;
+                btnPlayer.IsEnabled = false;
+                btnTurbo.IsEnabled = false;
+                slPitchShift.IsEnabled = true;
+                slReverb.IsEnabled = false;
+                btnStop.IsEnabled = true;
+                btnModeRecord.IsEnabled = false;
+                cmbRecord.IsEnabled = false;
+            }
+            else if(ModeIndex == 1)
+            {
+                if(rbMan.IsChecked == true || rbWoman.IsChecked == true)
+                {
+                    StartFullDuplexTurbo();
+                    ImgBtnTurboClick = 1;
+                    string uri = @"Neurotuners\button\button-turbo-active.png";
+                    ImgTurboBtn.ImageSource = new ImageSourceConverter().ConvertFromString(uri) as ImageSource;
+                    //Thread.Sleep(2000);
+                    btnStart_Open.IsEnabled = false;
+                    btnPlayer.IsEnabled = false;
+                    btnTurbo.IsEnabled = false;
+                    slPitchShift.IsEnabled = true;
+                    slReverb.IsEnabled = false;
+                    btnStop.IsEnabled = true;
+                    btnModeRecord.IsEnabled = false;
+                    cmbRecord.IsEnabled = false;
+                }
+                else
+                {
+                    if (langindex == "0")
+                    {
+                        string msg = "Выберите пол.";
+                        MessageBox.Show(msg);
+                        LogClass.LogWrite("Режим нейротюнинга.");
+                    }
+                    else
+                    {
+                        string msg = "Choose a gender.";
+                        MessageBox.Show(msg);
+                        LogClass.LogWrite("Neuro tuning mode.");
+                    }
+                }
+            }
         }
 
         private void cmbModes_SelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -1587,7 +1647,7 @@ namespace SimpleNeurotuner
                         LogClass.LogWrite("Recording mode is on.");
                     }
                 }
-                else if (ModeIndex != 0)
+                else if (ModeIndex == -1)
                 {
                     StreamReader sr = new StreamReader("DataRec.tmp");
                     string read = sr.ReadToEnd();
@@ -1627,6 +1687,20 @@ namespace SimpleNeurotuner
                             Filling();
                             LogClass.LogWrite("Listening mode is on.");
                         }
+                } 
+                else if (ModeIndex == 1)
+                {
+                    btnModeAudio.Visibility = Visibility.Hidden;
+                    btnModeRecord.Visibility = Visibility.Hidden;
+                    imgBack.Visibility = Visibility.Hidden;
+                    cmbRecord.Visibility = Visibility.Hidden;
+                    imgLibRec.Visibility = Visibility.Hidden;
+                    pbRecord.Visibility = Visibility.Visible;
+                    pbRecord.Value = 0;
+                    btnRecording.IsEnabled = true;
+                    btnStart_Open.IsEnabled = false;
+                    btnStop.IsEnabled = false;
+                    btnPlayer.IsEnabled = false;
                 }
             }
             catch (Exception ex)
@@ -1728,6 +1802,25 @@ namespace SimpleNeurotuner
         private void slReverb_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
         {
             lbReverb.Content = slReverb.Value.ToString("f1");
+        }
+
+        private void rbMan_Checked(object sender, RoutedEventArgs e)
+        {
+            TembroClass tembro = new TembroClass();
+            string pathFile = @"shablon\Wide_voiceMan.txt";
+            tembro.Tembro(SampleRate, pathFile);
+            pitchVal = -2.5f;
+            reverbVal = 150;
+            
+        }
+
+        private void rbWoman_Checked(object sender, RoutedEventArgs e)
+        {
+            TembroClass tembro = new TembroClass();
+            string pathFile = @"shablon\Wide_voiceWoman.txt";
+            tembro.Tembro(SampleRate, pathFile);
+            pitchVal = -2f;
+            reverbVal = 150;
         }
 
         private void btnModeAudio_MouseLeave(object sender, MouseEventArgs e)

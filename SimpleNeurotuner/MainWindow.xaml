@@ -6,19 +6,17 @@
         xmlns:wf="clr-namespace:System.Windows.Forms;assembly=System.Windows.Forms"
         xmlns:local="clr-namespace:SimpleNeurotuner"
         mc:Ignorable="d"
-        Title="Neurotuner NFT" Height="602" Width="569" Loaded="SimpleNeurotuner_Loaded" Closing="SimpleNeurotuner_Closing" ResizeMode="CanMinimize" Activated="SimpleNeurotuner_Activated" HorizontalAlignment="Center" VerticalAlignment="Center" Icon="/Logo-light.png">
+        Title="Neurotuner NFT" Height="602" Width="800" Loaded="SimpleNeurotuner_Loaded" Closing="SimpleNeurotuner_Closing" ResizeMode="CanMinimize" Activated="SimpleNeurotuner_Activated" HorizontalAlignment="Center" VerticalAlignment="Center" Icon="/Logo-light.png">
     <Window.Background>
         <ImageBrush Stretch="UniformToFill" TileMode="Tile">
-            <ImageBrush.ImageSource>
-                <ImageSource>/background-no-pic.png</ImageSource>
-            </ImageBrush.ImageSource>
+            <ImageBrush.ImageSource>/32547346-f758-4436-9811-3a4aca09ae1d.png</ImageBrush.ImageSource>
         </ImageBrush>
     </Window.Background>
     <Grid x:Name="grid" Margin="0,0,0,4">
         <Grid.ColumnDefinitions>
             <ColumnDefinition/>
         </Grid.ColumnDefinitions>
-        <Button x:Name="btnStart_Open" Content="Start" HorizontalAlignment="Left" Margin="194,461,0,0" VerticalAlignment="Top" Height="52" Width="52" Click="btnStart_Open_Click" MouseMove="btnStart_Open_MouseMove" MouseLeave="btnStart_Open_MouseLeave" FontSize="14" ToolTip="Start">
+        <Button x:Name="btnStart_Open" Content="Start" HorizontalAlignment="Left" Margin="261,461,0,0" VerticalAlignment="Top" Height="52" Width="52" Click="btnStart_Open_Click" MouseMove="btnStart_Open_MouseMove" MouseLeave="btnStart_Open_MouseLeave" FontSize="14" ToolTip="Start">
             <Button.Background>
                 <ImageBrush x:Name="ImgStart" ImageSource = "/button-play-inactive.png"/>
             </Button.Background>
@@ -28,7 +26,7 @@
                 </ControlTemplate>
             </Button.Template>
         </Button>
-        <Button x:Name="btnStop" Content="Stop" HorizontalAlignment="Left" Margin="309,461,0,0" VerticalAlignment="Top" Height="52" Width="52" Click="btnStop_Click" MouseMove="btnStop_MouseMove" MouseLeave="btnStop_MouseLeave" FontSize="14">
+        <Button x:Name="btnStop" Content="Stop" HorizontalAlignment="Left" Margin="431,461,0,0" VerticalAlignment="Top" Height="52" Width="52" Click="btnStop_Click" MouseMove="btnStop_MouseMove" MouseLeave="btnStop_MouseLeave" FontSize="14">
             <Button.Background>
                 <ImageBrush x:Name="ImgStopBtn" ImageSource="/button-stop-inactive.png"/>
             </Button.Background>
@@ -42,7 +40,7 @@
                 </ControlTemplate>
             </Button.Template>
         </Button>
-        <Button x:Name="btnRecording" Content="" HorizontalAlignment="Left" Margin="137,461,0,0" VerticalAlignment="Top" Height="52" Width="52" BorderBrush="{x:Null}" Foreground="{x:Null}" MouseMove="btnRecording_MouseMove" MouseLeave="btnRecording_MouseLeave" Click="btnRecording_Click">
+        <Button x:Name="btnRecording" Content="" HorizontalAlignment="Left" Margin="190,462,0,0" VerticalAlignment="Top" Height="52" Width="52" BorderBrush="{x:Null}" Foreground="{x:Null}" MouseMove="btnRecording_MouseMove" MouseLeave="btnRecording_MouseLeave" Click="btnRecording_Click">
             <Button.Background>
                 <ImageBrush x:Name="ImgRecordingBtn" ImageSource="/button-record-inactive.png"/>
             </Button.Background>
@@ -52,7 +50,7 @@
                 </ControlTemplate>
             </Button.Template>
         </Button>
-        <Button x:Name="btnTurbo" Content="Turbo" HorizontalAlignment="Left" Margin="366,461,0,0" VerticalAlignment="Top" Height="52" Width="52" Click="btnTurbo_Click" MouseMove="btnTurbo_MouseMove" MouseLeave="btnTurbo_MouseLeave" FontSize="14">
+        <Button x:Name="btnTurbo" Content="Turbo" HorizontalAlignment="Left" Margin="126,461,0,0" VerticalAlignment="Top" Height="52" Width="52" Click="btnTurbo_Click" MouseMove="btnTurbo_MouseMove" MouseLeave="btnTurbo_MouseLeave" FontSize="14">
             <Button.Background>
                 <ImageBrush x:Name="ImgTurboBtn" ImageSource="/button-turbo-inactive.png"/>
             </Button.Background>
@@ -62,7 +60,7 @@
                 </ControlTemplate>
             </Button.Template>
         </Button>
-        <Button x:Name="btnPlayer" Content="Player" HorizontalAlignment="Center" Margin="0,461,0,0" VerticalAlignment="Top" Height="52" Width="52" Click="btnPlayer_Click" MouseMove="btnPlayer_MouseMove" MouseLeave="btnPlayer_MouseLeave" FontSize="14" Visibility="Visible">
+        <Button x:Name="btnPlayer" Content="Player" HorizontalAlignment="Left" Margin="366,461,0,0" VerticalAlignment="Top" Height="53" Width="52" Click="btnPlayer_Click" MouseMove="btnPlayer_MouseMove" MouseLeave="btnPlayer_MouseLeave" FontSize="14" Visibility="Visible">
             <Button.Background>
                 <ImageBrush x:Name="ImgListenBtn" ImageSource="/button-listen-inactive.png"/>
             </Button.Background>
@@ -135,7 +133,7 @@
                 <ImageBrush ImageSource="/pic-shadow.png" Stretch="UniformToFill"/>
             </Image.OpacityMask>
         </Image>
-        <TabControl x:Name="tabNFTSet" Margin="153,115,151,192" Visibility="Visible" Background="{x:Null}" BorderBrush="{x:Null}" TabStripPlacement="Top">
+        <TabControl x:Name="tabNFTSet" Margin="126,115,408,192" Visibility="Visible" Background="{x:Null}" BorderBrush="{x:Null}" TabStripPlacement="Top" Width="270">
             <TabItem x:Name="TabNFT" Header="gNeuro NFT" Background="{x:Null}" BorderBrush="{x:Null}" Margin="46,-2,-50,0" Visibility="Hidden">
                 <Grid x:Name="GridName" Width="230" Margin="7,0,8,0" Height="230">
                     <Grid.ColumnDefinitions>
@@ -212,12 +210,20 @@
                 <ImageBrush ImageSource="/button-back.png"/>
             </Image.OpacityMask>
         </Image>
-        <Image x:Name="imgBackVolume" HorizontalAlignment="Left" Height="100" Margin="90,212,0,0" VerticalAlignment="Top" Width="50" Source="/button-back-volume.png">
+        <Image x:Name="imgBackVolume" HorizontalAlignment="Left" Height="54" Margin="501,460,0,0" VerticalAlignment="Top" Width="103" Source="/button-back-volhoriz.png" RenderTransformOrigin="0.5,0.5">
+            <Image.RenderTransform>
+                <TransformGroup>
+                    <ScaleTransform/>
+                    <SkewTransform/>
+                    <RotateTransform Angle="180"/>
+                    <TranslateTransform/>
+                </TransformGroup>
+            </Image.RenderTransform>
             <Image.OpacityMask>
-                <ImageBrush ImageSource="/button-back-volume.png"/>
+                <ImageBrush ImageSource="/button-back-volhoriz.png"/>
             </Image.OpacityMask>
         </Image>
-        <Button x:Name="btnDecVol" Content="-" HorizontalAlignment="Left" Margin="90,261,0,0" VerticalAlignment="Top" Height="50" Width="50" Click="btnDecVol_Click" RenderTransformOrigin="0.435,0.248" BorderBrush="{x:Null}" MouseMove="btnDecVol_MouseMove" Foreground="{x:Null}" Focusable="False">
+        <Button x:Name="btnDecVol" Content="-" HorizontalAlignment="Left" Margin="552,462,0,0" VerticalAlignment="Top" Height="50" Width="50" Click="btnDecVol_Click" RenderTransformOrigin="0.435,0.248" BorderBrush="{x:Null}" MouseMove="btnDecVol_MouseMove" Foreground="{x:Null}" Focusable="False">
             <Button.Background>
                 <ImageBrush x:Name="imgBTNinacDown" ImageSource="/button-sounddown-inactive.png"/>
             </Button.Background>
@@ -229,7 +235,7 @@
                 </ControlTemplate>
             </Button.Template>
         </Button>
-        <Button x:Name="btnIncVol" Content="+" HorizontalAlignment="Left" Margin="90,211,0,0" VerticalAlignment="Top" Height="50" Width="50" Click="btnIncVol_Click" MouseMove="btnIncVol_MouseMove" MouseLeave="btnIncVol_MouseLeave">
+        <Button x:Name="btnIncVol" Content="+" HorizontalAlignment="Left" Margin="502,462,0,0" VerticalAlignment="Top" Height="50" Width="50" Click="btnIncVol_Click" MouseMove="btnIncVol_MouseMove" MouseLeave="btnIncVol_MouseLeave">
             <Button.Background>
                 <ImageBrush x:Name="imgBTNinaUp" ImageSource="/button-soundup-inactive.png"/>
             </Button.Background>
@@ -268,7 +274,7 @@
                 </ControlTemplate>
             </Button.Template>
         </Button>
-        <Button x:Name="btnSettings" Content="Button" HorizontalAlignment="Left" Margin="481,22,0,0" VerticalAlignment="Top" Width="52" Height="52" BorderBrush="{x:Null}" Foreground="{x:Null}" MouseMove="btnSettings_MouseMove" MouseLeave="btnSettings_MouseLeave" Click="btnSettings_Click">
+        <Button x:Name="btnSettings" Content="Button" HorizontalAlignment="Left" Margin="679,461,0,0" VerticalAlignment="Top" Width="52" Height="52" BorderBrush="{x:Null}" Foreground="{x:Null}" MouseMove="btnSettings_MouseMove" MouseLeave="btnSettings_MouseLeave" Click="btnSettings_Click">
             <Button.Background>
                 <ImageBrush x:Name="ImgBtnSettings" ImageSource="/button-settings-inactive.png"/>
             </Button.Background>
@@ -281,12 +287,25 @@
         <ProgressBar x:Name="pbVolumeLeft" HorizontalAlignment="Left" Height="155" Margin="52,312,0,0" VerticalAlignment="Top" Width="17" Maximum="65535" Orientation="Vertical" Visibility="Hidden"/>
         <ProgressBar x:Name="pbVolumeRight" HorizontalAlignment="Left" Height="155" Margin="90,312,0,0" VerticalAlignment="Top" Width="18" Maximum="65535" Orientation="Vertical" Visibility="Hidden"/>
         <Slider x:Name="slPitchShift" HorizontalAlignment="Center" Margin="0,95,0,0" VerticalAlignment="Top" Width="248" Height="30" Maximum="15" Minimum="-15" TickPlacement="BottomRight" ValueChanged="slPitchShift_ValueChanged" IsEnabled="False"/>
-        <Label x:Name="lbValuePitch" Content="0" HorizontalAlignment="Left" Margin="410,90,0,0" VerticalAlignment="Top" Width="57" Height="40" FontSize="14"/>
+        <Label x:Name="lbValuePitch" Content="0" HorizontalAlignment="Left" Margin="502,90,0,0" VerticalAlignment="Top" Width="57" Height="40" FontSize="14"/>
         <Slider x:Name="slLeft" HorizontalAlignment="Left" Margin="41,140,0,0" VerticalAlignment="Top" Width="32" Orientation="Vertical" Height="222" TickPlacement="Both" ValueChanged="slLeft_ValueChanged" Maximum="65535" SmallChange="256" LargeChange="2048" TickFrequency="2048" Visibility="Hidden"/>
         <Slider x:Name="slRight" HorizontalAlignment="Left" Margin="490,140,0,0" VerticalAlignment="Top" Width="32" Orientation="Vertical" Height="222" TickPlacement="Both" ValueChanged="slRight_ValueChanged" Maximum="65535" SmallChange="256" LargeChange="2048" TickFrequency="2048" Minimum="1" Visibility="Hidden"/>
         <CheckBox x:Name="chBAuto" Content="Autobalance" HorizontalAlignment="Left" Margin="25,479,0,0" VerticalAlignment="Top" Checked="chBAuto_Checked" Visibility="Hidden"/>
         <Slider x:Name="slReverb" HorizontalAlignment="Center" Margin="0,66,0,0" VerticalAlignment="Top" Width="246" Maximum="3000" TickPlacement="BottomRight" TickFrequency="100" ValueChanged="slReverb_ValueChanged"/>
-        <Label x:Name="lbReverb" Content="0" HorizontalAlignment="Left" Margin="410,58,0,0" VerticalAlignment="Top" Width="57" FontSize="14"/>
+        <Label x:Name="lbReverb" Content="0" HorizontalAlignment="Left" Margin="506,55,0,0" VerticalAlignment="Top" Width="57" FontSize="14"/>
+        <RadioButton x:Name="rbMan" Content="Man" HorizontalAlignment="Left" Margin="655,25,0,0" VerticalAlignment="Top" Height="20" Width="100" FontSize="14" Checked="rbMan_Checked"/>
+        <RadioButton x:Name="rbWoman" Content="Woman" HorizontalAlignment="Left" Margin="655,55,0,0" VerticalAlignment="Top" FontSize="14" Checked="rbWoman_Checked"/>
+        <TabControl x:Name="tabNFT" Margin="485,115,45,192" Visibility="Visible" Background="{x:Null}" BorderBrush="{x:Null}" TabStripPlacement="Top" Width="270">
+            <TabItem x:Name="TabNFT1" Header="gNeuro NFT" Background="{x:Null}" BorderBrush="{x:Null}" Margin="46,-2,-50,0" Visibility="Hidden">
+                <Grid x:Name="GridName1" Width="230" Margin="7,0,8,0" Height="230">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="82*"/>
+                        <ColumnDefinition Width="33*"/>
+                    </Grid.ColumnDefinitions>
+                    <Image x:Name="Image2" HorizontalAlignment="Left" Height="228" VerticalAlignment="Top" Width="231" Grid.ColumnSpan="2" Margin="-2,-3,0,3"/>
+                </Grid>
+            </TabItem>
+        </TabControl>
 
 
 
