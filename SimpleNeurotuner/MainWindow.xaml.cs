@@ -99,8 +99,8 @@ namespace SimpleNeurotuner
         private string[] allfile;
         private int click, audioclick = 0, clickRec = 0;
 
-        private static int limit = 20;
-        private int ImgBtnStartClick = 0, ImgBtnRecordClick = 0, ImgBtnListenClick = 0, ImgBtnTurboClick = 0, ModeIndex, BtnSetClick = 0, NFTShadow = 0;
+        private static int limit = 200;
+        private int ImgBtnStartClick = 0, ImgBtnRecordClick = 0, NFTRecordClick = 0, ImgBtnListenClick = 0, ImgBtnTurboClick = 0, ModeIndex, BtnSetClick = 0, NFTShadow = 0;
 
         private const int APPCOMMAND_VOLUME_MUTE = 0x80000;
         private const int APPCOMMAND_VOLUME_UP = 0xA0000;
@@ -628,11 +628,11 @@ namespace SimpleNeurotuner
             ImgBtnListenClick = 0;
             ImgBtnTurboClick = 0;
             string uri = @"Neurotuners\button\button-play-inactive.png";
-            ImgStart.ImageSource = new ImageSourceConverter().ConvertFromString(uri) as ImageSource;
+            Dispatcher.Invoke(() => ImgStart.ImageSource = new ImageSourceConverter().ConvertFromString(uri) as ImageSource);
             string uri1 = @"Neurotuners\button\button-listen-inactive.png";
-            ImgListenBtn.ImageSource = new ImageSourceConverter().ConvertFromString(uri1) as ImageSource;
+            Dispatcher.Invoke(() => ImgListenBtn.ImageSource = new ImageSourceConverter().ConvertFromString(uri1) as ImageSource);
             string uri2 = @"Neurotuners\button\button-turbo-inactive.png";
-            ImgTurboBtn.ImageSource = new ImageSourceConverter().ConvertFromString(uri2) as ImageSource;
+            Dispatcher.Invoke(() => ImgTurboBtn.ImageSource = new ImageSourceConverter().ConvertFromString(uri2) as ImageSource);
         }
 
         private void StopOut()
@@ -741,8 +741,6 @@ namespace SimpleNeurotuner
                 //await Task.Run(() => SoundIn());
                 SoundIn();
 
-                if (slReverb.Value != 0)
-                {
                     var source = new SoundInSource(mSoundIn) { FillWithZeros = true };
                     var xsource = source.ToSampleSource();
 
@@ -754,13 +752,6 @@ namespace SimpleNeurotuner
                     //Init DSP для смещения высоты тона
                     mDspTurbo = new SampleDSPTurbo(xsource.ToMono());
                     SetPitchShiftValue();
-                }
-                else
-                {
-                    var source = new SoundInSource(mSoundIn) { FillWithZeros = true };
-                    mDspTurbo = new SampleDSPTurbo(source.ToSampleSource().ToMono());
-                    SetPitchShiftValue();
-                }
 
                 //SetPitchShiftValue();
                 
@@ -913,6 +904,48 @@ namespace SimpleNeurotuner
             }
         }
 
+        private void StopMinus1()
+        {
+            string uri = @"Neurotuners\button\button-stop-active.png";
+            ImgStopBtn.ImageSource = new ImageSourceConverter().ConvertFromString(uri) as ImageSource;
+            btnStart_Open.IsEnabled = true;
+            btnPlayer.IsEnabled = true;
+            btnTurbo.IsEnabled = true;
+            cmbRecord.IsEnabled = true;
+            btnStop.IsEnabled = false;
+            //btnRecord.IsEnabled = true;
+            slPitchShift.Value = 0;
+            lbValuePitch.Content = 0;
+            slReverb.IsEnabled = true;
+            slPitchShift.IsEnabled = false;
+            btnModeRecord.IsEnabled = true;
+            btnRecording.IsEnabled = false;
+        }
+
+        private void Stop0()
+        {
+            btnRecording.IsEnabled = true;
+            btnStop.IsEnabled = false;
+            btnModeAudio.IsEnabled = true;
+            btnStopEffect.Opacity = 0;
+            SaveDeleteWindow saveDelete = new SaveDeleteWindow();
+            saveDelete.Show();
+        }
+
+        private void Stop1()
+        {
+            audioclick = 0;
+            if (audioclick == 0)
+            {
+                Stop();
+                StopImg();
+                Dispatcher.Invoke(() => btnRecording.IsEnabled = true);
+                Dispatcher.Invoke(() => btnStop.IsEnabled = false);
+                Dispatcher.Invoke(() => btnTurbo.IsEnabled = true);
+            }
+            
+        }
+
         private void btnStop_Click(object sender, RoutedEventArgs e)
         {
             try
@@ -921,20 +954,7 @@ namespace SimpleNeurotuner
                 {
                     Stop();
                     StopImg();
-                    string uri = @"Neurotuners\button\button-stop-active.png";
-                    ImgStopBtn.ImageSource = new ImageSourceConverter().ConvertFromString(uri) as ImageSource;
-                    btnStart_Open.IsEnabled = true;
-                    btnPlayer.IsEnabled = true;
-                    btnTurbo.IsEnabled = true;
-                    cmbRecord.IsEnabled = true;
-                    btnStop.IsEnabled = false;
-                    //btnRecord.IsEnabled = true;
-                    slPitchShift.Value = 0;
-                    lbValuePitch.Content = 0;
-                    slReverb.IsEnabled = true;
-                    slPitchShift.IsEnabled = false;
-                    btnModeRecord.IsEnabled = true;
-                    btnRecording.IsEnabled = false;
+                    StopMinus1();
                 }
                 click = 0;
                 audioclick = 0;
@@ -955,12 +975,7 @@ namespace SimpleNeurotuner
                         Ndt = vizualzvuk(cutmyfile, myfile, Rdat, 2);*/
                         Stop();
                         StopImg();
-                        btnRecording.IsEnabled = true;
-                        btnStop.IsEnabled = false;
-                        btnModeAudio.IsEnabled = true;
-                        btnStopEffect.Opacity = 0;
-                        SaveDeleteWindow saveDelete = new SaveDeleteWindow();
-                        saveDelete.Show();
+                        Stop0();
                     }
                 }
                 if (ModeIndex == 1)
@@ -970,11 +985,8 @@ namespace SimpleNeurotuner
                         /*int[] Rdat = new int[5000];
                         int Ndt;
                         Ndt = vizualzvuk(cutmyfile, myfile, Rdat, 2);*/
-                        Stop();
-                        StopImg();
-                        btnRecording.IsEnabled = true;
-                        btnStop.IsEnabled = false;
-                        btnTurbo.IsEnabled = true;
+                        
+                        Stop1();
                         //btnModeAudio.IsEnabled = true;
                         //btnStopEffect.Opacity = 0;
                         //SaveDeleteWindow saveDelete = new SaveDeleteWindow();
@@ -1132,9 +1144,20 @@ namespace SimpleNeurotuner
                 StreamReader FileRecord = new StreamReader("Data_Create.tmp");
                 StreamReader FileCutRecord = new StreamReader("Data_cutCreate.tmp");
                 myfile = FileRecord.ReadToEnd();
-                cutmyfile = FileCutRecord.ReadToEnd();
+               cutmyfile = FileCutRecord.ReadToEnd();
+                //NFTRecordClick = 1;
+                //myfile = "MyRecord1.wav";
+                //cutmyfile = "cutMyRecord1.wav";
                 FileRecord.Close();
                 FileCutRecord.Close();
+                /*if (File.Exists(myfile))
+                {
+                    File.Delete(myfile);
+                }
+                if (File.Exists(cutmyfile))
+                {
+                    File.Delete(cutmyfile);
+                }*/
                 using (mSoundIn = new WasapiCapture())
                 {
                     mSoundIn.Device = mInputDevices[cmbInput.SelectedIndex];
@@ -1182,6 +1205,7 @@ namespace SimpleNeurotuner
                     int[] Rdat = new int[150000];
                     int Ndt;
                     Ndt = vizualzvuk(cutmyfile, myfile, Rdat, 1);
+                    //NFT_drawing1(myfile);
                     //File.Move(myfile, @"Record\" + myfile);
                     //CutRecord cutRecord = new CutRecord();
                     //cutRecord.CutFromWave(cutmyfile, myfile, start, end);
@@ -1210,6 +1234,242 @@ namespace SimpleNeurotuner
                     LogClass.LogWrite(msg);
                     MessageBox.Show(msg);
                     btnPlayerEffect.Opacity = 1;
+                }
+            }
+            catch (Exception ex)
+            {
+                if (langindex == "0")
+                {
+                    string msg = "Ошибка в Recording: \r\n" + ex.Message;
+                    LogClass.LogWrite(msg);
+                    MessageBox.Show(msg);
+                    Debug.WriteLine(msg);
+                }
+                else
+                {
+                    string msg = "Error in Recording: \r\n" + ex.Message;
+                    LogClass.LogWrite(msg);
+                    MessageBox.Show(msg);
+                    Debug.WriteLine(msg);
+                }
+            }
+        }
+
+        private async void Recording1()
+        {
+            try
+            {
+                StreamReader FileRecord = new StreamReader("Data_Create.tmp");
+                StreamReader FileCutRecord = new StreamReader("Data_cutCreate.tmp");
+                //myfile = FileRecord.ReadToEnd();
+                //cutmyfile = FileCutRecord.ReadToEnd();
+                NFTRecordClick = 1;
+                myfile = "MyRecord1.wav";
+                cutmyfile = "cutMyRecord1.wav";
+                FileRecord.Close();
+                FileCutRecord.Close();
+                if (File.Exists(myfile))
+                {
+                    File.Delete(myfile);
+                }
+                if (File.Exists(cutmyfile))
+                {
+                    File.Delete(cutmyfile);
+                }
+                using (mSoundIn = new WasapiCapture())
+                {
+                    mSoundIn.Device = mInputDevices[cmbInput.SelectedIndex];
+                    mSoundIn.Initialize();
+                    lbRecordPB.Visibility = Visibility.Visible;
+                    mSoundIn.Start();
+                    using (WaveWriter record = new WaveWriter(cutmyfile, mSoundIn.WaveFormat))
+                    {
+                        mSoundIn.DataAvailable += (s, data) => record.Write(data.Data, data.Offset, data.ByteCount);
+                        for (int i = 0; i < 100; i++)
+                        {
+                            pbRecord.Value++;
+                            await Task.Delay(40);
+                            if (pbRecord.Value == 25)
+                            {
+                                string uri1 = @"Neurotuners\progressbar\Group 13.png";
+                                ImgPBRecordBack.ImageSource = new ImageSourceConverter().ConvertFromString(uri1) as ImageSource;
+                            }
+                            else if (pbRecord.Value == 50)
+                            {
+                                string uri2 = @"Neurotuners\progressbar\Group 12.png";
+                                ImgPBRecordBack.ImageSource = new ImageSourceConverter().ConvertFromString(uri2) as ImageSource;
+                            }
+                            else if (pbRecord.Value == 75)
+                            {
+                                string uri3 = @"Neurotuners\progressbar\Group 11.png";
+                                ImgPBRecordBack.ImageSource = new ImageSourceConverter().ConvertFromString(uri3) as ImageSource;
+                            }
+                            else if (pbRecord.Value == 95)
+                            {
+                                string uri4 = @"Neurotuners\progressbar\Group 10.png";
+                                ImgPBRecordBack.ImageSource = new ImageSourceConverter().ConvertFromString(uri4) as ImageSource;
+                            }
+                        }
+                        //Thread.Sleep(5000);
+
+                        mSoundIn.Stop();
+                        lbRecordPB.Visibility = Visibility.Hidden;
+                        pbRecord.Value = 0;
+
+                    }
+                    Thread.Sleep(100);
+                    string uri = @"Neurotuners\element\progressbar-backgrnd1.png";
+                    ImgPBRecordBack.ImageSource = new ImageSourceConverter().ConvertFromString(uri) as ImageSource;
+                    int[] Rdat = new int[150000];
+                    int Ndt;
+                    Ndt = vizualzvuk(cutmyfile, myfile, Rdat, 1);
+                    NFT_drawing1(myfile);
+                    //File.Move(myfile, @"Record\" + myfile);
+                    //CutRecord cutRecord = new CutRecord();
+                    //cutRecord.CutFromWave(cutmyfile, myfile, start, end);
+
+                }
+                if (langindex == "0")
+                {
+                    ImgBtnRecordClick = 0;
+                    string uri = @"Neurotuners\button\button-record-inactive.png";
+                    ImgRecordingBtn.ImageSource = new ImageSourceConverter().ConvertFromString(uri) as ImageSource;
+                    btnPlayer.IsEnabled = true;
+                    btnRecording.IsEnabled = false;
+                    string msg = "Запись и обработка завершена.";
+                    LogClass.LogWrite(msg);
+                    MessageBox.Show(msg);
+                    //btnPlayerEffect.Opacity = 1;
+                }
+                else
+                {
+                    ImgBtnRecordClick = 0;
+                    string uri = @"Neurotuners\button\button-record-inactive.png";
+                    ImgRecordingBtn.ImageSource = new ImageSourceConverter().ConvertFromString(uri) as ImageSource;
+                    btnPlayer.IsEnabled = true;
+                    btnRecording.IsEnabled = false;
+                    string msg = "Recording and processing completed.";
+                    LogClass.LogWrite(msg);
+                    MessageBox.Show(msg);
+                    //btnPlayerEffect.Opacity = 1;
+                }
+            }
+            catch (Exception ex)
+            {
+                if (langindex == "0")
+                {
+                    string msg = "Ошибка в Recording: \r\n" + ex.Message;
+                    LogClass.LogWrite(msg);
+                    MessageBox.Show(msg);
+                    Debug.WriteLine(msg);
+                }
+                else
+                {
+                    string msg = "Error in Recording: \r\n" + ex.Message;
+                    LogClass.LogWrite(msg);
+                    MessageBox.Show(msg);
+                    Debug.WriteLine(msg);
+                }
+            }
+        }
+
+        private async void Recording2()
+        {
+            try
+            {
+                StreamReader FileRecord = new StreamReader("Data_Create.tmp");
+                StreamReader FileCutRecord = new StreamReader("Data_cutCreate.tmp");
+                //myfile = FileRecord.ReadToEnd();
+                //cutmyfile = FileCutRecord.ReadToEnd();
+                NFTRecordClick = 0;
+                myfile = "MyRecord2.wav";
+                cutmyfile = "cutMyRecord2.wav";
+                FileRecord.Close();
+                FileCutRecord.Close();
+                if (File.Exists(myfile))
+                {
+                    File.Delete(myfile);
+                }
+                if (File.Exists(cutmyfile))
+                {
+                    File.Delete(cutmyfile);
+                }
+                using (mSoundIn = new WasapiCapture())
+                {
+                    mSoundIn.Device = mInputDevices[cmbInput.SelectedIndex];
+                    mSoundIn.Initialize();
+                    lbRecordPB.Visibility = Visibility.Visible;
+                    mSoundIn.Start();
+                    using (WaveWriter record = new WaveWriter(cutmyfile, mSoundIn.WaveFormat))
+                    {
+                        mSoundIn.DataAvailable += (s, data) => record.Write(data.Data, data.Offset, data.ByteCount);
+                        for (int i = 0; i < 100; i++)
+                        {
+                            pbRecord.Value++;
+                            await Task.Delay(35);
+                            if (pbRecord.Value == 25)
+                            {
+                                string uri1 = @"Neurotuners\progressbar\Group 13.png";
+                                ImgPBRecordBack.ImageSource = new ImageSourceConverter().ConvertFromString(uri1) as ImageSource;
+                            }
+                            else if (pbRecord.Value == 50)
+                            {
+                                string uri2 = @"Neurotuners\progressbar\Group 12.png";
+                                ImgPBRecordBack.ImageSource = new ImageSourceConverter().ConvertFromString(uri2) as ImageSource;
+                            }
+                            else if (pbRecord.Value == 75)
+                            {
+                                string uri3 = @"Neurotuners\progressbar\Group 11.png";
+                                ImgPBRecordBack.ImageSource = new ImageSourceConverter().ConvertFromString(uri3) as ImageSource;
+                            }
+                            else if (pbRecord.Value == 95)
+                            {
+                                string uri4 = @"Neurotuners\progressbar\Group 10.png";
+                                ImgPBRecordBack.ImageSource = new ImageSourceConverter().ConvertFromString(uri4) as ImageSource;
+                            }
+                        }
+                        //Thread.Sleep(5000);
+
+                        mSoundIn.Stop();
+                        lbRecordPB.Visibility = Visibility.Hidden;
+                        pbRecord.Value = 0;
+
+                    }
+                    Thread.Sleep(100);
+                    string uri = @"Neurotuners\element\progressbar-backgrnd1.png";
+                    ImgPBRecordBack.ImageSource = new ImageSourceConverter().ConvertFromString(uri) as ImageSource;
+                    int[] Rdat = new int[150000];
+                    int Ndt;
+                    Ndt = vizualzvuk(cutmyfile, myfile, Rdat, 1);
+                    NFT_drawing2(myfile);
+                    //File.Move(myfile, @"Record\" + myfile);
+                    //CutRecord cutRecord = new CutRecord();
+                    //cutRecord.CutFromWave(cutmyfile, myfile, start, end);
+
+                }
+                if (langindex == "0")
+                {
+                    ImgBtnRecordClick = 0;
+                    string uri = @"Neurotuners\button\button-record-inactive.png";
+                    ImgRecordingBtn.ImageSource = new ImageSourceConverter().ConvertFromString(uri) as ImageSource;
+                    btnPlayer.IsEnabled = true;
+                    btnRecording.IsEnabled = false;
+                    string msg = "Запись и обработка завершена.";
+                    LogClass.LogWrite(msg);
+                    MessageBox.Show(msg);
+                    //btnPlayerEffect.Opacity = 1;
+                }
+                else
+                {
+                    ImgBtnRecordClick = 0;
+                    string uri = @"Neurotuners\button\button-record-inactive.png";
+                    ImgRecordingBtn.ImageSource = new ImageSourceConverter().ConvertFromString(uri) as ImageSource;
+                    btnPlayer.IsEnabled = true;
+                    btnRecording.IsEnabled = false;
+                    string msg = "Recording and processing completed.";
+                    LogClass.LogWrite(msg);
+                    MessageBox.Show(msg);
+                    //btnPlayerEffect.Opacity = 1;
                 }
             }
             catch (Exception ex)
@@ -1275,7 +1535,7 @@ namespace SimpleNeurotuner
                     rbMan.Content = "Мужчина";
                     rbWoman.Content = "Женщина";
                     cmbModes.SelectedIndex = cmbModes.Items.Count - 1;
-                    Title = "Нейротюнер NFT";
+                    Title = "Нейротюнер";
                     btnStart_Open.Content = "Старт";
                     btnStart_Open.ToolTip = "Старт";
                     btnTurbo.Content = "Турбо";
@@ -1313,7 +1573,7 @@ namespace SimpleNeurotuner
                     cmbModes.SelectedIndex = cmbModes.Items.Count - 1;
                     rbMan.Content = "Man";
                     rbWoman.Content = "Woman";
-                    Title = "Neurotuner NFT";
+                    Title = "Neurotuner";
                     btnStart_Open.Content = "Start";
                     btnTurbo.Content = "Turbo";
                     btnTurbo.ToolTip = "Turbo";
@@ -1492,7 +1752,7 @@ namespace SimpleNeurotuner
             }
         }
 
-        private void btnTurbo_Click(object sender, RoutedEventArgs e)
+        private async void btnTurbo_Click(object sender, RoutedEventArgs e)
         {
             if (ModeIndex == -1)
             {
@@ -1515,6 +1775,8 @@ namespace SimpleNeurotuner
                 if(rbMan.IsChecked == true || rbWoman.IsChecked == true)
                 {
                     StartFullDuplexTurbo();
+                    
+                    //PitchTimerMan();
                     ImgBtnTurboClick = 1;
                     string uri = @"Neurotuners\button\button-turbo-active.png";
                     ImgTurboBtn.ImageSource = new ImageSourceConverter().ConvertFromString(uri) as ImageSource;
@@ -1527,6 +1789,15 @@ namespace SimpleNeurotuner
                     btnStop.IsEnabled = true;
                     btnModeRecord.IsEnabled = false;
                     cmbRecord.IsEnabled = false;
+                    lbTimer.Visibility = Visibility.Visible;
+                    if (reverbVal == 150)
+                    {
+                        await Task.Run(() => PitchTimerMan());
+                    }
+                    else if(reverbVal == 400)
+                    {
+                        await Task.Run(() => PitchTimerWoman());
+                    }
                 }
                 else
                 {
@@ -1809,9 +2080,47 @@ namespace SimpleNeurotuner
             TembroClass tembro = new TembroClass();
             string pathFile = @"shablon\Wide_voiceMan.txt";
             tembro.Tembro(SampleRate, pathFile);
-            pitchVal = -2.5f;
+            pitchVal = 0;
             reverbVal = 150;
             
+        }
+
+        private void PitchTimerMan()
+        {
+            int timer = 100;
+            while (timer > 0)
+            {
+                Dispatcher.Invoke(() => lbTimer.Content = timer.ToString());
+                if (timer > 50) 
+                {
+                    pitchVal -= 0.05f;
+                    SetPitchShiftValue();
+                }
+                Thread.Sleep(1000);
+                timer--;
+            }
+            Dispatcher.Invoke(() => lbTimer.Content = timer.ToString());
+            Dispatcher.Invoke(() => lbTimer.Visibility = Visibility.Hidden);
+            Stop1();
+        }
+
+        private void PitchTimerWoman()
+        {
+            int timer = 100;
+            while (timer > 0)
+            {
+                Dispatcher.Invoke(() => lbTimer.Content = timer.ToString());
+                if (timer > 50)
+                {
+                    pitchVal -= 0.04f;
+                    SetPitchShiftValue();
+                }
+                Thread.Sleep(1000);
+                timer--;
+            }
+            Dispatcher.Invoke(() => lbTimer.Content = timer.ToString());
+            Dispatcher.Invoke(() => lbTimer.Visibility = Visibility.Hidden);
+            Stop();
         }
 
         private void rbWoman_Checked(object sender, RoutedEventArgs e)
@@ -1819,8 +2128,8 @@ namespace SimpleNeurotuner
             TembroClass tembro = new TembroClass();
             string pathFile = @"shablon\Wide_voiceWoman.txt";
             tembro.Tembro(SampleRate, pathFile);
-            pitchVal = -2f;
-            reverbVal = 150;
+            pitchVal = 0;
+            reverbVal = 400;
         }
 
         private void btnModeAudio_MouseLeave(object sender, MouseEventArgs e)
@@ -1850,6 +2159,16 @@ namespace SimpleNeurotuner
                 string uri = @"Neurotuners\button\record-mode-hover.png";
                 ImgBtnModeRecord.ImageSource = new ImageSourceConverter().ConvertFromString(uri) as ImageSource;
             }
+        }
+
+        private void btnAudition1_Click(object sender, RoutedEventArgs e)
+        {
+            Audition1();
+        }
+
+        private void btnAudition2_Click(object sender, RoutedEventArgs e)
+        {
+            Audition2();
         }
 
         private void btnModeRecord_MouseLeave(object sender, MouseEventArgs e)
@@ -1912,7 +2231,7 @@ namespace SimpleNeurotuner
             {
                 if (NFTShadow == 1)
                 {
-                    imgShadowNFT.Visibility = Visibility.Visible;
+                    //imgShadowNFT.Visibility = Visibility.Visible;
                 }
                 tabNFTSet.SelectedItem = TabNFT;
                 BtnSetClick = 0;
@@ -1921,20 +2240,62 @@ namespace SimpleNeurotuner
 
         private void btnRecording_Click(object sender, RoutedEventArgs e)
         {
-            ImgBtnRecordClick = 1;
-            string uri = @"Neurotuners\button\button-record-active.png";
-            ImgRecordingBtn.ImageSource = new ImageSourceConverter().ConvertFromString(uri) as ImageSource;
-            Recording();
-            btnRecording.IsEnabled = false;
-            btnStart_Open.IsEnabled = false;
-            btnModeAudio.IsEnabled = false;
-            if (langindex == "0")
+            if (ModeIndex == 0)
             {
-                LogClass.LogWrite("Начало записи голоса.");
+                ImgBtnRecordClick = 1;
+                string uri = @"Neurotuners\button\button-record-active.png";
+                ImgRecordingBtn.ImageSource = new ImageSourceConverter().ConvertFromString(uri) as ImageSource;
+                Recording();
+                btnRecording.IsEnabled = false;
+                btnStart_Open.IsEnabled = false;
+                btnModeAudio.IsEnabled = false;
+                if (langindex == "0")
+                {
+                    LogClass.LogWrite("Начало записи голоса.");
+                }
+                else
+                {
+                    LogClass.LogWrite("Start voice recording.");
+                }
             }
-            else
+            else if (ModeIndex == 1)
             {
-                LogClass.LogWrite("Start voice recording.");
+                if(NFTRecordClick == 0)
+                {
+                    ImgBtnRecordClick = 1;
+                    string uri = @"Neurotuners\button\button-record-active.png";
+                    ImgRecordingBtn.ImageSource = new ImageSourceConverter().ConvertFromString(uri) as ImageSource;
+                    Recording1();
+                    btnRecording.IsEnabled = false;
+                    btnStart_Open.IsEnabled = false;
+                    btnModeAudio.IsEnabled = false;
+                    if (langindex == "0")
+                    {
+                        LogClass.LogWrite("Начало первой записи голоса.");
+                    }
+                    else
+                    {
+                        LogClass.LogWrite("The beginning of the first voice recording.");
+                    }
+                }
+                else if(NFTRecordClick == 1)
+                {
+                    ImgBtnRecordClick = 1;
+                    string uri = @"Neurotuners\button\button-record-active.png";
+                    ImgRecordingBtn.ImageSource = new ImageSourceConverter().ConvertFromString(uri) as ImageSource;
+                    Recording2();
+                    btnRecording.IsEnabled = false;
+                    btnStart_Open.IsEnabled = false;
+                    btnModeAudio.IsEnabled = false;
+                    if (langindex == "0")
+                    {
+                        LogClass.LogWrite("Начало второй записи голоса.");
+                    }
+                    else
+                    {
+                        LogClass.LogWrite("The beginning of the second voice recording.");
+                    }
+                }
             }
         }
 
@@ -2026,6 +2387,310 @@ namespace SimpleNeurotuner
                     Debug.WriteLine(msg);
                 }
             }
+        }
+
+        private async void Audition1()
+        {
+            try
+            {
+                //StreamReader FileRecord = new StreamReader("Data_Create.tmp");
+                //myfile = FileRecord.ReadToEnd();
+                myfile = "MyRecord1.wav";
+                //Stop();
+                Mixer();
+                mMp3 = CodecFactory.Instance.GetCodec(/*@"Record\" + */myfile).ToMono().ToSampleSource();
+                mMixer.AddSource(mMp3.ChangeSampleRate(mMixer.WaveFormat.SampleRate).ToWaveSource(32).Loop().ToSampleSource());
+                await Task.Run(() => SoundOut());
+            }
+            catch (Exception ex)
+            {
+                if (langindex == "0")
+                {
+                    string msg = "Ошибка в Audition: \r\n" + ex.Message;
+                    LogClass.LogWrite(msg);
+                    MessageBox.Show(msg);
+                    Debug.WriteLine(msg);
+                }
+                else
+                {
+                    string msg = "Error in Audition: \r\n" + ex.Message;
+                    LogClass.LogWrite(msg);
+                    MessageBox.Show(msg);
+                    Debug.WriteLine(msg);
+                }
+            }
+        }
+
+        private async void Audition2()
+        {
+            try
+            {
+                //StreamReader FileRecord = new StreamReader("Data_Create.tmp");
+                //myfile = FileRecord.ReadToEnd();
+                myfile = "MyRecord1.wav";
+                //Stop();
+                Mixer();
+                mMp3 = CodecFactory.Instance.GetCodec(/*@"Record\" + */myfile).ToMono().ToSampleSource();
+                mMixer.AddSource(mMp3.ChangeSampleRate(mMixer.WaveFormat.SampleRate).ToWaveSource(32).Loop().ToSampleSource());
+                await Task.Run(() => SoundOut());
+            }
+            catch (Exception ex)
+            {
+                if (langindex == "0")
+                {
+                    string msg = "Ошибка в Audition: \r\n" + ex.Message;
+                    LogClass.LogWrite(msg);
+                    MessageBox.Show(msg);
+                    Debug.WriteLine(msg);
+                }
+                else
+                {
+                    string msg = "Error in Audition: \r\n" + ex.Message;
+                    LogClass.LogWrite(msg);
+                    MessageBox.Show(msg);
+                    Debug.WriteLine(msg);
+                }
+            }
+        }
+
+        private async void NFT_drawing1(string filename)
+        {
+            int[] Rdat = new int[250000];
+            int Ndt;
+            int Ww, Hw, k, ik, dWw, dHw;
+            worker.RunWorkerAsync();
+            Ndt = await Task.Run(() =>
+            {
+                return vizualzvuk(filename, filename, Rdat, 0);
+            });
+            Hw = (int)Math.Sqrt(Ndt);
+            Ww = (int)((double)(Ndt) / (double)(Hw) + 0.5);
+            dWw = (int)((Image1.Width - (double)Ww) / 2.0) - 5;
+            if (dWw < 0)
+                dWw = 0;
+            dHw = (int)((Image1.Height - (double)Hw) / 2.0) - 5;
+            if (dHw < 0)
+                dHw = 0;
+            WriteableBitmap wb = new WriteableBitmap((int)Image1.Width, (int)Image1.Height, Ww, Hw, PixelFormats.Bgra32, null);
+
+            // Define the update square (which is as big as the entire image).
+            Int32Rect rect = new Int32Rect(0, 0, (int)Image1.Width, (int)Image1.Height);
+
+            byte[] pixels = new byte[(int)Image1.Width * (int)Image1.Height * wb.Format.BitsPerPixel / 8];
+            //Random rand = new Random();
+            k = 0;
+            ik = 0;
+            int Wwt = 2, Hwt = 2, it0 = Ww / 2, jt0 = Hw / 2, it = 0, jt = 0;
+            int R = 0, G = 0, B = 0, A = 0;
+            int pixelOffset, poffp = 0, kt = 0;
+            while (k < Ndt)
+            {
+                if (ik % 4 == 0)
+                {
+                    R = Rdat[3 * k];
+                    G = Rdat[3 * k + 1];
+                    B = Rdat[3 * k + 2];
+                    A = 255;
+                    pixelOffset = (dWw + it0 + it + (dHw + jt0 + jt) * wb.PixelWidth) * wb.Format.BitsPerPixel / 8;
+                    pixels[pixelOffset] = (byte)B;
+                    pixels[pixelOffset + 1] = (byte)G;
+                    pixels[pixelOffset + 2] = (byte)R;
+                    pixels[pixelOffset + 3] = (byte)A;
+                    jt++;
+                    if (jt == Hwt)
+                    {
+                        ik++;
+                    }
+                }
+                else if (ik % 4 == 1)
+                {
+                    R = Rdat[3 * k];
+                    G = Rdat[3 * k + 1];
+                    B = Rdat[3 * k + 2];
+                    A = 255;
+                    pixelOffset = (dWw + it0 + it + (dHw + jt0 + jt) * wb.PixelWidth) * wb.Format.BitsPerPixel / 8;
+                    pixels[pixelOffset] = (byte)B;
+                    pixels[pixelOffset + 1] = (byte)G;
+                    pixels[pixelOffset + 2] = (byte)R;
+                    pixels[pixelOffset + 3] = (byte)A;
+                    it++;
+                    if (it == Wwt)
+                    {
+                        ik++;
+                    }
+                }
+                else if (ik % 4 == 2)
+                {
+                    R = Rdat[3 * k];
+                    G = Rdat[3 * k + 1];
+                    B = Rdat[3 * k + 2];
+                    A = 255;
+                    pixelOffset = (dWw + it0 + it + (dHw + jt0 + jt) * wb.PixelWidth) * wb.Format.BitsPerPixel / 8;
+                    pixels[pixelOffset] = (byte)B;
+                    pixels[pixelOffset + 1] = (byte)G;
+                    pixels[pixelOffset + 2] = (byte)R;
+                    pixels[pixelOffset + 3] = (byte)A;
+                    jt--;
+                    if (jt == -1)
+                    {
+                        ik++;
+                        //jt0--;
+                    }
+                }
+                else
+                {
+                    R = Rdat[3 * k];
+                    G = Rdat[3 * k + 1];
+                    B = Rdat[3 * k + 2];
+                    A = 255;
+                    pixelOffset = (dWw + it0 + it + (dHw + jt0 + jt) * wb.PixelWidth) * wb.Format.BitsPerPixel / 8;
+                    pixels[pixelOffset] = (byte)B;
+                    pixels[pixelOffset + 1] = (byte)G;
+                    pixels[pixelOffset + 2] = (byte)R;
+                    pixels[pixelOffset + 3] = (byte)A;
+                    it--;
+                    if (it == -1)
+                    {
+                        it = 0;
+                        jt = 0;
+                        ik++;
+                        it0--;
+                        jt0--;
+                        Hwt += 2;
+                        Wwt += 2;
+                    }
+                }
+                int stride = ((int)Image1.Width * wb.Format.BitsPerPixel) / 8;
+                wb.WritePixels(rect, pixels, stride, 0);
+                k++;
+            }
+            // Show the bitmap in an Image element.
+            Image1.Source = wb;
+            Image1.UpdateLayout();
+            NFTShadow = 1;
+            //imgShadowNFT.Visibility = Visibility.Visible;
+
+            worker.CancelAsync();
+        }
+
+        private async void NFT_drawing2(string filename)
+        {
+            int[] Rdat = new int[250000];
+            int Ndt;
+            int Ww, Hw, k, ik, dWw, dHw;
+            worker.RunWorkerAsync();
+            Ndt = await Task.Run(() =>
+            {
+                return vizualzvuk(filename, filename, Rdat, 0);
+            });
+            Hw = (int)Math.Sqrt(Ndt);
+            Ww = (int)((double)(Ndt) / (double)(Hw) + 0.5);
+            dWw = (int)((Image2.Width - (double)Ww) / 2.0) - 5;
+            if (dWw < 0)
+                dWw = 0;
+            dHw = (int)((Image2.Height - (double)Hw) / 2.0) - 5;
+            if (dHw < 0)
+                dHw = 0;
+            WriteableBitmap wb = new WriteableBitmap((int)Image2.Width, (int)Image2.Height, Ww, Hw, PixelFormats.Bgra32, null);
+
+            // Define the update square (which is as big as the entire image).
+            Int32Rect rect = new Int32Rect(0, 0, (int)Image2.Width, (int)Image2.Height);
+
+            byte[] pixels = new byte[(int)Image2.Width * (int)Image2.Height * wb.Format.BitsPerPixel / 8];
+            //Random rand = new Random();
+            k = 0;
+            ik = 0;
+            int Wwt = 2, Hwt = 2, it0 = Ww / 2, jt0 = Hw / 2, it = 0, jt = 0;
+            int R = 0, G = 0, B = 0, A = 0;
+            int pixelOffset, poffp = 0, kt = 0;
+            while (k < Ndt)
+            {
+                if (ik % 4 == 0)
+                {
+                    R = Rdat[3 * k];
+                    G = Rdat[3 * k + 1];
+                    B = Rdat[3 * k + 2];
+                    A = 255;
+                    pixelOffset = (dWw + it0 + it + (dHw + jt0 + jt) * wb.PixelWidth) * wb.Format.BitsPerPixel / 8;
+                    pixels[pixelOffset] = (byte)B;
+                    pixels[pixelOffset + 1] = (byte)G;
+                    pixels[pixelOffset + 2] = (byte)R;
+                    pixels[pixelOffset + 3] = (byte)A;
+                    jt++;
+                    if (jt == Hwt)
+                    {
+                        ik++;
+                    }
+                }
+                else if (ik % 4 == 1)
+                {
+                    R = Rdat[3 * k];
+                    G = Rdat[3 * k + 1];
+                    B = Rdat[3 * k + 2];
+                    A = 255;
+                    pixelOffset = (dWw + it0 + it + (dHw + jt0 + jt) * wb.PixelWidth) * wb.Format.BitsPerPixel / 8;
+                    pixels[pixelOffset] = (byte)B;
+                    pixels[pixelOffset + 1] = (byte)G;
+                    pixels[pixelOffset + 2] = (byte)R;
+                    pixels[pixelOffset + 3] = (byte)A;
+                    it++;
+                    if (it == Wwt)
+                    {
+                        ik++;
+                    }
+                }
+                else if (ik % 4 == 2)
+                {
+                    R = Rdat[3 * k];
+                    G = Rdat[3 * k + 1];
+                    B = Rdat[3 * k + 2];
+                    A = 255;
+                    pixelOffset = (dWw + it0 + it + (dHw + jt0 + jt) * wb.PixelWidth) * wb.Format.BitsPerPixel / 8;
+                    pixels[pixelOffset] = (byte)B;
+                    pixels[pixelOffset + 1] = (byte)G;
+                    pixels[pixelOffset + 2] = (byte)R;
+                    pixels[pixelOffset + 3] = (byte)A;
+                    jt--;
+                    if (jt == -1)
+                    {
+                        ik++;
+                        //jt0--;
+                    }
+                }
+                else
+                {
+                    R = Rdat[3 * k];
+                    G = Rdat[3 * k + 1];
+                    B = Rdat[3 * k + 2];
+                    A = 255;
+                    pixelOffset = (dWw + it0 + it + (dHw + jt0 + jt) * wb.PixelWidth) * wb.Format.BitsPerPixel / 8;
+                    pixels[pixelOffset] = (byte)B;
+                    pixels[pixelOffset + 1] = (byte)G;
+                    pixels[pixelOffset + 2] = (byte)R;
+                    pixels[pixelOffset + 3] = (byte)A;
+                    it--;
+                    if (it == -1)
+                    {
+                        it = 0;
+                        jt = 0;
+                        ik++;
+                        it0--;
+                        jt0--;
+                        Hwt += 2;
+                        Wwt += 2;
+                    }
+                }
+                int stride = ((int)Image2.Width * wb.Format.BitsPerPixel) / 8;
+                wb.WritePixels(rect, pixels, stride, 0);
+                k++;
+            }
+            // Show the bitmap in an Image element.
+            Image2.Source = wb;
+            Image2.UpdateLayout();
+            NFTShadow = 1;
+            //imgShadowNFT.Visibility = Visibility.Visible;
+
+            worker.CancelAsync();
         }
 
         private async void cmbRecord_SelectionChanged(object sender, SelectionChangedEventArgs e)

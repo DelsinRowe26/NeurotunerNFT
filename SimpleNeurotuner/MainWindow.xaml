@@ -6,7 +6,7 @@
         xmlns:wf="clr-namespace:System.Windows.Forms;assembly=System.Windows.Forms"
         xmlns:local="clr-namespace:SimpleNeurotuner"
         mc:Ignorable="d"
-        Title="Neurotuner NFT" Height="602" Width="800" Loaded="SimpleNeurotuner_Loaded" Closing="SimpleNeurotuner_Closing" ResizeMode="CanMinimize" Activated="SimpleNeurotuner_Activated" HorizontalAlignment="Center" VerticalAlignment="Center" Icon="/Logo-light.png">
+        Title="Neurotuner" Height="602" Width="800" Loaded="SimpleNeurotuner_Loaded" Closing="SimpleNeurotuner_Closing" ResizeMode="CanMinimize" Activated="SimpleNeurotuner_Activated" HorizontalAlignment="Center" VerticalAlignment="Center" Icon="/Logo-light.png">
     <Window.Background>
         <ImageBrush Stretch="UniformToFill" TileMode="Tile">
             <ImageBrush.ImageSource>/32547346-f758-4436-9811-3a4aca09ae1d.png</ImageBrush.ImageSource>
@@ -95,7 +95,6 @@
                 <ComboBoxItem Content="Record"/>
             </ComboBox>
         </Menu>
-        <Label x:Name="label" Content="Label" HorizontalAlignment="Left" Margin="731,354,0,0" VerticalAlignment="Top" Height="26" Width="0"/>
         <Label x:Name="lbVersion" Content="Version: 1.1" HorizontalAlignment="Left" Margin="441,500,0,0" VerticalAlignment="Top" FontSize="18" Visibility="Hidden" Height="31" Width="97">
             <Label.Style>
                 <Style>
@@ -133,7 +132,7 @@
                 <ImageBrush ImageSource="/pic-shadow.png" Stretch="UniformToFill"/>
             </Image.OpacityMask>
         </Image>
-        <TabControl x:Name="tabNFTSet" Margin="126,115,408,192" Visibility="Visible" Background="{x:Null}" BorderBrush="{x:Null}" TabStripPlacement="Top" Width="270">
+        <TabControl x:Name="tabNFTSet" Margin="88,115,442,192" Visibility="Visible" Background="{x:Null}" BorderBrush="{x:Null}" TabStripPlacement="Top" Width="270">
             <TabItem x:Name="TabNFT" Header="gNeuro NFT" Background="{x:Null}" BorderBrush="{x:Null}" Margin="46,-2,-50,0" Visibility="Hidden">
                 <Grid x:Name="GridName" Width="230" Margin="7,0,8,0" Height="230">
                     <Grid.ColumnDefinitions>
@@ -286,16 +285,16 @@
         </Button>
         <ProgressBar x:Name="pbVolumeLeft" HorizontalAlignment="Left" Height="155" Margin="52,312,0,0" VerticalAlignment="Top" Width="17" Maximum="65535" Orientation="Vertical" Visibility="Hidden"/>
         <ProgressBar x:Name="pbVolumeRight" HorizontalAlignment="Left" Height="155" Margin="90,312,0,0" VerticalAlignment="Top" Width="18" Maximum="65535" Orientation="Vertical" Visibility="Hidden"/>
-        <Slider x:Name="slPitchShift" HorizontalAlignment="Center" Margin="0,95,0,0" VerticalAlignment="Top" Width="248" Height="30" Maximum="15" Minimum="-15" TickPlacement="BottomRight" ValueChanged="slPitchShift_ValueChanged" IsEnabled="False"/>
-        <Label x:Name="lbValuePitch" Content="0" HorizontalAlignment="Left" Margin="502,90,0,0" VerticalAlignment="Top" Width="57" Height="40" FontSize="14"/>
+        <Slider x:Name="slPitchShift" HorizontalAlignment="Center" Margin="0,95,0,0" VerticalAlignment="Top" Width="248" Height="30" Maximum="15" Minimum="-15" TickPlacement="BottomRight" ValueChanged="slPitchShift_ValueChanged" IsEnabled="False" Visibility="Hidden"/>
+        <Label x:Name="lbValuePitch" Content="0" HorizontalAlignment="Left" Margin="502,90,0,0" VerticalAlignment="Top" Width="57" Height="40" FontSize="14" Visibility="Hidden"/>
         <Slider x:Name="slLeft" HorizontalAlignment="Left" Margin="41,140,0,0" VerticalAlignment="Top" Width="32" Orientation="Vertical" Height="222" TickPlacement="Both" ValueChanged="slLeft_ValueChanged" Maximum="65535" SmallChange="256" LargeChange="2048" TickFrequency="2048" Visibility="Hidden"/>
         <Slider x:Name="slRight" HorizontalAlignment="Left" Margin="490,140,0,0" VerticalAlignment="Top" Width="32" Orientation="Vertical" Height="222" TickPlacement="Both" ValueChanged="slRight_ValueChanged" Maximum="65535" SmallChange="256" LargeChange="2048" TickFrequency="2048" Minimum="1" Visibility="Hidden"/>
         <CheckBox x:Name="chBAuto" Content="Autobalance" HorizontalAlignment="Left" Margin="25,479,0,0" VerticalAlignment="Top" Checked="chBAuto_Checked" Visibility="Hidden"/>
-        <Slider x:Name="slReverb" HorizontalAlignment="Center" Margin="0,66,0,0" VerticalAlignment="Top" Width="246" Maximum="3000" TickPlacement="BottomRight" TickFrequency="100" ValueChanged="slReverb_ValueChanged"/>
-        <Label x:Name="lbReverb" Content="0" HorizontalAlignment="Left" Margin="506,55,0,0" VerticalAlignment="Top" Width="57" FontSize="14"/>
+        <Slider x:Name="slReverb" HorizontalAlignment="Center" Margin="0,66,0,0" VerticalAlignment="Top" Width="246" Maximum="3000" TickPlacement="BottomRight" TickFrequency="100" ValueChanged="slReverb_ValueChanged" Visibility="Hidden"/>
+        <Label x:Name="lbReverb" Content="0" HorizontalAlignment="Left" Margin="506,55,0,0" VerticalAlignment="Top" Width="57" FontSize="14" Visibility="Hidden"/>
         <RadioButton x:Name="rbMan" Content="Man" HorizontalAlignment="Left" Margin="655,25,0,0" VerticalAlignment="Top" Height="20" Width="100" FontSize="14" Checked="rbMan_Checked"/>
         <RadioButton x:Name="rbWoman" Content="Woman" HorizontalAlignment="Left" Margin="655,55,0,0" VerticalAlignment="Top" FontSize="14" Checked="rbWoman_Checked"/>
-        <TabControl x:Name="tabNFT" Margin="485,115,45,192" Visibility="Visible" Background="{x:Null}" BorderBrush="{x:Null}" TabStripPlacement="Top" Width="270">
+        <TabControl x:Name="tabNFT" Margin="439,115,91,192" Visibility="Visible" Background="{x:Null}" BorderBrush="{x:Null}" TabStripPlacement="Top" Width="270">
             <TabItem x:Name="TabNFT1" Header="gNeuro NFT" Background="{x:Null}" BorderBrush="{x:Null}" Margin="46,-2,-50,0" Visibility="Hidden">
                 <Grid x:Name="GridName1" Width="230" Margin="7,0,8,0" Height="230">
                     <Grid.ColumnDefinitions>
@@ -306,6 +305,21 @@
                 </Grid>
             </TabItem>
         </TabControl>
+        <Label x:Name="lbTimer" Content="0" HorizontalAlignment="Center" Margin="0,12,0,0" VerticalAlignment="Top" Width="88" Height="66" FontSize="48" Visibility="Hidden"/>
+        <Button x:Name="btnAudition1" Content="Button" HorizontalAlignment="Left" Margin="99,142,0,0" VerticalAlignment="Top" Height="238" Width="249" Background="White" Foreground="{x:Null}" BorderBrush="{x:Null}" Click="btnAudition1_Click" Opacity="0">
+            <Button.Template>
+                <ControlTemplate>
+                    <Border x:Name = "btnAud1" Background="{TemplateBinding Background}"/>
+                </ControlTemplate>
+            </Button.Template>
+        </Button>
+        <Button x:Name="btnAudition2" Content="Button" HorizontalAlignment="Left" Margin="450,143,0,0" VerticalAlignment="Top" Height="238" Width="248" Background="White" Foreground="{x:Null}" BorderBrush="{x:Null}" Click="btnAudition2_Click" Opacity="0">
+            <Button.Template>
+                <ControlTemplate>
+                    <Border x:Name = "btnAud2" Background="{TemplateBinding Background}"/>
+                </ControlTemplate>
+            </Button.Template>
+        </Button>
 
 
 
