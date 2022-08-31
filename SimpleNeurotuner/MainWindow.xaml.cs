@@ -1738,7 +1738,7 @@ namespace SimpleNeurotuner
                     ModeIndex = -1;
                     Modes();
                 }
-            }
+            }//g
             catch (Exception ex)
             {
                 if (langindex == "0")
