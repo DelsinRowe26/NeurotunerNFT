@@ -131,6 +131,9 @@
     <Compile Include="PlusRecord.xaml.cs">
       <DependentUpon>PlusRecord.xaml</DependentUpon>
     </Compile>
+    <Compile Include="RepeatRecWin.xaml.cs">
+      <DependentUpon>RepeatRecWin.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Reverb.cs" />
     <Compile Include="SampleDSP.cs" />
     <Compile Include="SampleDSPPitch.cs" />
@@ -146,6 +149,9 @@
     <Compile Include="TembroClass.cs" />
     <Compile Include="WelcomeWindow.xaml.cs">
       <DependentUpon>WelcomeWindow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="YesNoWin.xaml.cs">
+      <DependentUpon>YesNoWin.xaml</DependentUpon>
     </Compile>
     <Page Include="ActivationForm.xaml">
       <SubType>Designer</SubType>
@@ -175,11 +181,19 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="RepeatRecWin.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="SaveDeleteWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="WelcomeWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="YesNoWin.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

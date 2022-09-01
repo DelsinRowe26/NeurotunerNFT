@@ -31,6 +31,8 @@ Project("{54435603-DBB4-11D2-8724-00A0C9A8B90C}") = "31.08.22 Neurotuner Setup",
 EndProject
 Project("{54435603-DBB4-11D2-8724-00A0C9A8B90C}") = "31.08.22 Update Neurotuner Setup", "31.08.22 Update Neurotuner Setup\31.08.22 Update Neurotuner Setup.vdproj", "{79979048-E4DC-4E89-B56B-555F5F823213}"
 EndProject
+Project("{54435603-DBB4-11D2-8724-00A0C9A8B90C}") = "01.09.22 Update Neurotuner Setup", "01.09.22 Update Neurotuner Setup\01.09.22 Update Neurotuner Setup.vdproj", "{16BF8F67-C558-4491-BC3E-21C0C5136CED}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -103,6 +105,10 @@ Global
 		{79979048-E4DC-4E89-B56B-555F5F823213}.Debug|x64.ActiveCfg = Debug
 		{79979048-E4DC-4E89-B56B-555F5F823213}.Release|Any CPU.ActiveCfg = Release
 		{79979048-E4DC-4E89-B56B-555F5F823213}.Release|x64.ActiveCfg = Release
+		{16BF8F67-C558-4491-BC3E-21C0C5136CED}.Debug|Any CPU.ActiveCfg = Debug
+		{16BF8F67-C558-4491-BC3E-21C0C5136CED}.Debug|x64.ActiveCfg = Debug
+		{16BF8F67-C558-4491-BC3E-21C0C5136CED}.Release|Any CPU.ActiveCfg = Release
+		{16BF8F67-C558-4491-BC3E-21C0C5136CED}.Release|x64.ActiveCfg = Release
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
