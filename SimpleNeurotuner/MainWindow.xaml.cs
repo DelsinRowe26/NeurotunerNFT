@@ -1732,7 +1732,7 @@ namespace SimpleNeurotuner
             }
         }
 
-        private async void SimpleNeurotuner_Activated(object sender, EventArgs e)
+        private void SimpleNeurotuner_Activated(object sender, EventArgs e)
         {
             try
             {
@@ -1773,105 +1773,13 @@ namespace SimpleNeurotuner
                 }
                 if(YesNoWin.btnOKInd == 1)
                 {
-                    if (NFTRecordClick == 0)
-                    {
-                        /*if (langindex == "0")
-                        {
-                            string msg = "Держите звук 'А' 3 секунды.";
-                            MessageBox.Show(msg);
-                        }
-                        else
-                        {
-                            string msg = "Hold the sound 'A' for 3 seconds.";
-                            MessageBox.Show(msg);
-                        }*/
-                        ImgBtnRecordClick = 1;
-                        string uri = @"Neurotuners\button\button-record-active.png";
-                        ImgRecordingBtn.ImageSource = new ImageSourceConverter().ConvertFromString(uri) as ImageSource;
-                        Recording1();
-                        btnRecording.IsEnabled = false;
-                        btnStart_Open.IsEnabled = false;
-                        btnModeAudio.IsEnabled = false;
-                        YesNoWin.btnOKInd = 0;
-                        if (langindex == "0")
-                        {
-                            LogClass.LogWrite("Начало первой записи голоса.");
-                        }
-                        else
-                        {
-                            LogClass.LogWrite("The beginning of the first voice recording.");
-                        }
-                    }
-                    else if (NFTRecordClick != 0)
-                    {
-                        /*if (langindex == "0")
-                        {
-                            string msg = "Держите звук 'А' 3 секунды.";
-                            MessageBox.Show(msg);
-                        }
-                        else
-                        {
-                            string msg = "Hold the sound 'A' for 3 seconds.";
-                            MessageBox.Show(msg);
-                        }*/
-                        ImgBtnRecordClick++;
-                        string uri = @"Neurotuners\button\button-record-active.png";
-                        ImgRecordingBtn.ImageSource = new ImageSourceConverter().ConvertFromString(uri) as ImageSource;
-                        Recording2();
-                        YesNoWin.btnOKInd = 0;
-                        //btnRecording.IsEnabled = false;
-                        //btnStart_Open.IsEnabled = false;
-                        //btnModeAudio.IsEnabled = false;
-                        if (langindex == "0")
-                        {
-                            LogClass.LogWrite("Начало второй записи голоса.");
-                        }
-                        else
-                        {
-                            LogClass.LogWrite("The beginning of the second voice recording.");
-                        }
-                    }
+                    RecAct();
                 }
                 
                 if(RepeatRecWin.RepRecInd == 1)
                 {
-                        /*if (langindex == "0")
-                        {
-                            string msg = "Приступим к самонастройке. Наденьте гарнитуру.\n100 секунд настройки. Извлекайте продолжительный и периодический звук «Ааааа»\nвнимательно слушая свой голос в наушниках.\nСтарайтесь максимально настроиться на него. Лучше с закрытыми глазами.\nЧем четче резонирует ощущение своего голоса и голос в наушниках – тем выше эффект!";
-                            MessageBox.Show(msg);
-                        }
-                        else
-                        {
-                            string msg = "Let's start with self-tuning. Put on your headset.\n100 seconds settings. Make a long and intermittent “Ahhh”\nsound by listening carefully to your voice with headphones.\nTry to tune in to it as much as possible. Better with closed eyes.\nThe more clearly the feeling of your voice and the voice in the headphones resonates, the higher the effect!";
-                            MessageBox.Show(msg);
-                        }*/
-
-                        StartFullDuplexTurbo();
-
-                        //PitchTimerMan();
-                        ImgBtnTurboClick = 1;
-                        string uri = @"Neurotuners\button\button-turbo-active.png";
-                        ImgTurboBtn.ImageSource = new ImageSourceConverter().ConvertFromString(uri) as ImageSource;
-                        //Thread.Sleep(2000);
-                        //btnStart_Open.IsEnabled = false;
-                        //btnPlayer.IsEnabled = false;
-                        btnTurbo.IsEnabled = false;
-                        RepeatRecWin.RepRecInd = 0;
-                        //slPitchShift.IsEnabled = true;
-                        //slReverb.IsEnabled = false;
-                        //btnStop.IsEnabled = true;
-                        //btnModeRecord.IsEnabled = false;
-                        //cmbRecord.IsEnabled = false;
-                        lbTimer.Visibility = Visibility.Visible;
-                        if (reverbVal == 150)
-                        {
-                            await Task.Run(() => PitchTimerMan());
-                        }
-                        else if (reverbVal == 400)
-                        {
-                            await Task.Run(() => PitchTimerWoman());
-                        }
-                    }
+                    TurboAct();
+                }
             }
             catch (Exception ex)
             {
@@ -1889,6 +1797,108 @@ namespace SimpleNeurotuner
                     MessageBox.Show(msg);
                     Debug.WriteLine(msg);
                 }
+            }
+        }
+
+        private void RecAct()
+        {
+            if (NFTRecordClick == 0)
+            {
+                /*if (langindex == "0")
+                {
+                    string msg = "Держите звук 'А' 3 секунды.";
+                    MessageBox.Show(msg);
+                }
+                else
+                {
+                    string msg = "Hold the sound 'A' for 3 seconds.";
+                    MessageBox.Show(msg);
+                }*/
+                ImgBtnRecordClick = 1;
+                string uri = @"Neurotuners\button\button-record-active.png";
+                ImgRecordingBtn.ImageSource = new ImageSourceConverter().ConvertFromString(uri) as ImageSource;
+                Recording1();
+                btnRecording.IsEnabled = false;
+                btnStart_Open.IsEnabled = false;
+                btnModeAudio.IsEnabled = false;
+                YesNoWin.btnOKInd = 0;
+                if (langindex == "0")
+                {
+                    LogClass.LogWrite("Начало первой записи голоса.");
+                }
+                else
+                {
+                    LogClass.LogWrite("The beginning of the first voice recording.");
+                }
+            }
+            else if (NFTRecordClick != 0)
+            {
+                /*if (langindex == "0")
+                {
+                    string msg = "Держите звук 'А' 3 секунды.";
+                    MessageBox.Show(msg);
+                }
+                else
+                {
+                    string msg = "Hold the sound 'A' for 3 seconds.";
+                    MessageBox.Show(msg);
+                }*/
+                ImgBtnRecordClick++;
+                string uri = @"Neurotuners\button\button-record-active.png";
+                ImgRecordingBtn.ImageSource = new ImageSourceConverter().ConvertFromString(uri) as ImageSource;
+                Recording2();
+                YesNoWin.btnOKInd = 0;
+                //btnRecording.IsEnabled = false;
+                //btnStart_Open.IsEnabled = false;
+                //btnModeAudio.IsEnabled = false;
+                if (langindex == "0")
+                {
+                    LogClass.LogWrite("Начало второй записи голоса.");
+                }
+                else
+                {
+                    LogClass.LogWrite("The beginning of the second voice recording.");
+                }
+            }
+        }
+
+        private async void TurboAct()
+        {
+            /*if (langindex == "0")
+                        {
+                            string msg = "Приступим к самонастройке. Наденьте гарнитуру.\n100 секунд настройки. Извлекайте продолжительный и периодический звук «Ааааа»\nвнимательно слушая свой голос в наушниках.\nСтарайтесь максимально настроиться на него. Лучше с закрытыми глазами.\nЧем четче резонирует ощущение своего голоса и голос в наушниках – тем выше эффект!";
+                            MessageBox.Show(msg);
+                        }
+                        else
+                        {
+                            string msg = "Let's start with self-tuning. Put on your headset.\n100 seconds settings. Make a long and intermittent “Ahhh”\nsound by listening carefully to your voice with headphones.\nTry to tune in to it as much as possible. Better with closed eyes.\nThe more clearly the feeling of your voice and the voice in the headphones resonates, the higher the effect!";
+                            MessageBox.Show(msg);
+                        }*/
+
+            StartFullDuplexTurbo();
+
+            //PitchTimerMan();
+            ImgBtnTurboClick = 1;
+            string uri = @"Neurotuners\button\button-turbo-active.png";
+            ImgTurboBtn.ImageSource = new ImageSourceConverter().ConvertFromString(uri) as ImageSource;
+            //Thread.Sleep(2000);
+            //btnStart_Open.IsEnabled = false;
+            //btnPlayer.IsEnabled = false;
+            btnTurbo.IsEnabled = false;
+            RepeatRecWin.RepRecInd = 0;
+            //slPitchShift.IsEnabled = true;
+            //slReverb.IsEnabled = false;
+            //btnStop.IsEnabled = true;
+            //btnModeRecord.IsEnabled = false;
+            //cmbRecord.IsEnabled = false;
+            lbTimer.Visibility = Visibility.Visible;
+            if (reverbVal == 150)
+            {
+                await Task.Run(() => PitchTimerMan());
+            }
+            else if (reverbVal == 400)
+            {
+                await Task.Run(() => PitchTimerWoman());
             }
         }
 
