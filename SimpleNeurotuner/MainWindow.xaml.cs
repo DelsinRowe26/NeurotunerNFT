@@ -413,12 +413,12 @@ namespace SimpleNeurotuner
                 //audioVolume.GetMasterVolumeNative(out volume);
                 //int vol = (int)volume;
 
-                if (check.strt(path2) > limit)
+                /*if (check.strt(path2) > limit)
                 {
                     this.IsEnabled = false;
                     ActivationForm activation = new ActivationForm();
                     activation.Show();
-                }
+                }*/
                 //GetWaveVolume(hWnd,out volume);
                 //vol = volume;
                 //ShowCurrentVolume();
@@ -426,12 +426,12 @@ namespace SimpleNeurotuner
                 Modes();
                 if (langindex == "0")
                 {
-                    string msg = "Подключите проводную аудио-гарнитуру к компьютеру.\nЕсли на данный момент гарнитура не подключена,\nто подключите проводную гарнитуру, и пользуйтесь программой,\nа если вы подключаете безпроводную гарнитуру,\nто подключив её перезапустите программу.";
+                    string msg = "Подключите проводную аудио-гарнитуру к компьютеру.\nЕсли на данный момент гарнитура не подключена,\nто подключите проводную гарнитуру, и перезапустите программу для того, чтобы звук подавался в наушники.";
                     MessageBox.Show(msg);
                 }
                 else
                 {
-                    string msg = "Connect a wired audio headset to your computer.\nIf the headset is not currently connected,\nthen connect a wired headset, and use the program,\nand if you connect a wireless headset,\nthen connect it and restart the program.";
+                    string msg = "Connect a wired audio headset to your computer.\nIf a headset is not currently connected,\nthen connect a wired headset and restart the program so that the sound is played through the headphones.";
                     MessageBox.Show(msg);
                 }
                 btnRecordShadow.Opacity = 1;
@@ -1383,6 +1383,7 @@ namespace SimpleNeurotuner
                         mSoundIn.Stop();
                         lbRecordPB.Visibility = Visibility.Hidden;
                         pbRecord.Value = 0;
+                        pbRecord.Visibility = Visibility.Hidden;
 
                     }
                     Thread.Sleep(100);
@@ -1409,7 +1410,7 @@ namespace SimpleNeurotuner
                     btnAudition1.IsEnabled = false;
                     btnAudition2.IsEnabled = false;
                     btnTurboShadow.Opacity = 1;
-                    string msg = "Запись и обработка завершена.";
+                    string msg = "Запись и обработка завершена. Сейчас появится графическое изображение вашего голоса.";
                     LogClass.LogWrite(msg);
                     MessageBox.Show(msg);
                     //btnPlayerEffect.Opacity = 1;
@@ -1426,7 +1427,7 @@ namespace SimpleNeurotuner
                     btnAudition1.IsEnabled = false;
                     btnAudition2.IsEnabled = false;
                     btnTurboShadow.Opacity = 1;
-                    string msg = "Recording and processing completed.";
+                    string msg = "Recording and processing completed. A graphic representation of your voice will now appear.";
                     LogClass.LogWrite(msg);
                     MessageBox.Show(msg);
                     //btnPlayerEffect.Opacity = 1;
@@ -1513,6 +1514,7 @@ namespace SimpleNeurotuner
                         mSoundIn.Stop();
                         lbRecordPB.Visibility = Visibility.Hidden;
                         pbRecord.Value = 0;
+                        pbRecord.Visibility = Visibility.Hidden;
 
                     }
                     Thread.Sleep(100);
@@ -1539,7 +1541,7 @@ namespace SimpleNeurotuner
                     btnRecordShadow.Opacity = 0;
                     btnTurbo.IsEnabled = true;
                     btnTurboShadow.Opacity = 1;
-                    string msg = "Запись и обработка завершена. Сейчас вы можете нажав на картинку прослушать свою запись. Либо начать новую сессию нажав на кнопку записи.";
+                    string msg = "Запись и обработка завершена. Сейчас появится графическое изображение вашего голоса. Сейчас вы можете нажав на картинку прослушать свою запись. Либо начать новую сессию нажав на кнопку записи.";
                     LogClass.LogWrite(msg);
                     MessageBox.Show(msg);
                     //btnPlayerEffect.Opacity = 1;
@@ -1556,7 +1558,7 @@ namespace SimpleNeurotuner
                     btnRecordShadow.Opacity = 0;
                     btnTurbo.IsEnabled = true;
                     btnTurboShadow.Opacity = 1;
-                    string msg = "Recording and processing completed. Now you can click on the picture to listen to your recording. Or start a new session by clicking on the record button.";
+                    string msg = "Recording and processing completed. A graphic representation of your voice will now appear. Now you can click on the picture to listen to your recording. Or start a new session by clicking on the record button.";
                     LogClass.LogWrite(msg);
                     MessageBox.Show(msg);
                     //btnPlayerEffect.Opacity = 1;
@@ -1817,6 +1819,7 @@ namespace SimpleNeurotuner
                 ImgBtnRecordClick = 1;
                 string uri = @"Neurotuners\button\button-record-active.png";
                 ImgRecordingBtn.ImageSource = new ImageSourceConverter().ConvertFromString(uri) as ImageSource;
+                pbRecord.Visibility = Visibility.Visible;
                 Recording1();
                 btnRecording.IsEnabled = false;
                 btnStart_Open.IsEnabled = false;
@@ -1846,6 +1849,7 @@ namespace SimpleNeurotuner
                 ImgBtnRecordClick++;
                 string uri = @"Neurotuners\button\button-record-active.png";
                 ImgRecordingBtn.ImageSource = new ImageSourceConverter().ConvertFromString(uri) as ImageSource;
+                pbRecord.Visibility = Visibility.Visible;
                 Recording2();
                 YesNoWin.btnOKInd = 0;
                 //btnRecording.IsEnabled = false;
@@ -1884,6 +1888,8 @@ namespace SimpleNeurotuner
             //Thread.Sleep(2000);
             //btnStart_Open.IsEnabled = false;
             //btnPlayer.IsEnabled = false;
+            rbMan.IsEnabled = false;
+            rbWoman.IsEnabled = false;
             btnTurbo.IsEnabled = false;
             RepeatRecWin.RepRecInd = 0;
             //slPitchShift.IsEnabled = true;
@@ -2187,7 +2193,7 @@ namespace SimpleNeurotuner
                     imgBack.Visibility = Visibility.Hidden;
                     cmbRecord.Visibility = Visibility.Hidden;
                     imgLibRec.Visibility = Visibility.Hidden;
-                    pbRecord.Visibility = Visibility.Visible;
+                    //pbRecord.Visibility = Visibility.Visible;
                     pbRecord.Value = 0;
                     btnRecording.IsEnabled = true;
                     btnStart_Open.Visibility = Visibility.Hidden;
@@ -2302,7 +2308,7 @@ namespace SimpleNeurotuner
         private void rbMan_Checked(object sender, RoutedEventArgs e)
         {
             TembroClass tembro = new TembroClass();
-            string pathFile = @"shablon\Wide_voiceMan.txt";
+            string pathFile = @"Pattern\Wide_voiceMan.tmp";
             tembro.Tembro(SampleRate, pathFile);
             pitchVal = 0;
             reverbVal = 150;
@@ -2328,6 +2334,8 @@ namespace SimpleNeurotuner
 
             Dispatcher.Invoke(() => lbTimer.Content = timer.ToString());
             Dispatcher.Invoke(() => lbTimer.Visibility = Visibility.Hidden);
+            Dispatcher.Invoke(() => rbWoman.IsEnabled = true);
+            Dispatcher.Invoke(() => rbMan.IsEnabled = true);
             pitchVal = 0;
             Stop1();
         }
@@ -2350,6 +2358,8 @@ namespace SimpleNeurotuner
             }
             Dispatcher.Invoke(() => lbTimer.Content = timer.ToString());
             Dispatcher.Invoke(() => lbTimer.Visibility = Visibility.Hidden);
+            Dispatcher.Invoke(() => rbWoman.IsEnabled = true);
+            Dispatcher.Invoke(() => rbMan.IsEnabled = true);
             pitchVal = 0;
             Stop1();
         }
@@ -2357,7 +2367,7 @@ namespace SimpleNeurotuner
         private void rbWoman_Checked(object sender, RoutedEventArgs e)
         {
             TembroClass tembro = new TembroClass();
-            string pathFile = @"shablon\Wide_voiceWoman.txt";
+            string pathFile = @"Pattern\Wide_voiceWoman.tmp";
             tembro.Tembro(SampleRate, pathFile);
             pitchVal = 0;
             reverbVal = 400;

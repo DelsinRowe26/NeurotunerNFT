@@ -4,9 +4,9 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:SimpleNeurotuner"
-        mc:Ignorable="d" Height="292" Width="476" WindowStartupLocation="CenterScreen" Topmost="True" ResizeMode="NoResize" Closing="WinRecRep_Closing">
+        mc:Ignorable="d" Height="292" Width="476" WindowStartupLocation="CenterScreen" Topmost="True" ResizeMode="NoResize" Closing="WinRecRep_Closing" Loaded="WinRecRep_Loaded">
     <Grid>
-        <TextBlock x:Name="textBlock" HorizontalAlignment="Left" Margin="10,10,0,0" Text="Приступайте к самонастройке. Наденьте гарнитуру. Выберите количество секунд настройки. Извлекайте продолжительный звук «Ааааа», внимательно слушая свой голос в наушниках (подержали 10 секунд, затем вдох и снова). Рот необходимо открыть широко. Старайтесь максимально настроиться на голос. Лучше с закрытыми глазами. Чем лучше резонирует ощущение своего голоса и голос в наушниках – тем выше эффект!" VerticalAlignment="Top" Height="197" Width="438" FontSize="16" FontWeight="Bold" TextWrapping="Wrap">
+        <TextBlock x:Name="textBlock" HorizontalAlignment="Left" Margin="10,10,0,0" Text="Приступайте к самонастройке. Наденьте гарнитуру. Выберите количество секунд настройки. Извлекайте продолжительный звук «Ааааа», внимательно слушая свой голос в наушниках (подержали 10 секунд, затем вдох и снова). Откройте широко рот. Старайтесь максимально настроиться на голос. Лучше с закрытыми глазами. Чем лучше резонирует ощущение своего голоса и голос в наушниках – тем выше эффект!" VerticalAlignment="Top" Height="197" Width="438" FontSize="16" FontWeight="Bold" TextWrapping="Wrap">
             <TextBlock.Foreground>
                 <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
                     <GradientStop Color="#FFF100B7"/>
@@ -22,7 +22,7 @@
                 </LinearGradientBrush>
             </Button.Foreground>
         </Button>
-        <ComboBox x:Name="cmbTime" HorizontalAlignment="Left" Margin="10,212,0,0" VerticalAlignment="Top" Width="136">
+        <ComboBox x:Name="cmbTime" HorizontalAlignment="Left" Margin="10,212,0,0" VerticalAlignment="Top" Width="191">
             <ComboBoxItem x:Name="Time100" Content="100"/>
             <ComboBoxItem x:Name="Time200" Content="200"/>
             <ComboBoxItem x:Name="Time300" Content="300"/>

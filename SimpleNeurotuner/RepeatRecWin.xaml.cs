@@ -54,7 +54,7 @@ namespace SimpleNeurotuner
 
         private void WinRecRep_Closing(object sender, System.ComponentModel.CancelEventArgs e)
         {
-            if (cmbTime.SelectedIndex == -1)
+            if (cmbTime.SelectedItem.ToString() == "Выберите количество секунд")
             {
                 e.Cancel = true;
             }
@@ -76,6 +76,12 @@ namespace SimpleNeurotuner
                     RepRecInd = 1;
                 }
             }
+        }
+
+        private void WinRecRep_Loaded(object sender, RoutedEventArgs e)
+        {
+            cmbTime.Items.Add("Выберите количество секунд");
+            cmbTime.SelectedIndex = cmbTime.Items.Count - 1;
         }
     }
 }
