@@ -332,7 +332,7 @@ namespace SimpleNeurotuner
                     File.AppendAllText(fileInfo.FullName, "1");
                 }
 
-                
+                SoftCl.IsSoftwareInstalled("Microsoft Visual C++ 2015-2022 Redistributable (x86) - 14.32.31332");
 
                 //Находит устройства для захвата звука и заполнияет комбобокс
                 MMDeviceEnumerator deviceEnum = new MMDeviceEnumerator();
