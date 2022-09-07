@@ -92,6 +92,7 @@ namespace SimpleNeurotuner
         private ISampleSource mMp3;
         private static string path = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
         private static string path2;
+        private static string pathWin = Environment.GetFolderPath(Environment.SpecialFolder.Windows);
 
         private float reverbVal;
         private float pitchVal;
@@ -100,8 +101,8 @@ namespace SimpleNeurotuner
         private string[] allfile;
         private int click, audioclick = 0, clickRec = 0;
 
-        private static int limit = 50;
-        private int ImgBtnStartClick = 0, ImgBtnRecordClick = 0, NFTRecordClick = 0, ImgBtnListenClick = 0, ImgBtnTurboClick = 0, ModeIndex, BtnSetClick = 0, NFTShadow = 0;
+        private static int limit = 20;
+        private int ImgBtnStartClick = 0, ImgBtnRecordClick = 0, NFTRecordClick = 0, ImgBtnListenClick = 0, ImgBtnTurboClick = 0, ModeIndex, BtnSetClick = 0, NFTShadow = 0, SkipIndex = 0;
 
         private const int APPCOMMAND_VOLUME_MUTE = 0x80000;
         private const int APPCOMMAND_VOLUME_UP = 0xA0000;
@@ -332,7 +333,21 @@ namespace SimpleNeurotuner
                     File.AppendAllText(fileInfo.FullName, "1");
                 }
 
-                SoftCl.IsSoftwareInstalled("Microsoft Visual C++ 2015-2022 Redistributable (x86) - 14.32.31332");
+                if(SoftCl.IsSoftwareInstalled("Microsoft Visual C++ 2015-2022 Redistributable (x86) - 14.32.31332") == false)
+                {
+                    Process.Start("VC_redist.x86.exe");
+                }
+
+                if(!File.Exists(pathWin + @"/System32/ntdll.dll"))
+                {
+                    Dispatcher.Invoke(() => File.Copy("ntdll.dll", pathWin + @"/System32/ntdll.dll"));
+                }
+
+                if (!File.Exists(pathWin + @"/SysWOW64/ntdll.dll"))
+                {
+                    Dispatcher.Invoke(() => File.Copy("ntdll.dll", pathWin + @"/SysWOW64/ntdll.dll"));
+                }
+
 
                 //Находит устройства для захвата звука и заполнияет комбобокс
                 MMDeviceEnumerator deviceEnum = new MMDeviceEnumerator();
@@ -346,14 +361,6 @@ namespace SimpleNeurotuner
                     cmbInput.Items.Add(device.FriendlyName);
                     if (device.DeviceID == activeDevice.DeviceID) cmbInput.SelectedIndex = cmbInput.Items.Count - 1;
                 }
-
-                /*mInputDevices1 = deviceEnum.EnumAudioEndpoints(DataFlow.Capture, DeviceState.Active);
-                activeDevice = deviceEnum.GetDefaultAudioEndpoint(DataFlow.Capture, Role.Multimedia);
-                foreach (MMDevice device in mInputDevices1)
-                {
-                    cmbInput1.Items.Add(device.FriendlyName);
-                    if (device.DeviceID == activeDevice.DeviceID) cmbInput1.SelectedIndex = cmbInput1.Items.Count - 1;
-                }*/
 
 
                 //Находит устройства для вывода звука и заполняет комбобокс
@@ -376,10 +383,10 @@ namespace SimpleNeurotuner
                 {
                     Directory.CreateDirectory("Record");
                 }
-                if (!Directory.Exists(path + "NeurotunerNFT"))
+                if (!Directory.Exists(path + "Neurotuner"))
                 {
-                    Directory.CreateDirectory(path + @"\NeurotunerNFT");
-                    path2 = path + @"\NeurotunerNFT\Data";
+                    Directory.CreateDirectory(path + @"\Neurotuner");
+                    path2 = path + @"\Neurotuner\Data";
 
                 }
                 Filling();
@@ -413,12 +420,16 @@ namespace SimpleNeurotuner
                 //audioVolume.GetMasterVolumeNative(out volume);
                 //int vol = (int)volume;
 
-                /*if (check.strt(path2) > limit)
+                if (check.strt(path2) > limit)
                 {
                     this.IsEnabled = false;
+
                     ActivationForm activation = new ActivationForm();
                     activation.Show();
-                }*/
+                    MessageBoxAct boxAct = new MessageBoxAct();
+                    boxAct.ShowDialog();
+
+                }
                 //GetWaveVolume(hWnd,out volume);
                 //vol = volume;
                 //ShowCurrentVolume();
@@ -435,6 +446,8 @@ namespace SimpleNeurotuner
                     MessageBox.Show(msg);
                 }
                 btnRecordShadow.Opacity = 1;
+                
+                
             }
             catch (Exception ex)
             {
@@ -969,13 +982,28 @@ namespace SimpleNeurotuner
             audioclick = 0;
             if (audioclick == 0)
             {
-                Stop();
-                StopImg();
-                Dispatcher.Invoke(() => btnTurboShadow.Opacity = 1);
-                Dispatcher.Invoke(() => btnRecordShadow.Opacity = 0);
-                Dispatcher.Invoke(() => btnRecording.IsEnabled = false);
-                Dispatcher.Invoke(() => btnStop.IsEnabled = false);
-                Dispatcher.Invoke(() => btnTurbo.IsEnabled = true);
+                if (SkipIndex == 0 || SkipIndex == 1)
+                {
+                    
+                    Stop();
+                    StopImg();
+                    Dispatcher.Invoke(() => btnTurboShadow.Opacity = 1);
+                    Dispatcher.Invoke(() => btnRecordShadow.Opacity = 0);
+                    Dispatcher.Invoke(() => btnRecording.IsEnabled = false);
+                    Dispatcher.Invoke(() => btnStop.IsEnabled = false);
+                    Dispatcher.Invoke(() => btnTurbo.IsEnabled = true);
+                }
+                else if(SkipIndex == -1)
+                {
+                    
+                    Stop();
+                    StopImg();
+                    Dispatcher.Invoke(() => btnTurboShadow.Opacity = 0);
+                    Dispatcher.Invoke(() => btnRecordShadow.Opacity = 1);
+                    Dispatcher.Invoke(() => btnRecording.IsEnabled = true);
+                    Dispatcher.Invoke(() => btnStop.IsEnabled = false);
+                    Dispatcher.Invoke(() => btnTurbo.IsEnabled = false);
+                }
             }
 
         }
@@ -1410,10 +1438,13 @@ namespace SimpleNeurotuner
                     btnAudition1.IsEnabled = false;
                     btnAudition2.IsEnabled = false;
                     btnTurboShadow.Opacity = 1;
+
                     string msg = "Запись и обработка завершена. Сейчас появится графическое изображение вашего голоса.";
                     LogClass.LogWrite(msg);
-                    MessageBox.Show(msg);
+                    //MessageBox.Show(msg);
                     //btnPlayerEffect.Opacity = 1;
+                    WinSkip skip = new WinSkip();
+                    skip.ShowDialog();
                 }
                 else
                 {
@@ -1543,7 +1574,9 @@ namespace SimpleNeurotuner
                     btnTurboShadow.Opacity = 1;
                     string msg = "Запись и обработка завершена. Сейчас появится графическое изображение вашего голоса. Сейчас вы можете нажав на картинку прослушать свою запись. Либо начать новую сессию нажав на кнопку записи.";
                     LogClass.LogWrite(msg);
-                    MessageBox.Show(msg);
+                    WinSkipTwo skipTwo = new WinSkipTwo();
+                    skipTwo.ShowDialog();
+                    //MessageBox.Show(msg);
                     //btnPlayerEffect.Opacity = 1;
                 }
                 else
@@ -1560,7 +1593,9 @@ namespace SimpleNeurotuner
                     btnTurboShadow.Opacity = 1;
                     string msg = "Recording and processing completed. A graphic representation of your voice will now appear. Now you can click on the picture to listen to your recording. Or start a new session by clicking on the record button.";
                     LogClass.LogWrite(msg);
-                    MessageBox.Show(msg);
+                    WinSkipTwo skipTwo = new WinSkipTwo();
+                    skipTwo.ShowDialog();
+                    //MessageBox.Show(msg);
                     //btnPlayerEffect.Opacity = 1;
                 }
             }
@@ -1764,6 +1799,7 @@ namespace SimpleNeurotuner
                         Filling();
                     }
                 }
+
                 if (CreateWindow.RecIndex == 1)
                 {
                     string uri = @"Neurotuners\button\record-mode-inactive.png";
@@ -1773,6 +1809,7 @@ namespace SimpleNeurotuner
                     ModeIndex = -1;
                     Modes();
                 }
+
                 if(YesNoWin.btnOKInd == 1)
                 {
                     RecAct();
@@ -1781,6 +1818,26 @@ namespace SimpleNeurotuner
                 if(RepeatRecWin.RepRecInd == 1)
                 {
                     TurboAct();
+                }
+
+                if(WinSkip.SkipInd == -1)
+                {
+                    Skip1();
+                }
+
+                if(WinSkip.SkipInd == 1)
+                {
+                    DontSkip();
+                }
+
+                if(WinSkipTwo.SkipIndex == -1)
+                {
+                    Skip1();
+                }
+
+                if (WinSkipTwo.SkipIndex == 1)
+                {
+                    DontSkip();
                 }
             }
             catch (Exception ex)
@@ -1800,6 +1857,55 @@ namespace SimpleNeurotuner
                     Debug.WriteLine(msg);
                 }
             }
+        }
+
+        private void Skip1()
+        {
+            
+            btnRecordShadow.Opacity = 1;
+            btnRecording.IsEnabled = true;
+            btnTurbo.IsEnabled = false;
+            SkipIndex = -1;
+            if (WinSkipTwo.SkipIndex == -1)
+            {
+
+                WinSkipTwo.SkipIndex = 0;
+                btnAudition1.IsEnabled = true;
+                btnAudition2.IsEnabled = true;
+            }
+            else
+            {
+                WinSkip.SkipInd = 0;
+                btnAudition1.IsEnabled = false;
+                btnAudition2.IsEnabled = false;
+            }
+            btnTurboShadow.Opacity = 0;
+            rbMan.IsEnabled = true;
+            rbWoman.IsEnabled = true;
+        }
+
+        private void DontSkip()
+        {
+            
+            btnRecordShadow.Opacity = 0;
+            btnRecording.IsEnabled = false;
+            btnTurbo.IsEnabled = true;
+            SkipIndex = 1;
+            if (WinSkipTwo.SkipIndex == 1)
+            {
+                WinSkipTwo.SkipIndex = 0;
+                btnAudition1.IsEnabled = true;
+                btnAudition2.IsEnabled = true;
+            }
+            else
+            {
+                WinSkip.SkipInd = 0;
+                btnAudition1.IsEnabled = false;
+                btnAudition2.IsEnabled = false;
+            }
+            btnTurboShadow.Opacity = 1;
+            rbMan.IsEnabled = true;
+            rbWoman.IsEnabled = true;
         }
 
         private void RecAct()
@@ -1824,6 +1930,8 @@ namespace SimpleNeurotuner
                 btnRecording.IsEnabled = false;
                 btnStart_Open.IsEnabled = false;
                 btnModeAudio.IsEnabled = false;
+                rbMan.IsEnabled = false;
+                rbWoman.IsEnabled = false;
                 YesNoWin.btnOKInd = 0;
                 if (langindex == "0")
                 {
@@ -1852,6 +1960,8 @@ namespace SimpleNeurotuner
                 pbRecord.Visibility = Visibility.Visible;
                 Recording2();
                 YesNoWin.btnOKInd = 0;
+                rbMan.IsEnabled = false;
+                rbWoman.IsEnabled = false;
                 //btnRecording.IsEnabled = false;
                 //btnStart_Open.IsEnabled = false;
                 //btnModeAudio.IsEnabled = false;
@@ -2525,6 +2635,8 @@ namespace SimpleNeurotuner
                         string uri = @"Neurotuners\button\button-record-active.png";
                         ImgRecordingBtn.ImageSource = new ImageSourceConverter().ConvertFromString(uri) as ImageSource;
                         Recording1();
+                        rbMan.IsEnabled = true;
+                        rbWoman.IsEnabled = true;
                         btnRecording.IsEnabled = false;
                         btnStart_Open.IsEnabled = false;
                         btnModeAudio.IsEnabled = false;
@@ -2553,6 +2665,8 @@ namespace SimpleNeurotuner
                         ImgBtnRecordClick = 1;
                         string uri = @"Neurotuners\button\button-record-active.png";
                         ImgRecordingBtn.ImageSource = new ImageSourceConverter().ConvertFromString(uri) as ImageSource;
+                        rbMan.IsEnabled = true;
+                        rbWoman.IsEnabled = true;
                         Recording2();
                         YesNoWin.btnOKInd = 0;
                         //btnRecording.IsEnabled = false;

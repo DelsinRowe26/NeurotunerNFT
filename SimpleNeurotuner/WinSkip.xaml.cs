@@ -1,0 +1,49 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using System.Windows;
+using System.Windows.Controls;
+using System.Windows.Data;
+using System.Windows.Documents;
+using System.Windows.Input;
+using System.Windows.Media;
+using System.Windows.Media.Imaging;
+using System.Windows.Shapes;
+
+namespace SimpleNeurotuner
+{
+    /// <summary>
+    /// Логика взаимодействия для WinSkip.xaml
+    /// </summary>
+    public partial class WinSkip : Window
+    {
+        public static int SkipInd = 0;
+
+        public WinSkip()
+        {
+            InitializeComponent();
+        }
+
+        private void btnSkip_Click(object sender, RoutedEventArgs e)
+        {
+            SkipInd = -1;
+            Close();
+        }
+
+        private void btnDo_Click(object sender, RoutedEventArgs e)
+        {
+            SkipInd = 1;
+            Close();
+        }
+
+        private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
+        {
+            if (SkipInd == 0)
+            {
+                e.Cancel = true;
+            }
+        }
+    }
+}
