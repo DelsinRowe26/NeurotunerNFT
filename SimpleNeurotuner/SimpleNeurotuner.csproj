@@ -154,12 +154,6 @@
     <Compile Include="WelcomeWindow.xaml.cs">
       <DependentUpon>WelcomeWindow.xaml</DependentUpon>
     </Compile>
-    <Compile Include="WinSkip.xaml.cs">
-      <DependentUpon>WinSkip.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="WinSkipTwo.xaml.cs">
-      <DependentUpon>WinSkipTwo.xaml</DependentUpon>
-    </Compile>
     <Compile Include="YesNoWin.xaml.cs">
       <DependentUpon>YesNoWin.xaml</DependentUpon>
     </Compile>
@@ -204,14 +198,6 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="WelcomeWindow.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="WinSkip.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="WinSkipTwo.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

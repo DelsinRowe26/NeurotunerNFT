@@ -9,6 +9,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SoundAnalysis", "SoundAnaly
 EndProject
 Project("{54435603-DBB4-11D2-8724-00A0C9A8B90C}") = "Update Neurotuner v.2.02 Setup", "Update Neurotuner v.2.02 Setup\Update Neurotuner v.2.02 Setup.vdproj", "{AF01C4F4-9FCE-4C54-B266-1A9A528EEB5B}"
 EndProject
+Project("{54435603-DBB4-11D2-8724-00A0C9A8B90C}") = "Update Neurotuner v.2.02.1", "Update Neurotuner v.2.02.1\Update Neurotuner v.2.02.1.vdproj", "{DD433FFF-3796-4BDF-A006-DACA31E1D44F}"
+EndProject
+Project("{54435603-DBB4-11D2-8724-00A0C9A8B90C}") = "Update Neurotuner v.2.02.2 Setup", "Update Neurotuner v.2.02.2 Setup\Update Neurotuner v.2.02.2 Setup.vdproj", "{776910EC-126A-4B40-BDD5-479DF6D00CF5}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -37,6 +41,14 @@ Global
 		{AF01C4F4-9FCE-4C54-B266-1A9A528EEB5B}.Debug|x64.ActiveCfg = Debug
 		{AF01C4F4-9FCE-4C54-B266-1A9A528EEB5B}.Release|Any CPU.ActiveCfg = Release
 		{AF01C4F4-9FCE-4C54-B266-1A9A528EEB5B}.Release|x64.ActiveCfg = Release
+		{DD433FFF-3796-4BDF-A006-DACA31E1D44F}.Debug|Any CPU.ActiveCfg = Debug
+		{DD433FFF-3796-4BDF-A006-DACA31E1D44F}.Debug|x64.ActiveCfg = Debug
+		{DD433FFF-3796-4BDF-A006-DACA31E1D44F}.Release|Any CPU.ActiveCfg = Release
+		{DD433FFF-3796-4BDF-A006-DACA31E1D44F}.Release|x64.ActiveCfg = Release
+		{776910EC-126A-4B40-BDD5-479DF6D00CF5}.Debug|Any CPU.ActiveCfg = Debug
+		{776910EC-126A-4B40-BDD5-479DF6D00CF5}.Debug|x64.ActiveCfg = Debug
+		{776910EC-126A-4B40-BDD5-479DF6D00CF5}.Release|Any CPU.ActiveCfg = Release
+		{776910EC-126A-4B40-BDD5-479DF6D00CF5}.Release|x64.ActiveCfg = Release
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

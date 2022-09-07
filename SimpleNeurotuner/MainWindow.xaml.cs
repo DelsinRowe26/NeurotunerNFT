@@ -338,7 +338,7 @@ namespace SimpleNeurotuner
                     Process.Start("VC_redist.x86.exe");
                 }
 
-                if(!File.Exists(pathWin + @"/System32/ntdll.dll"))
+                /*if(!File.Exists(pathWin + @"/System32/ntdll.dll"))
                 {
                     Dispatcher.Invoke(() => File.Copy("ntdll.dll", pathWin + @"/System32/ntdll.dll"));
                 }
@@ -346,7 +346,7 @@ namespace SimpleNeurotuner
                 if (!File.Exists(pathWin + @"/SysWOW64/ntdll.dll"))
                 {
                     Dispatcher.Invoke(() => File.Copy("ntdll.dll", pathWin + @"/SysWOW64/ntdll.dll"));
-                }
+                }*/
 
 
                 //Находит устройства для захвата звука и заполнияет комбобокс
@@ -1353,8 +1353,8 @@ namespace SimpleNeurotuner
         {
             try
             {
-                StreamReader FileRecord = new StreamReader("Data_Create.tmp");
-                StreamReader FileCutRecord = new StreamReader("Data_cutCreate.tmp");
+                //StreamReader FileRecord = new StreamReader("Data_Create.tmp");
+                //StreamReader FileCutRecord = new StreamReader("Data_cutCreate.tmp");
                 //myfile = FileRecord.ReadToEnd();
                 //cutmyfile = FileCutRecord.ReadToEnd();
                 NFTRecordClick = 1;
@@ -1362,8 +1362,8 @@ namespace SimpleNeurotuner
                 cutmyfile = "cutMyRecord1.wav";
                 fileDeleteRec1 = myfile;
                 fileDeleteCutRec1 = cutmyfile;
-                FileRecord.Close();
-                FileCutRecord.Close();
+                //FileRecord.Close();
+                //FileCutRecord.Close();
                 if (File.Exists(myfile))
                 {
                     File.Delete(myfile);
@@ -1441,10 +1441,12 @@ namespace SimpleNeurotuner
 
                     string msg = "Запись и обработка завершена. Сейчас появится графическое изображение вашего голоса.";
                     LogClass.LogWrite(msg);
-                    //MessageBox.Show(msg);
+                    MessageBox.Show(msg);
+                    rbMan.IsEnabled = true;
+                    rbWoman.IsEnabled = true;
                     //btnPlayerEffect.Opacity = 1;
-                    WinSkip skip = new WinSkip();
-                    skip.ShowDialog();
+                    //WinSkip skip = new WinSkip();
+                    //skip.ShowDialog();
                 }
                 else
                 {
@@ -1461,6 +1463,8 @@ namespace SimpleNeurotuner
                     string msg = "Recording and processing completed. A graphic representation of your voice will now appear.";
                     LogClass.LogWrite(msg);
                     MessageBox.Show(msg);
+                    rbMan.IsEnabled = true;
+                    rbWoman.IsEnabled = true;
                     //btnPlayerEffect.Opacity = 1;
                 }
             }
@@ -1468,14 +1472,14 @@ namespace SimpleNeurotuner
             {
                 if (langindex == "0")
                 {
-                    string msg = "Ошибка в Recording: \r\n" + ex.Message;
+                    string msg = "Ошибка в Recording1: \r\n" + ex.Message;
                     LogClass.LogWrite(msg);
                     MessageBox.Show(msg);
                     Debug.WriteLine(msg);
                 }
                 else
                 {
-                    string msg = "Error in Recording: \r\n" + ex.Message;
+                    string msg = "Error in Recording1: \r\n" + ex.Message;
                     LogClass.LogWrite(msg);
                     MessageBox.Show(msg);
                     Debug.WriteLine(msg);
@@ -1487,8 +1491,8 @@ namespace SimpleNeurotuner
         {
             try
             {
-                StreamReader FileRecord = new StreamReader("Data_Create.tmp");
-                StreamReader FileCutRecord = new StreamReader("Data_cutCreate.tmp");
+                //StreamReader FileRecord = new StreamReader("Data_Create.tmp");
+                //StreamReader FileCutRecord = new StreamReader("Data_cutCreate.tmp");
                 //myfile = FileRecord.ReadToEnd();
                 //cutmyfile = FileCutRecord.ReadToEnd();
                 NFTRecordClick++;
@@ -1496,8 +1500,8 @@ namespace SimpleNeurotuner
                 cutmyfile = "cutMyRecord2.wav";
                 fileDeleteRec2 = myfile;
                 fileDeleteCutRec2 = cutmyfile;
-                FileRecord.Close();
-                FileCutRecord.Close();
+                //FileRecord.Close();
+                //FileCutRecord.Close();
                 if (File.Exists(myfile))
                 {
                     File.Delete(myfile);
@@ -1574,9 +1578,11 @@ namespace SimpleNeurotuner
                     btnTurboShadow.Opacity = 1;
                     string msg = "Запись и обработка завершена. Сейчас появится графическое изображение вашего голоса. Сейчас вы можете нажав на картинку прослушать свою запись. Либо начать новую сессию нажав на кнопку записи.";
                     LogClass.LogWrite(msg);
-                    WinSkipTwo skipTwo = new WinSkipTwo();
-                    skipTwo.ShowDialog();
-                    //MessageBox.Show(msg);
+                    //WinSkipTwo skipTwo = new WinSkipTwo();
+                    //skipTwo.ShowDialog();
+                    MessageBox.Show(msg);
+                    rbMan.IsEnabled = true;
+                    rbWoman.IsEnabled = true;
                     //btnPlayerEffect.Opacity = 1;
                 }
                 else
@@ -1593,9 +1599,11 @@ namespace SimpleNeurotuner
                     btnTurboShadow.Opacity = 1;
                     string msg = "Recording and processing completed. A graphic representation of your voice will now appear. Now you can click on the picture to listen to your recording. Or start a new session by clicking on the record button.";
                     LogClass.LogWrite(msg);
-                    WinSkipTwo skipTwo = new WinSkipTwo();
-                    skipTwo.ShowDialog();
-                    //MessageBox.Show(msg);
+                    //WinSkipTwo skipTwo = new WinSkipTwo();
+                    //skipTwo.ShowDialog();
+                    MessageBox.Show(msg);
+                    rbMan.IsEnabled = true;
+                    rbWoman.IsEnabled = true;
                     //btnPlayerEffect.Opacity = 1;
                 }
             }
@@ -1603,14 +1611,14 @@ namespace SimpleNeurotuner
             {
                 if (langindex == "0")
                 {
-                    string msg = "Ошибка в Recording: \r\n" + ex.Message;
+                    string msg = "Ошибка в Recording2: \r\n" + ex.Message;
                     LogClass.LogWrite(msg);
                     MessageBox.Show(msg);
                     Debug.WriteLine(msg);
                 }
                 else
                 {
-                    string msg = "Error in Recording: \r\n" + ex.Message;
+                    string msg = "Error in Recording2: \r\n" + ex.Message;
                     LogClass.LogWrite(msg);
                     MessageBox.Show(msg);
                     Debug.WriteLine(msg);
@@ -1820,7 +1828,7 @@ namespace SimpleNeurotuner
                     TurboAct();
                 }
 
-                if(WinSkip.SkipInd == -1)
+                /*if(WinSkip.SkipInd == -1)
                 {
                     Skip1();
                 }
@@ -1838,7 +1846,7 @@ namespace SimpleNeurotuner
                 if (WinSkipTwo.SkipIndex == 1)
                 {
                     DontSkip();
-                }
+                }*/
             }
             catch (Exception ex)
             {
@@ -1859,14 +1867,14 @@ namespace SimpleNeurotuner
             }
         }
 
-        private void Skip1()
+        /*private void Skip1()
         {
             
             btnRecordShadow.Opacity = 1;
             btnRecording.IsEnabled = true;
             btnTurbo.IsEnabled = false;
             SkipIndex = -1;
-            if (WinSkipTwo.SkipIndex == -1)
+            /*if (WinSkipTwo.SkipIndex == -1)
             {
 
                 WinSkipTwo.SkipIndex = 0;
@@ -1882,16 +1890,16 @@ namespace SimpleNeurotuner
             btnTurboShadow.Opacity = 0;
             rbMan.IsEnabled = true;
             rbWoman.IsEnabled = true;
-        }
+        }*/
 
-        private void DontSkip()
+        /*private void DontSkip()
         {
             
             btnRecordShadow.Opacity = 0;
             btnRecording.IsEnabled = false;
             btnTurbo.IsEnabled = true;
             SkipIndex = 1;
-            if (WinSkipTwo.SkipIndex == 1)
+            /*if (WinSkipTwo.SkipIndex == 1)
             {
                 WinSkipTwo.SkipIndex = 0;
                 btnAudition1.IsEnabled = true;
@@ -1906,7 +1914,7 @@ namespace SimpleNeurotuner
             btnTurboShadow.Opacity = 1;
             rbMan.IsEnabled = true;
             rbWoman.IsEnabled = true;
-        }
+        }*/
 
         private void RecAct()
         {
