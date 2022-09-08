@@ -11,7 +11,9 @@ Project("{54435603-DBB4-11D2-8724-00A0C9A8B90C}") = "Update Neurotuner v.2.02 Se
 EndProject
 Project("{54435603-DBB4-11D2-8724-00A0C9A8B90C}") = "Update Neurotuner v.2.02.1", "Update Neurotuner v.2.02.1\Update Neurotuner v.2.02.1.vdproj", "{DD433FFF-3796-4BDF-A006-DACA31E1D44F}"
 EndProject
-Project("{54435603-DBB4-11D2-8724-00A0C9A8B90C}") = "Update Neurotuner v.2.02.2 Setup", "Update Neurotuner v.2.02.2 Setup\Update Neurotuner v.2.02.2 Setup.vdproj", "{776910EC-126A-4B40-BDD5-479DF6D00CF5}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UninstallDirectory", "UninstallDirectory\UninstallDirectory.csproj", "{47AECB3D-FE66-40CA-80B8-CC6FB39554FC}"
+EndProject
+Project("{54435603-DBB4-11D2-8724-00A0C9A8B90C}") = "Update Neurotuner v.2.02.2 Setup", "Update Neurotuner v.2.02.2 Setup\Update Neurotuner v.2.02.2 Setup.vdproj", "{1E38DB2F-D6F5-4542-80F1-43D06DBA42B9}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -45,10 +47,18 @@ Global
 		{DD433FFF-3796-4BDF-A006-DACA31E1D44F}.Debug|x64.ActiveCfg = Debug
 		{DD433FFF-3796-4BDF-A006-DACA31E1D44F}.Release|Any CPU.ActiveCfg = Release
 		{DD433FFF-3796-4BDF-A006-DACA31E1D44F}.Release|x64.ActiveCfg = Release
-		{776910EC-126A-4B40-BDD5-479DF6D00CF5}.Debug|Any CPU.ActiveCfg = Debug
-		{776910EC-126A-4B40-BDD5-479DF6D00CF5}.Debug|x64.ActiveCfg = Debug
-		{776910EC-126A-4B40-BDD5-479DF6D00CF5}.Release|Any CPU.ActiveCfg = Release
-		{776910EC-126A-4B40-BDD5-479DF6D00CF5}.Release|x64.ActiveCfg = Release
+		{47AECB3D-FE66-40CA-80B8-CC6FB39554FC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{47AECB3D-FE66-40CA-80B8-CC6FB39554FC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{47AECB3D-FE66-40CA-80B8-CC6FB39554FC}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{47AECB3D-FE66-40CA-80B8-CC6FB39554FC}.Debug|x64.Build.0 = Debug|Any CPU
+		{47AECB3D-FE66-40CA-80B8-CC6FB39554FC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{47AECB3D-FE66-40CA-80B8-CC6FB39554FC}.Release|Any CPU.Build.0 = Release|Any CPU
+		{47AECB3D-FE66-40CA-80B8-CC6FB39554FC}.Release|x64.ActiveCfg = Release|Any CPU
+		{47AECB3D-FE66-40CA-80B8-CC6FB39554FC}.Release|x64.Build.0 = Release|Any CPU
+		{1E38DB2F-D6F5-4542-80F1-43D06DBA42B9}.Debug|Any CPU.ActiveCfg = Debug
+		{1E38DB2F-D6F5-4542-80F1-43D06DBA42B9}.Debug|x64.ActiveCfg = Debug
+		{1E38DB2F-D6F5-4542-80F1-43D06DBA42B9}.Release|Any CPU.ActiveCfg = Release
+		{1E38DB2F-D6F5-4542-80F1-43D06DBA42B9}.Release|x64.ActiveCfg = Release
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

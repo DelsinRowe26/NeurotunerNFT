@@ -92,7 +92,7 @@ namespace SimpleNeurotuner
         private ISampleSource mMp3;
         private static string path = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
         private static string path2;
-        private static string pathWin = Environment.GetFolderPath(Environment.SpecialFolder.Windows);
+        //private static string pathWin = Environment.GetFolderPath(Environment.SpecialFolder.Windows);
 
         private float reverbVal;
         private float pitchVal;
@@ -375,21 +375,21 @@ namespace SimpleNeurotuner
 
                 cmbRecord.Items.Add("Select a record");
                 cmbRecord.SelectedIndex = cmbRecord.Items.Count - 1;
-                if (!Directory.Exists("Image"))
+                /*if (!Directory.Exists("Image"))
                 {
                     Directory.CreateDirectory("Image");
                 }
                 if (!Directory.Exists("Record"))
                 {
                     Directory.CreateDirectory("Record");
-                }
+                }*/
                 if (!Directory.Exists(path + "Neurotuner"))
                 {
                     Directory.CreateDirectory(path + @"\Neurotuner");
                     path2 = path + @"\Neurotuner\Data";
 
                 }
-                Filling();
+                //Filling();
                 string[] filename = File.ReadAllLines(fileInfo1.FullName);
                 if (filename.Length == 1)
                 {
@@ -973,6 +973,7 @@ namespace SimpleNeurotuner
                 Dispatcher.Invoke(() => btnRecording.IsEnabled = true);
                 Dispatcher.Invoke(() => btnStop.IsEnabled = false);
                 Dispatcher.Invoke(() => btnTurbo.IsEnabled = false);
+                UnBlock();
             }
             
         }
@@ -992,6 +993,7 @@ namespace SimpleNeurotuner
                     Dispatcher.Invoke(() => btnRecording.IsEnabled = false);
                     Dispatcher.Invoke(() => btnStop.IsEnabled = false);
                     Dispatcher.Invoke(() => btnTurbo.IsEnabled = true);
+                    UnBlock();
                 }
                 else if(SkipIndex == -1)
                 {
@@ -1003,6 +1005,7 @@ namespace SimpleNeurotuner
                     Dispatcher.Invoke(() => btnRecording.IsEnabled = true);
                     Dispatcher.Invoke(() => btnStop.IsEnabled = false);
                     Dispatcher.Invoke(() => btnTurbo.IsEnabled = false);
+                    UnBlock();
                 }
             }
 
@@ -1432,13 +1435,13 @@ namespace SimpleNeurotuner
                     string uri = @"Neurotuners\button\button-record-inactive.png";
                     ImgRecordingBtn.ImageSource = new ImageSourceConverter().ConvertFromString(uri) as ImageSource;
                     //btnPlayer.IsEnabled = true;
-                    btnRecordShadow.Opacity = 0;
-                    btnRecording.IsEnabled = false;
+                    btnRecordShadow.Opacity = 1;
+                    btnRecording.IsEnabled = true;
                     btnTurbo.IsEnabled = true;
                     btnAudition1.IsEnabled = false;
                     btnAudition2.IsEnabled = false;
                     btnTurboShadow.Opacity = 1;
-
+                    UnBlock();
                     string msg = "Запись и обработка завершена. Сейчас появится графическое изображение вашего голоса.";
                     LogClass.LogWrite(msg);
                     MessageBox.Show(msg);
@@ -1576,6 +1579,7 @@ namespace SimpleNeurotuner
                     btnRecordShadow.Opacity = 0;
                     btnTurbo.IsEnabled = true;
                     btnTurboShadow.Opacity = 1;
+                    UnBlock();
                     string msg = "Запись и обработка завершена. Сейчас появится графическое изображение вашего голоса. Сейчас вы можете нажав на картинку прослушать свою запись. Либо начать новую сессию нажав на кнопку записи.";
                     LogClass.LogWrite(msg);
                     //WinSkipTwo skipTwo = new WinSkipTwo();
@@ -1648,6 +1652,36 @@ namespace SimpleNeurotuner
             SoundOut();
         }*/
 
+        private void BlockRec()
+        {
+            Dispatcher.Invoke(() => btnRecording.IsEnabled = false);
+            Dispatcher.Invoke(() => btnRecordShadow.Opacity = 0);
+        }
+
+        private void BlockTur()
+        {
+            Dispatcher.Invoke(() => btnTurbo.IsEnabled = false);
+            Dispatcher.Invoke(() => btnTurboShadow.Opacity = 0);
+        }
+
+        private void Block()
+        {
+            Dispatcher.Invoke(() => btnRecording.IsEnabled = false);
+            Dispatcher.Invoke(() => btnRecordShadow.Opacity = 0);
+            Dispatcher.Invoke(() => btnTurbo.IsEnabled = false);
+            Dispatcher.Invoke(() => btnTurboShadow.Opacity = 0);
+            
+        }
+
+        private void UnBlock()
+        {
+            Dispatcher.Invoke(() => btnRecording.IsEnabled = true);
+            Dispatcher.Invoke(() => btnRecordShadow.Opacity = 1);
+            Dispatcher.Invoke(() => btnTurbo.IsEnabled = true);
+            Dispatcher.Invoke(() => btnTurboShadow.Opacity = 1);
+            Dispatcher.Invoke(() => btnStopEffect.Opacity = 0);
+        }
+
         private void Languages()
         {
             try
@@ -1662,7 +1696,7 @@ namespace SimpleNeurotuner
                     cmbRecord.Items.Clear();
                     cmbRecord.Items.Add("Выберите запись");
                     cmbRecord.SelectedIndex = cmbRecord.Items.Count - 1;
-                    Filling();
+                    //Filling();
                     btnRecording.ToolTip = "Запись";
                     cmbModes.Items.Clear();
                     cmbModes.Items.Add("Записи");
@@ -1701,7 +1735,7 @@ namespace SimpleNeurotuner
                     cmbRecord.Items.Clear();
                     cmbRecord.Items.Add("Select a record");
                     cmbRecord.SelectedIndex = cmbRecord.Items.Count - 1;
-                    Filling();
+                    //Filling();
                     cmbModes.Items.Clear();
                     cmbModes.Items.Add("Record");
                     cmbModes.Items.Add("Audition");
@@ -1797,14 +1831,14 @@ namespace SimpleNeurotuner
                         cmbRecord.Items.Clear();
                         cmbRecord.Items.Add("Выберите запись");
                         cmbRecord.SelectedIndex = cmbRecord.Items.Count - 1;
-                        Filling();
+                        //Filling();
                     }
                     else
                     {
                         cmbRecord.Items.Clear();
                         cmbRecord.Items.Add("Select a record");
                         cmbRecord.SelectedIndex = cmbRecord.Items.Count - 1;
-                        Filling();
+                        //Filling();
                     }
                 }
 
@@ -1940,6 +1974,7 @@ namespace SimpleNeurotuner
                 btnModeAudio.IsEnabled = false;
                 rbMan.IsEnabled = false;
                 rbWoman.IsEnabled = false;
+                BlockTur();
                 YesNoWin.btnOKInd = 0;
                 if (langindex == "0")
                 {
@@ -1970,6 +2005,7 @@ namespace SimpleNeurotuner
                 YesNoWin.btnOKInd = 0;
                 rbMan.IsEnabled = false;
                 rbWoman.IsEnabled = false;
+                BlockTur();
                 //btnRecording.IsEnabled = false;
                 //btnStart_Open.IsEnabled = false;
                 //btnModeAudio.IsEnabled = false;
@@ -2010,6 +2046,7 @@ namespace SimpleNeurotuner
             rbWoman.IsEnabled = false;
             btnTurbo.IsEnabled = false;
             RepeatRecWin.RepRecInd = 0;
+            BlockRec();
             //slPitchShift.IsEnabled = true;
             //slReverb.IsEnabled = false;
             //btnStop.IsEnabled = true;
@@ -2197,7 +2234,7 @@ namespace SimpleNeurotuner
                         cmbRecord.Items.Clear();
                         cmbRecord.Items.Add("Выберите запись");
                         cmbRecord.SelectedIndex = cmbRecord.Items.Count - 1;
-                        Filling();
+                        //Filling();
                         LogClass.LogWrite("Включен режим прослушивания.");
                     }
                     else
@@ -2205,7 +2242,7 @@ namespace SimpleNeurotuner
                         cmbRecord.Items.Clear();
                         cmbRecord.Items.Add("Select a record");
                         cmbRecord.SelectedIndex = cmbRecord.Items.Count - 1;
-                        Filling();
+                        //Filling();
                         LogClass.LogWrite("Listening mode is on.");
                     }
                 }
@@ -2292,7 +2329,7 @@ namespace SimpleNeurotuner
                             cmbRecord.Items.Clear();
                             cmbRecord.Items.Add("Выберите запись");
                             cmbRecord.SelectedIndex = cmbRecord.Items.Count - 1;
-                            Filling();
+                            //Filling();
                             LogClass.LogWrite("Включен режим прослушивания.");
                         }
                         else
@@ -2300,7 +2337,7 @@ namespace SimpleNeurotuner
                             cmbRecord.Items.Clear();
                             cmbRecord.Items.Add("Select a record");
                             cmbRecord.SelectedIndex = cmbRecord.Items.Count - 1;
-                            Filling();
+                            //Filling();
                             LogClass.LogWrite("Listening mode is on.");
                         }
                 } 
@@ -2794,12 +2831,15 @@ namespace SimpleNeurotuner
             {
                 //StreamReader FileRecord = new StreamReader("Data_Create.tmp");
                 //myfile = FileRecord.ReadToEnd();
+
                 myfile = "MyRecord1.wav";
                 //Stop();
                 Mixer();
                 mMp3 = CodecFactory.Instance.GetCodec(/*@"Record\" + */myfile).ToMono().ToSampleSource();
                 mMixer.AddSource(mMp3.ChangeSampleRate(mMixer.WaveFormat.SampleRate).ToWaveSource(32).Loop().ToSampleSource());
                 await Task.Run(() => SoundOut());
+                Dispatcher.Invoke(() => btnStopEffect.Opacity = 1);
+                Block();
             }
             catch (Exception ex)
             {
@@ -2832,6 +2872,8 @@ namespace SimpleNeurotuner
                 mMp3 = CodecFactory.Instance.GetCodec(/*@"Record\" + */myfile).ToMono().ToSampleSource();
                 mMixer.AddSource(mMp3.ChangeSampleRate(mMixer.WaveFormat.SampleRate).ToWaveSource(32).Loop().ToSampleSource());
                 await Task.Run(() => SoundOut());
+                Dispatcher.Invoke(() => btnStopEffect.Opacity = 1);
+                Block();
             }
             catch (Exception ex)
             {
