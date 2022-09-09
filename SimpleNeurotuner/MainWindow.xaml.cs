@@ -1379,8 +1379,9 @@ namespace SimpleNeurotuner
                 {
                     mSoundIn.Device = mInputDevices[cmbInput.SelectedIndex];
                     mSoundIn.Initialize();
-                    lbRecordPB.Visibility = Visibility.Visible;
+                    
                     mSoundIn.Start();
+                    lbRecordPB.Visibility = Visibility.Visible;
                     using (WaveWriter record = new WaveWriter(cutmyfile, mSoundIn.WaveFormat))
                     {
                         mSoundIn.DataAvailable += (s, data) => record.Write(data.Data, data.Offset, data.ByteCount);
