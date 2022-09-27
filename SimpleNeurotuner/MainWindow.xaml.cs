@@ -74,7 +74,7 @@ namespace SimpleNeurotuner
         string folder = "Record";
         private IWaveSource mSource;
         private MMDeviceCollection mOutputDevices;
-        private MMDeviceCollection mInputDevices, mInputDevices1;
+        private MMDeviceCollection mInputDevices;
         public double Magn;
         string myfile;
         string cutmyfile;
@@ -154,7 +154,7 @@ namespace SimpleNeurotuner
                     Debug.WriteLine(msg);
                 }
             }
-        }
+        }//не нужно
 
         void worker_ProgressChanged(object sender, ProgressChangedEventArgs e)
         {
@@ -216,7 +216,7 @@ namespace SimpleNeurotuner
                     Debug.WriteLine(msg);
                 }
             }
-        }
+        }//не нужно
 
         private void select_an_entry()
         {
@@ -248,7 +248,7 @@ namespace SimpleNeurotuner
                     Debug.WriteLine(msg);
                 }
             }
-        }
+        }//не нужно
 
         private void NFT_download()
         {
@@ -262,7 +262,7 @@ namespace SimpleNeurotuner
                 string msg = "Wait for the NFT image to load.";
                 MessageBox.Show(msg);
             }
-        }
+        }//не нужно
 
         private void Mixer()
         {
@@ -476,7 +476,7 @@ namespace SimpleNeurotuner
             streamWriter.WriteLineAsync("0");
             streamWriter.Close();
             fileStream.Close();
-        }
+        }//не нужно
 
         private void ShowCurrentVolume()
         {
@@ -487,22 +487,22 @@ namespace SimpleNeurotuner
             int left = (int)(volume & 0xFFFF);
             slLeft.Value = left;
             slRight.Value = right;
-            
-        }
+
+        }//не нужно
 
         private void SetVolume()
         {
             uint volume = (uint)(slLeft.Value + ((int)slRight.Value << 16));
             waveOutSetVolume(IntPtr.Zero, volume);
-        }
-        
+        }//не нужно
+
         private void Autobalance()
         {
             int volume = (int)(slLeft.Value + slRight.Value) / 2;
             slLeft.Value = volume;
             slRight.Value = volume;
             SetVolume();
-        }
+        }//не нужно
 
         private void Filling()
         {
@@ -533,7 +533,7 @@ namespace SimpleNeurotuner
                     Debug.WriteLine(msg);
                 }
             }
-        }
+        }//не нужно
 
         private async void btnStart_Open_Click(object sender, RoutedEventArgs e)
         {
@@ -1730,7 +1730,7 @@ namespace SimpleNeurotuner
                     lbPBNFT.Content = "Идёт загрузка NFT...";
                     lbRecordPB.Content = "Идёт запись...";
                 }
-                else if (langindex != "0")
+                else
                 {
                     index = 0;
                     cmbRecord.Items.Clear();

@@ -109,7 +109,7 @@ namespace SimpleNeurotuner
                 StreamReader FileLanguage = new StreamReader("Data_Language.tmp");
                 langindex = FileLanguage.ReadToEnd();
                 FileLanguage.Close();
-                path2 = path + @"\NeurotunerNFT\Data";
+                path2 = path + @"\Neurotuner\Data";
                 if (langindex == "0")
                 {
                     btnActivation.Content = "Активировать";

@@ -15,6 +15,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UninstallDirectory", "Unins
 EndProject
 Project("{54435603-DBB4-11D2-8724-00A0C9A8B90C}") = "Update Neurotuner v.2.02.2 Setup", "Update Neurotuner v.2.02.2 Setup\Update Neurotuner v.2.02.2 Setup.vdproj", "{1E38DB2F-D6F5-4542-80F1-43D06DBA42B9}"
 EndProject
+Project("{54435603-DBB4-11D2-8724-00A0C9A8B90C}") = "Update Neurotuner v.2.02.3 Setup", "Update Neurotuner v.2.02.3 Setup\Update Neurotuner v.2.02.3 Setup.vdproj", "{174F4BF5-9692-4313-96F2-D5613F020F34}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -59,6 +61,10 @@ Global
 		{1E38DB2F-D6F5-4542-80F1-43D06DBA42B9}.Debug|x64.ActiveCfg = Debug
 		{1E38DB2F-D6F5-4542-80F1-43D06DBA42B9}.Release|Any CPU.ActiveCfg = Release
 		{1E38DB2F-D6F5-4542-80F1-43D06DBA42B9}.Release|x64.ActiveCfg = Release
+		{174F4BF5-9692-4313-96F2-D5613F020F34}.Debug|Any CPU.ActiveCfg = Debug
+		{174F4BF5-9692-4313-96F2-D5613F020F34}.Debug|x64.ActiveCfg = Debug
+		{174F4BF5-9692-4313-96F2-D5613F020F34}.Release|Any CPU.ActiveCfg = Release
+		{174F4BF5-9692-4313-96F2-D5613F020F34}.Release|x64.ActiveCfg = Release
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
